@@ -7,5 +7,5 @@ import java.io.IOException;
 
 public interface Command {
 
-    public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException;
+    void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException;
 }

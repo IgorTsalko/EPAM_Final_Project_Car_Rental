@@ -11,6 +11,6 @@ public class GoToMainPageCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("mainPage.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/jsp/mainPage.jsp").forward(req, resp);
     }
 }

@@ -7,32 +7,32 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 880041323907629570L;
 
-    private int id;
-    private String email;
-    private String phone;
+    private final String id;
+    private final String login;
+    private final String role;
+    private final String rating;
 
-    public int getId() {
+    public User(String id, String login, String role, String rating) {
+        this.id = id;
+        this.login = login;
+        this.role = role;
+        this.rating = rating;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getLogin() {
+        return login;
     }
 
-    public String getEmail() {
-        return email;
+    public String getRole() {
+        return role;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public String getRating() {
+        return rating;
     }
 
     @Override
@@ -40,22 +40,24 @@ public class User implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id &&
-                email.equals(user.email) &&
-                Objects.equals(phone, user.phone);
+        return Objects.equals(id, user.id) &&
+                Objects.equals(login, user.login) &&
+                Objects.equals(role, user.role) &&
+                Objects.equals(rating, user.rating);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, phone);
+        return Objects.hash(id, login, role, rating);
     }
 
     @Override
     public String toString() {
-        return  User.class.getSimpleName() + "{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", phoneNumber='" + phone + '\'' +
+        return this.getClass().getSimpleName() + "{" +
+                "id='" + id + '\'' +
+                ", login='" + login + '\'' +
+                ", role='" + role + '\'' +
+                ", rating='" + rating + '\'' +
                 '}';
     }
 }
