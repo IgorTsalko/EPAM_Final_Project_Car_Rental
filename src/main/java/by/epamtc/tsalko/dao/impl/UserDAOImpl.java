@@ -26,8 +26,8 @@ public class UserDAOImpl implements UserDAO {
 
         ConnectionProvider connectionProvider;
         Connection connection;
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
 
         try {
             connectionProvider = ConnectionProvider.getInstance();
@@ -45,10 +45,29 @@ public class UserDAOImpl implements UserDAO {
                 String role = resultSet.getString("user_role");
                 String rating = resultSet.getString("user_rating");
 
-                user = new User(id, login, role, rating);
+                user = new User();
+                user.setId(id);
+                user.setLogin(login);
+                user.setRole(role);
+                user.setRating(rating);
             }
         } catch (SQLException | ClassNotFoundException e) {
             throw new DAOException(e);
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException throwable) {
+                    throw new DAOException(throwable);
+                }
+            }
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException throwable) {
+                    throw new DAOException(throwable);
+                }
+            }
         }
 
         return user;
@@ -60,7 +79,7 @@ public class UserDAOImpl implements UserDAO {
 
         ConnectionProvider connectionProvider;
         Connection connection;
-        PreparedStatement preparedStatement;
+        PreparedStatement preparedStatement = null;
 
         try {
             connectionProvider = ConnectionProvider.getInstance();
@@ -78,6 +97,14 @@ public class UserDAOImpl implements UserDAO {
 
         } catch (SQLException | ClassNotFoundException e) {
             throw new DAOException(e);
+        }  finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException throwable) {
+                    throw new DAOException(throwable);
+                }
+            }
         }
 
         return registration;

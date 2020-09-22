@@ -7,32 +7,43 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 880041323907629570L;
 
-    private final String id;
-    private final String login;
-    private final String role;
-    private final String rating;
+    private String id;
+    private String login;
+    private String role;
+    private String rating;
 
-    public User(String id, String login, String role, String rating) {
-        this.id = id;
-        this.login = login;
-        this.role = role;
-        this.rating = rating;
-    }
+    public User() {}
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getLogin() {
         return login;
     }
 
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
     public String getRole() {
         return role;
     }
 
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public String getRating() {
         return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 
     @Override

@@ -31,7 +31,9 @@ public class AuthorizationCommand implements Command {
         String login = req.getParameter(PARAMETER_LOGIN);
         String password = req.getParameter(PARAMETER_PASSWORD);
         //todo: техническая валидация
-        AuthorizationData authorizationData = new AuthorizationData(login, password);
+        AuthorizationData authorizationData = new AuthorizationData();
+        authorizationData.setLogin(login);
+        authorizationData.setPassword(password);
 
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         UserService userService = serviceProvider.getUserService();

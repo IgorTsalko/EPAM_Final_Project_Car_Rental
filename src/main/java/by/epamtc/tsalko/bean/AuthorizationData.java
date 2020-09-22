@@ -1,23 +1,31 @@
 package by.epamtc.tsalko.bean;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class AuthorizationData {
+public class AuthorizationData implements Serializable {
 
-    private final String login;
-    private final String password;
+    private static final long serialVersionUID = 8497449356388112889L;
 
-    public AuthorizationData(String login, String password) {
-        this.login = login;
-        this.password = password;
-    }
+    private String login;
+    private String password;
+
+    public AuthorizationData() {}
 
     public String getLogin() {
         return login;
     }
 
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
