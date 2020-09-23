@@ -20,11 +20,9 @@ public class AuthorizationCommand implements Command {
     private final static String PARAMETER_USER = "user";
 
     private final static String PARAMETER_MESSAGE = "message";
-    private final static String PARAMETER_ERROR = "error";
 
     private final static String LOGIN_PAGE = "mainController?command=go_to_login_page";
     private final static String MAIN_PAGE = "mainController?command=go_to_main_page";
-    private final static String ERROR_PAGE = "mainController?command=go_to_error_page";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -54,8 +52,6 @@ public class AuthorizationCommand implements Command {
         } catch (ServiceException e) {
             e.printStackTrace();
             // todo: loging
-            req.setAttribute(PARAMETER_ERROR, e);
-            req.getRequestDispatcher(ERROR_PAGE).forward(req, resp);
         }
 
     }

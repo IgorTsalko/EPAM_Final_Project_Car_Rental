@@ -15,7 +15,6 @@ public class CommandProvider {
         commands.put(ParameterName.REGISTRATION, new RegistrationCommand());
         commands.put(ParameterName.GO_TO_MAIN_PAGE, new GoToMainPageCommand());
         commands.put(ParameterName.GO_TO_LOGIN_PAGE, new GoToLoginPageCommand());
-        commands.put(ParameterName.GO_TO_ERROR_PAGE, new GoToErrorPageCommand());
         commands.put(ParameterName.GO_TO_REGISTRATION_PAGE, new GoToRegistrationPageCommand());
         commands.put(ParameterName.GO_TO_CONTACT_PAGE, new GoToContactPageCommand());
         commands.put(ParameterName.GO_TO_CATALOG, new GoToCatalogCommand());

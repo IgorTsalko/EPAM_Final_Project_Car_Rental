@@ -13,7 +13,5 @@ public enum ParameterName {
     GO_TO_CATALOG,
     GO_TO_NEWS,
     GO_TO_REGULATIONS,
-    GO_TO_STOCKS,
-
-    GO_TO_ERROR_PAGE
+    GO_TO_STOCKS
 }

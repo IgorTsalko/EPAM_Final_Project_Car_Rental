@@ -15,6 +15,15 @@
     <url-pattern>/mainController</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>ExceptionHandler</servlet-name>
+    <servlet-class>by.epamtc.tsalko.controller.ExceptionHandler</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ExceptionHandler</servlet-name>
+    <url-pattern>/exception</url-pattern>
+  </servlet-mapping>
+
   <filter>
     <filter-name>CharacterEncodingFilter</filter-name>
     <filter-class>by.epamtc.tsalko.controller.CharacterEncodingFilter</filter-class>
@@ -23,5 +32,15 @@
     <filter-name>CharacterEncodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+
+  <error-page>
+    <error-code>404</error-code>
+    <location>/WEB-INF/jsp/404.jsp</location>
+  </error-page>
+
+  <error-page>
+    <exception-type>java.lang.Throwable</exception-type>
+    <location>/exception</location>
+  </error-page>
 
 </web-app>
