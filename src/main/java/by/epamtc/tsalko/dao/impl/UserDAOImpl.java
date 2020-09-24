@@ -6,6 +6,8 @@ import by.epamtc.tsalko.bean.User;
 import by.epamtc.tsalko.dao.ConnectionProvider;
 import by.epamtc.tsalko.dao.UserDAO;
 import by.epamtc.tsalko.dao.exception.DAOException;
+import by.epamtc.tsalko.dao.exception.UserAlreadyExistsDAOException;
+import by.epamtc.tsalko.dao.exception.UserNotFoundDAOException;
 
 import java.sql.*;
 
@@ -50,22 +52,26 @@ public class UserDAOImpl implements UserDAO {
                 user.setLogin(login);
                 user.setRole(role);
                 user.setRating(rating);
+            } else {
+                throw new UserNotFoundDAOException();
             }
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new DAOException(e);
+        } catch (SQLException e) {
+            // todo: log. Что то предпринимаем, ошибка базы или запроса
+        } catch (ClassNotFoundException e) {
+            // todo: log. Что то предпринимаем, ошибка java или др.
         } finally {
             if (resultSet != null) {
                 try {
                     resultSet.close();
                 } catch (SQLException throwable) {
-                    throw new DAOException(throwable);
+                    // todo: log и что то предпринимаем. Ошибка решаеться на уровне DAO. Ошибка закрытия
                 }
             }
             if (preparedStatement != null) {
                 try {
                     preparedStatement.close();
                 } catch (SQLException throwable) {
-                    throw new DAOException(throwable);
+                    // todo: log и что то предпринимаем. Ошибка решаеться на уровне DAO. Ошибка закрытия
                 }
             }
         }
@@ -95,14 +101,18 @@ public class UserDAOImpl implements UserDAO {
                 registration = true;
             }
 
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new DAOException(e);
-        }  finally {
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new UserAlreadyExistsDAOException(e);
+        } catch (SQLException e) {
+            // todo: log и что то предпринимаем. Ошибка решаеться на уровне DAO. Ошибка вставки
+        } catch (ClassNotFoundException e) {
+            // todo: log и что то предпринимаем. Ошибка решаеться на уровне DAO. Ошибка базы
+        } finally {
             if (preparedStatement != null) {
                 try {
                     preparedStatement.close();
                 } catch (SQLException throwable) {
-                    throw new DAOException(throwable);
+                    // todo: log и что то предпринимаем. Ошибка решаеться на уровне DAO. Ошибка закрытия
                 }
             }
         }

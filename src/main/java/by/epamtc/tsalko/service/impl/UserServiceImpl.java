@@ -6,8 +6,12 @@ import by.epamtc.tsalko.bean.AuthorizationData;
 import by.epamtc.tsalko.dao.DAOProvider;
 import by.epamtc.tsalko.dao.UserDAO;
 import by.epamtc.tsalko.dao.exception.DAOException;
+import by.epamtc.tsalko.dao.exception.UserAlreadyExistsDAOException;
+import by.epamtc.tsalko.dao.exception.UserNotFoundDAOException;
 import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.ServiceException;
+import by.epamtc.tsalko.service.exception.UserAlreadyExistsServiceException;
+import by.epamtc.tsalko.service.exception.UserNotFoundServiceException;
 
 public class UserServiceImpl implements UserService {
 
@@ -21,6 +25,8 @@ public class UserServiceImpl implements UserService {
 
         try {
             user = userDAO.authorization(authorizationData);
+        } catch (UserNotFoundDAOException e) {
+            throw new UserNotFoundServiceException(e);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
@@ -38,6 +44,8 @@ public class UserServiceImpl implements UserService {
 
         try {
             registration = userDAO.registration(registrationData);
+        } catch (UserAlreadyExistsDAOException e) {
+            throw new UserAlreadyExistsServiceException(e);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }

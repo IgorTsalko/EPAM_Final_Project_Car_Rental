@@ -9,8 +9,11 @@ import java.io.IOException;
 
 public class GoToLoginPageCommand implements Command {
 
+    private final static String PARAMETER_AUTHORIZATION_MESSAGE = "authorization_message";
+
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/WEB-INF/jsp/loginPage.jsp").forward(req, resp);
+        req.getServletContext().removeAttribute(PARAMETER_AUTHORIZATION_MESSAGE);
     }
 }

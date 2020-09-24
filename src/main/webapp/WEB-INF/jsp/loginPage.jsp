@@ -7,17 +7,15 @@
 
         <div class="login-block">
             <h1>Войти</h1>
-
-            <c:if test="${requestScope.message == \"incorrect data\"}">
-                <p>Неверный логин или пароль!</p>
-            </c:if>
-
             <div class="login-form">
                 <form action="mainController" method="post">
                     <input type="hidden" name="command" value="authorization">
                     <input type="text" name="login" placeholder="логин">
                     <input type="password" name="password" placeholder="пароль">
                     <input type="submit" value="войти">
+                    <c:if test="${applicationScope.authorization_message eq 'wrong data'}">
+                        <p class="error-message">Неверный логин или пароль!</p>
+                    </c:if>
                 </form>
             </div>
             <div class="info-login-block">

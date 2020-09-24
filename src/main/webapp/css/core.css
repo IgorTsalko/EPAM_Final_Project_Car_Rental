@@ -138,10 +138,15 @@ header .menu-utility {
     float: right;
 }
 
+.rowing-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .login-form, .registration-form {
     margin-left: auto;
     margin-right: auto;
-    width: 300px;
+    width: 320px;
     border-width: 1px;
     border-color: rgb(190,190,190);
     border-style: solid;
@@ -150,8 +155,9 @@ header .menu-utility {
 }
 
 .login-form input, .registration-form input {
-    width: 280px;
-    height: 30px;
+    box-sizing: border-box;
+    width: 300px;
+    height: 35px;
     margin: 10px;
 }
 
@@ -203,6 +209,11 @@ footer ul {
     height: 180px;
 }
 
+.footer-info a {
+    font-size: 1.25em;
+    line-height: 20px;
+}
+
 ul {
     list-style-type: none;
 }
@@ -214,4 +225,9 @@ li {
 
 .code404 {
     text-align: center;
+}
+
+.error-message {
+    text-align: center;
+    color: red;
 }

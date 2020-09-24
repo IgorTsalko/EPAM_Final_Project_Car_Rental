@@ -5,6 +5,7 @@ import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.ServiceException;
+import by.epamtc.tsalko.service.exception.UserAlreadyExistsServiceException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,9 +18,9 @@ public class RegistrationCommand implements Command {
     private final static String PARAMETER_PHONE = "phone";
     private final static String PARAMETER_LOGIN = "login";
     private final static String PARAMETER_PASSWORD = "password";
-    private final static String PARAMETER_MESSAGE = "message";
+    private final static String PARAMETER_REGISTRATION_MESSAGE = "registration_message";
 
-    private final static String REGISTRATION_PAGE = "/WEB-INF/jsp/registrationPage.jsp";
+    private final static String REGISTRATION_PAGE = "mainController?command=go_to_registration_page";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
@@ -40,12 +41,16 @@ public class RegistrationCommand implements Command {
 
         try {
             if (userService.registration(registrationData)) {
-                req.setAttribute(PARAMETER_MESSAGE, "registration successful");
-                req.getRequestDispatcher(REGISTRATION_PAGE).forward(req, resp);
+                req.getServletContext().setAttribute(PARAMETER_REGISTRATION_MESSAGE, "registration_successful");
+            } else {
+                req.getServletContext().setAttribute(PARAMETER_REGISTRATION_MESSAGE, "registration_error");
             }
-        } catch (ServiceException e) {
-            e.printStackTrace();
+        } catch (UserAlreadyExistsServiceException e) {
+            req.getServletContext().setAttribute(PARAMETER_REGISTRATION_MESSAGE, "user_already_exists");
             // todo: loging
+        } catch (ServiceException e) {
+            // todo: loging. Прочие ошибки, придумать что делать для каждой
         }
+        resp.sendRedirect(REGISTRATION_PAGE);
     }
 }

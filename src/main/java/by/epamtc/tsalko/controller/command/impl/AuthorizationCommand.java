@@ -6,6 +6,7 @@ import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.ServiceException;
+import by.epamtc.tsalko.service.exception.UserNotFoundServiceException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,8 +19,7 @@ public class AuthorizationCommand implements Command {
     private final static String PARAMETER_LOGIN = "login";
     private final static String PARAMETER_PASSWORD = "password";
     private final static String PARAMETER_USER = "user";
-
-    private final static String PARAMETER_MESSAGE = "message";
+    private final static String PARAMETER_AUTHORIZATION_MESSAGE = "authorization_message";
 
     private final static String LOGIN_PAGE = "mainController?command=go_to_login_page";
     private final static String MAIN_PAGE = "mainController?command=go_to_main_page";
@@ -41,17 +41,15 @@ public class AuthorizationCommand implements Command {
 
         try {
             user = userService.authorization(authorizationData);
-            if (user != null) {
-                session = req.getSession();
-                session.setAttribute(PARAMETER_USER, user);
-                resp.sendRedirect(MAIN_PAGE);
-            } else {
-                req.setAttribute(PARAMETER_MESSAGE, "incorrect data");
-                req.getRequestDispatcher(LOGIN_PAGE).forward(req, resp);
-            }
+            session = req.getSession();
+            session.setAttribute(PARAMETER_USER, user);
+            resp.sendRedirect(MAIN_PAGE);
+        } catch (UserNotFoundServiceException e) {
+            req.getServletContext().setAttribute(PARAMETER_AUTHORIZATION_MESSAGE, "wrong data");
+            resp.sendRedirect(LOGIN_PAGE);
         } catch (ServiceException e) {
             e.printStackTrace();
-            // todo: loging
+            // todo: loging. Обрабатываем, устраняем
         }
 
     }
