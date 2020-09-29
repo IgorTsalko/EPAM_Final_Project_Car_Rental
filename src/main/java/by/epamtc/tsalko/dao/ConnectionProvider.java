@@ -10,7 +10,7 @@ public class ConnectionProvider {
 
     private Connection connection;
 
-    private final String URL = "jdbc:mysql://localhost/car_rental?serverTimezone=Europe/Moscow&useSSL=false";
+    private final String URL = "jdbc:mysql://localhost/car_rental?serverTimezone=UTC&useSSL=false";
     private final String USER_NAME = "root";
     private final String PASSWORD = "4january";
 

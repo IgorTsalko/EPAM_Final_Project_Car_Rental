@@ -20,7 +20,7 @@
                         <ul>
                             <li><a href="mainController?command=go_to_contact_page">О нас</a></li>
                             <li><a href="mainController?command=go_to_news">Новости</a></li>
-                            <li><a href="mainController?command=go_to_regulations">Правила аренды</a></li>
+                            <li><a href="mainController?command=go_to_rules">Правила аренды</a></li>
                             <li><a href="mainController?command=go_to_stocks">Акции</a></li>
                         </ul>
                     </div>

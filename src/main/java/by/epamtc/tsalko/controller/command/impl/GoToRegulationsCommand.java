@@ -11,6 +11,6 @@ public class GoToRegulationsCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/jsp/regulations.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/jsp/rules.jsp").forward(req, resp);
     }
 }

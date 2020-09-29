@@ -11,9 +11,6 @@ public class GoToCatalogCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (true) {
-            throw new ServletException();
-        }
         req.getRequestDispatcher("/WEB-INF/jsp/catalog.jsp").forward(req, resp);
     }
 }

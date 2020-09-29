@@ -9,11 +9,11 @@ import java.io.IOException;
 
 public class GoToRegistrationPageCommand implements Command {
 
-    private final static String PARAMETER_REGISTRATION_MESSAGE = "registration_message";
+    private final static String ATTRIBUTE_REGISTRATION_MESSAGE = "registration_message";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/WEB-INF/jsp/registrationPage.jsp").forward(req, resp);
-        req.getServletContext().removeAttribute(PARAMETER_REGISTRATION_MESSAGE);
+        req.getSession().removeAttribute(ATTRIBUTE_REGISTRATION_MESSAGE);
     }
 }

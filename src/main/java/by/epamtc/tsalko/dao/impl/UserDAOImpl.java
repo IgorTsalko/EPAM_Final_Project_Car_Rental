@@ -39,6 +39,9 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setString(1, authorizationData.getLogin());
             preparedStatement.setString(2, authorizationData.getPassword());
 
+            System.out.println("authorizationData.getLogin() - " + authorizationData.getLogin());
+            System.out.println("authorizationData.getPassword() - " + authorizationData.getPassword());
+
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
@@ -53,24 +56,26 @@ public class UserDAOImpl implements UserDAO {
                 user.setRole(role);
                 user.setRating(rating);
             } else {
+                System.out.println("nothing");
                 throw new UserNotFoundDAOException();
             }
         } catch (SQLException e) {
             // todo: log. Что то предпринимаем, ошибка базы или запроса
+            throw new DAOException(e);
         } catch (ClassNotFoundException e) {
             // todo: log. Что то предпринимаем, ошибка java или др.
         } finally {
             if (resultSet != null) {
                 try {
                     resultSet.close();
-                } catch (SQLException throwable) {
+                } catch (SQLException e) {
                     // todo: log и что то предпринимаем. Ошибка решаеться на уровне DAO. Ошибка закрытия
                 }
             }
             if (preparedStatement != null) {
                 try {
                     preparedStatement.close();
-                } catch (SQLException throwable) {
+                } catch (SQLException e) {
                     // todo: log и что то предпринимаем. Ошибка решаеться на уровне DAO. Ошибка закрытия
                 }
             }

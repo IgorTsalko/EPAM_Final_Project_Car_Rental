@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="header.jsp"%>
 
+<fmt:message key="form.search_title" var="search"/>
+<fmt:message key="searching_form_title" var="form_title"/>
+<fmt:message key="pick_up_date" var="pick_up_date"/>
+<fmt:message key="pick_up_time" var="pick_up_time"/>
+<fmt:message key="drop_off_date" var="drop_off_date"/>
+<fmt:message key="drop_off_time" var="drop_off_time"/>
+
 <%--START MAIN-CONTENT--%>
 <div id="content">
     <div class="container main-content">
@@ -9,56 +16,27 @@
 
             <div class="searching-form boxShadow clear">
                 <form class="" action="someAction" method="post">
-                    <div class="field rowing-left">
-                        <p>Начало аренды</p>
-                        <input class="" type="date">
+                    <div class="field">
+                        <p id="searching-form-title">${form_title}</p>
                     </div>
-
                     <div class="field rowing-left">
-                        <p>Время</p>
-                        <select>
-                            <option value="0800">8:00</option>
-                            <option value="0900">9:00</option>
-                            <option value="1000">10:00</option>
-                            <option value="1100" selected="selected">11:00</option>
-                            <option value="1200">12:00</option>
-                            <option value="1300">13:00</option>
-                            <option value="1400">14:00</option>
-                            <option value="1500">15:00</option>
-                            <option value="1600">16:00</option>
-                            <option value="1700">17:00</option>
-                            <option value="1800">18:00</option>
-                            <option value="1900">19:00</option>
-                            <option value="2000">20:00</option>
-                        </select>
+                        <p>${pick_up_date}</p>
+                        <input type="date">
                     </div>
-
+                    <div class="field rowing-right">
+                        <p>${pick_up_time}</p>
+                        <input type="time" value="11:00" min="08:00" max="22:00">
+                    </div>
                     <div class="field rowing-left">
-                        <p>Конец аренды</p>
-                        <input class="" type="date">
+                        <p>${drop_off_date}</p>
+                        <input type="date">
                     </div>
-
-                    <div class="field rowing-left">
-                        <p>Время</p>
-                        <select>
-                            <option value="0800">8:00</option>
-                            <option value="0900">9:00</option>
-                            <option value="1000">10:00</option>
-                            <option value="1100" selected="selected">11:00</option>
-                            <option value="1200">12:00</option>
-                            <option value="1300">13:00</option>
-                            <option value="1400">14:00</option>
-                            <option value="1500">15:00</option>
-                            <option value="1600">16:00</option>
-                            <option value="1700">17:00</option>
-                            <option value="1800">18:00</option>
-                            <option value="1900">19:00</option>
-                            <option value="2000">20:00</option>
-                        </select>
+                    <div class="field rowing-right">
+                        <p>${drop_off_time}</p>
+                        <input type="time" value="11:00" min="08:00" max="22:00">
                     </div>
-
-                    <div class="form-button rowing-right">
-                        <button type="submit">Найти</button>
+                    <div class="field rowing-right">
+                        <button type="submit">${search}</button>
                     </div>
                 </form>
             </div>

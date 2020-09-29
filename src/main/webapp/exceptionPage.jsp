@@ -5,9 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-<h3>Exception: ${requestScope.exception}</h3>
+<h3>Exception: ${sessionScope.exception}</h3>
 <p>
-<c:forEach items="${requestScope.exception.stackTrace}" var="trace">
+<c:forEach items="${sessionScope.exception.stackTrace}" var="trace">
     ${trace}<br>
 </c:forEach>
 </p>

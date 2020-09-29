@@ -18,11 +18,12 @@ public class AuthorizationCommand implements Command {
 
     private final static String PARAMETER_LOGIN = "login";
     private final static String PARAMETER_PASSWORD = "password";
-    private final static String PARAMETER_USER = "user";
-    private final static String PARAMETER_AUTHORIZATION_MESSAGE = "authorization_message";
+
+    private final static String ATTRIBUTE_USER = "user";
+    private final static String ATTRIBUTE_AUTHORIZATION_MESSAGE = "authorization_message";
 
     private final static String LOGIN_PAGE = "mainController?command=go_to_login_page";
-    private final static String MAIN_PAGE = "mainController?command=go_to_main_page";
+    private final static String USER_PAGE = "mainController?command=go_to_user_page";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -36,19 +37,19 @@ public class AuthorizationCommand implements Command {
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         UserService userService = serviceProvider.getUserService();
 
-        HttpSession session;
-        User user;
+        HttpSession session = req.getSession();
 
         try {
-            user = userService.authorization(authorizationData);
-            session = req.getSession();
-            session.setAttribute(PARAMETER_USER, user);
-            resp.sendRedirect(MAIN_PAGE);
+            User user = userService.authorization(authorizationData);
+            System.out.println(user);
+            session.setAttribute(ATTRIBUTE_USER, user);
+            resp.sendRedirect(USER_PAGE);
         } catch (UserNotFoundServiceException e) {
-            req.getServletContext().setAttribute(PARAMETER_AUTHORIZATION_MESSAGE, "wrong data");
+            session.setAttribute(ATTRIBUTE_AUTHORIZATION_MESSAGE, "wrong_data");
             resp.sendRedirect(LOGIN_PAGE);
         } catch (ServiceException e) {
-            e.printStackTrace();
+            session.setAttribute(ATTRIBUTE_AUTHORIZATION_MESSAGE, "bd_error");
+            resp.sendRedirect(LOGIN_PAGE);
             // todo: loging. Обрабатываем, устраняем
         }
 

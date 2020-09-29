@@ -15,8 +15,8 @@ public class ExceptionHandler extends HttpServlet {
         Throwable throwable = (Throwable) req.getAttribute("javax.servlet.error.exception");
 
         if (throwable != null) {
-            req.setAttribute(EXCEPTION_ATTRIBUTE, throwable);
-            req.getRequestDispatcher("/WEB-INF/jsp/exceptionPage.jsp").forward(req, resp);
+            req.getSession().setAttribute(EXCEPTION_ATTRIBUTE, throwable);
+            resp.sendRedirect("exceptionPage.jsp");
         }
     }
 

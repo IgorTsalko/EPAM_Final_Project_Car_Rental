@@ -14,13 +14,15 @@ public class CommandProvider {
         commands.put(ParameterName.LOGOUT, new LogoutCommand());
         commands.put(ParameterName.REGISTRATION, new RegistrationCommand());
         commands.put(ParameterName.GO_TO_MAIN_PAGE, new GoToMainPageCommand());
+        commands.put(ParameterName.GO_TO_USER_PAGE, new GoToUserPageCommand());
         commands.put(ParameterName.GO_TO_LOGIN_PAGE, new GoToLoginPageCommand());
         commands.put(ParameterName.GO_TO_REGISTRATION_PAGE, new GoToRegistrationPageCommand());
         commands.put(ParameterName.GO_TO_CONTACT_PAGE, new GoToContactPageCommand());
         commands.put(ParameterName.GO_TO_CATALOG, new GoToCatalogCommand());
         commands.put(ParameterName.GO_TO_NEWS, new GoToNewsCommand());
-        commands.put(ParameterName.GO_TO_REGULATIONS, new GoToRegulationsCommand());
+        commands.put(ParameterName.GO_TO_RULES, new GoToRegulationsCommand());
         commands.put(ParameterName.GO_TO_STOCKS, new GoToStocksCommand());
+        commands.put(ParameterName.APP_LOCALIZATION, new AppLocalizationCommand());
     }
 
     public Command getCommand(String commandName) {
