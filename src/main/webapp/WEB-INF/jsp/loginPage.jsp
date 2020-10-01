@@ -20,10 +20,10 @@
                     <input type="text" name="login" placeholder="${login}">
                     <input type="password" name="password" placeholder="${password}">
                     <button type="submit">${log_in}</button>
-                    <c:if test="${sessionScope.authorization_message eq 'wrong_data'}">
+                    <c:if test="${pageContext.request.getParameter(\"message\") eq 'wrong_data'}">
                         <p class="error-message">${wrong_data}</p>
                     </c:if>
-                    <c:if test="${sessionScope.authorization_message eq 'bd_error'}">
+                    <c:if test="${pageContext.request.getParameter(\"message\") eq 'bd_error'}">
                         <p class="error-message">${bd_error}</p>
                     </c:if>
                 </form>

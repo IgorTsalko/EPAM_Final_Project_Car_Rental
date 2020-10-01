@@ -5,6 +5,7 @@ html {
 }
 
 body {
+    font-size: 14px;
     background-color: #fff;
     color: #36495a;
     line-height: inherit;
@@ -32,7 +33,8 @@ header .menu-utility {
 }
 
 .user-info a {
-    margin-left: 10px;
+    margin: 0 15px 0 0;
+    text-decoration: none;
 }
 
 .container {
@@ -54,8 +56,12 @@ header .menu-utility {
 }
 
 .header-menu {
-    margin: 50px 0 0 50px;
+    margin: 50px 0 0 45px;
     font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #36495a;
+    text-decoration: none;
 }
 
 .field {
@@ -65,7 +71,6 @@ header .menu-utility {
 
 .field p {
     margin: 5px 0 5px 0;
-    font-size: 14px;
 }
 
 .field input {
@@ -107,6 +112,8 @@ header .menu-utility {
 
 .main-content {
     min-height: 300px;
+    margin-top: 40px;
+    margin-bottom: 40px;
 }
 
 .main-text {
@@ -166,6 +173,14 @@ header .menu-utility {
     margin: 10px;
 }
 
+.registration-form h3, .registration-form p {
+    margin: 10px;
+}
+
+.registration-form {
+    text-align: center;
+}
+
 button {
     text-transform: uppercase;
     font-size: 1em;
@@ -194,24 +209,6 @@ button {
     clear:both;
 }
 
-.features {
-    height: 180px;
-    padding: 20px 0 20px 0;
-}
-
-.features div {
-    width: 300px;
-    padding: 15px;
-}
-
-.features-header {
-    font-weight: bold;
-}
-
-.features p {
-    font-size: 16px;
-}
-
 footer {
     background-color: #d0dae0;
     padding-top: 20px;
@@ -231,8 +228,16 @@ footer ul {
 }
 
 .footer-info a {
-    font-size: 1.25em;
     line-height: 20px;
+}
+
+a {
+    color: #00529c;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 ul {
@@ -264,4 +269,94 @@ li {
 #searching-form-title {
     font-size: 16px;
     font-weight: 600;
+}
+
+#user-logo {
+    width: 100px;
+    height: 100px;
+    background-color: #90bf90;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7em;
+    font-weight: 600;
+    color: #e2ffe2;
+    margin: 20px 30px 20px 0;
+}
+
+#user-data {
+    margin: 20px 30px 20px 0;
+}
+
+#user-data h2 {
+    margin: 0 0 20px 0;
+}
+
+#user-menu {
+    margin: 20px 0 20px 60px;
+    font-size: 16px;
+}
+
+.user-menu-tab {
+    margin-right: 20px;
+}
+
+.user-menu-tab a {
+    text-transform: uppercase;
+    color: #36495a;
+    text-decoration: none;
+}
+
+.info-login-block {
+    text-align: center;
+    margin: 40px;
+}
+
+.info-registration-block {
+    text-align: center;
+    margin: 40px;
+}
+
+.features {
+    text-align: justify;
+    margin: 20px 0;
+}
+
+.features:before{
+    content: '';
+    display: block;
+    width: 100%;
+    height: 0;
+}
+
+.features:after {
+    width: 100%;
+    height: 0;
+    visibility: hidden;
+    overflow: hidden;
+    content: '';
+    display: inline-block;
+}
+
+.feature {
+    display: inline-block;
+    width: 300px;
+}
+
+.feature p {
+    font-size: 16px;
+}
+
+.feature-title {
+    height: 25px;
+    line-height: 25px;
+}
+
+.feature-info {
+    height: 90px;
+}
+
+#footer-add {
+    height: 30px;
+    margin-top: 10px;
 }

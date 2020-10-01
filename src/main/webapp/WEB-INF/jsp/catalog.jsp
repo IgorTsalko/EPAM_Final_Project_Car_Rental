@@ -5,7 +5,7 @@
 <div id="content">
     <div class="container main-content">
 
-        <h1>Наши машины:</h1>
+        <h1>${catalog_title}</h1>
 
         <p>Здесь будет список доступных машин</p>
 

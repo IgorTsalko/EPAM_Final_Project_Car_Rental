@@ -5,7 +5,7 @@
 <div id="content">
     <div class="container main-content">
 
-        <h1>Наши контакты</h1>
+        <h1>${contacts_title}</h1>
 
         <ul>
             <li>Разработчик: Tsalko Igor</li>

@@ -7,20 +7,9 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 880041323907629570L;
 
-    private String id;
     private String login;
     private String role;
     private String rating;
-
-    public User() {}
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getLogin() {
         return login;
@@ -51,22 +40,20 @@ public class User implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(login, user.login) &&
+        return Objects.equals(login, user.login) &&
                 Objects.equals(role, user.role) &&
                 Objects.equals(rating, user.rating);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, role, rating);
+        return Objects.hash(login, role, rating);
     }
 
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
-                "id='" + id + '\'' +
-                ", login='" + login + '\'' +
+                "login='" + login + '\'' +
                 ", role='" + role + '\'' +
                 ", rating='" + rating + '\'' +
                 '}';

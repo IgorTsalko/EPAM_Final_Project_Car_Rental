@@ -23,11 +23,11 @@
     <fmt:message key="log_out_title" var="log_out"/>
     <fmt:message key="registration_title" var="registration"/>
 
-    <fmt:message key="contacts_title" var="menu_contacts"/>
-    <fmt:message key="catalog_title" var="menu_catalog"/>
-    <fmt:message key="stocks_title" var="menu_stocks"/>
-    <fmt:message key="rules_title" var="menu_rules"/>
-    <fmt:message key="news_title" var="menu_news"/>
+    <fmt:message key="contacts_title" var="contacts_title"/>
+    <fmt:message key="catalog_title" var="catalog_title"/>
+    <fmt:message key="stocks_title" var="stocks_title"/>
+    <fmt:message key="rules_title" var="rules_title"/>
+    <fmt:message key="news_title" var="news_title"/>
 </head>
 <body>
 <!-- START HEADER -->
@@ -36,7 +36,7 @@
         <div class="container">
             <div class="user-info">
                 <c:if test="${sessionScope.user != null}">
-                    ${hello}<a href="mainController?command=go_to_user_page"><strong>${sessionScope.user.login}</strong></a>
+                    ${hello} <a href="mainController?command=go_to_user_page"><strong>${sessionScope.user.login}</strong></a>
                     <a href="mainController?command=logout">${log_out}</a>
                 </c:if>
 
@@ -65,11 +65,11 @@
             <a class="logo rowing-left" href="<c:url value="/"/>">
                 <img src="${pageContext.request.contextPath}/img/logo.png" alt="Logo">
             </a>
-            <a class="header-menu rowing-right" href="mainController?command=go_to_contact_page">${menu_contacts}</a>
-            <a class="header-menu rowing-right" href="mainController?command=go_to_catalog">${menu_catalog}</a>
-            <a class="header-menu rowing-right" href="mainController?command=go_to_stocks">${menu_stocks}</a>
-            <a class="header-menu rowing-right" href="mainController?command=go_to_rules">${menu_rules}</a>
-            <a class="header-menu rowing-right" href="mainController?command=go_to_news">${menu_news}</a>
+            <a class="header-menu rowing-right" href="mainController?command=go_to_contact_page">${contacts_title}</a>
+            <a class="header-menu rowing-right" href="mainController?command=go_to_catalog">${catalog_title}</a>
+            <a class="header-menu rowing-right" href="mainController?command=go_to_stocks">${stocks_title}</a>
+            <a class="header-menu rowing-right" href="mainController?command=go_to_rules">${rules_title}</a>
+            <a class="header-menu rowing-right" href="mainController?command=go_to_news">${news_title}</a>
         </div>
     </div>
 </header>

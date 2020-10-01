@@ -5,7 +5,7 @@
 <div id="content">
     <div class="container main-content">
 
-        <h1>Акция!</h1>
+        <h1>${stocks_title}</h1>
 
         <p>Здесь будет список акций</p>
 

@@ -30,14 +30,14 @@
                     <input type="tel" name="phone" placeholder="${phone}">
                     <button type="submit">${form_register}</button>
                 </form>
-                <c:if test="${sessionScope.registration_message eq 'registration_successful'}">
+                <c:if test="${pageContext.request.getParameter(\"message\") eq 'registration_successful'}">
                     <h3>${reg_successful}</h3>
                     <p>${info_text_start} <a href="mainController?command=go_to_login_page">${login_page}</a> ${info_text_end}</p>
                 </c:if>
-                <c:if test="${sessionScope.registration_message eq 'user_already_exists'}">
+                <c:if test="${pageContext.request.getParameter(\"message\") eq 'user_already_exists'}">
                     <p class="error-message">${reg_user_exists}</p>
                 </c:if>
-                <c:if test="${sessionScope.registration_message eq 'registration_error'}">
+                <c:if test="${pageContext.request.getParameter(\"message\") eq 'registration_error'}">
                     <p class="error-message">${reg_error}</p>
                 </c:if>
             </div>

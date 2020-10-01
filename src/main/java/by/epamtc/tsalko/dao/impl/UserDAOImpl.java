@@ -8,15 +8,19 @@ import by.epamtc.tsalko.dao.UserDAO;
 import by.epamtc.tsalko.dao.exception.DAOException;
 import by.epamtc.tsalko.dao.exception.UserAlreadyExistsDAOException;
 import by.epamtc.tsalko.dao.exception.UserNotFoundDAOException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 
 public class UserDAOImpl implements UserDAO {
 
+    private static final Logger logger = LogManager.getLogger(UserDAOImpl.class);
+
     private static final String SELECT_USER_BY_LOGIN_SQL =
-            "SELECT u.user_id, u.user_login, rol.user_role, rat.user_rating " +
-                    "FROM users u, user_roles rol, user_ratings rat " +
-                    "WHERE u.user_login=? and u.user_password=? and u.user_role=rol.user_role_id and u.user_rating=rat.user_rating_id;";
+            "SELECT u.user_login, rol.user_role, rat.user_rating " +
+                    "FROM users u JOIN user_roles rol ON u.user_role=rol.user_role_id " +
+                    "JOIN user_ratings rat ON u.user_rating=rat.user_rating_id WHERE u.user_login=? and u.user_password=?;";
 
     private static final String INSERT_NEW_USER_SQL =
             "INSERT INTO users (user_email, user_phone, user_login, user_password, user_rating, user_role) " +
@@ -39,28 +43,22 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setString(1, authorizationData.getLogin());
             preparedStatement.setString(2, authorizationData.getPassword());
 
-            System.out.println("authorizationData.getLogin() - " + authorizationData.getLogin());
-            System.out.println("authorizationData.getPassword() - " + authorizationData.getPassword());
-
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                String id = resultSet.getString("user_id");
                 String login = resultSet.getString("user_login");
                 String role = resultSet.getString("user_role");
                 String rating = resultSet.getString("user_rating");
 
                 user = new User();
-                user.setId(id);
                 user.setLogin(login);
                 user.setRole(role);
                 user.setRating(rating);
             } else {
-                System.out.println("nothing");
                 throw new UserNotFoundDAOException();
             }
         } catch (SQLException e) {
-            // todo: log. Что то предпринимаем, ошибка базы или запроса
+            logger.error("Severe database error!", e);
             throw new DAOException(e);
         } catch (ClassNotFoundException e) {
             // todo: log. Что то предпринимаем, ошибка java или др.

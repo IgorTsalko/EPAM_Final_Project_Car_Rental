@@ -49,23 +49,35 @@
             </div>
         </div>
 
-        <div class="features clear">
-            <div class="rowing-left">
-                <p class="features-header">Аренда от одного дня</p>
-                <p>Стоимость аренды от 45 руб/сутки. Нужен только паспорт и водительские права. Выдача авто в течении 15 минут!</p>
-                <a href="someLink"><p><strong>узнай больше</strong></p></a>
+        <div class="features">
+            <div class="feature">
+                <div class="feature-title">
+                    <h2>Аренда от одного дня</h2>
+                </div>
+                <div class="feature-info">
+                    <p>Стоимость аренды от 45 руб/сутки. Нужен только паспорт и водительские права. Выдача авто в течении 15 минут!</p>
+                </div>
+                <a href="someLink">узнай больше..</a>
             </div>
 
-            <div class="rowing-left">
-                <p class="features-header">Автокаско</p>
-                <p>Страховка все покроет! Полное автокаско на любые виды повреждений. С нами - вам не о чем беспокоиться!</p>
-                <a href="someLink"><p><strong>узнай больше</strong></p></a>
+            <div class="feature">
+                <div class="feature-title">
+                    <h2>Автокаско на все!</h2>
+                </div>
+                <div class="feature-info">
+                    <p>Страховка все покроет! Полное автокаско на любые виды повреждений. С нами - вам не о чем беспокоиться!</p>
+                </div>
+                <a href="someLink">узнай больше..</a>
             </div>
 
-            <div class="rowing-left">
-                <p class="features-header">Детское кресло - Бесплатно!</p>
-                <p>Если вам нужно перевезти ребенка, мы выдадим вам автокресло абсолютно бессплатно!</p>
-                <a href="someLink"><p><strong>узнай больше</strong></p></a>
+            <div class="feature">
+                <div class="feature-title">
+                    <h2>Детское кресло - Бесплатно!</h2>
+                </div>
+                <div class="feature-info">
+                    <p>Если вам нужно перевезти ребенка, мы выдадим вам автокресло абсолютно бессплатно!</p>
+                </div>
+                <a href="someLink">узнай больше..</a>
             </div>
         </div>
     </div>

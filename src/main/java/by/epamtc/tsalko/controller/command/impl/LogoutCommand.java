@@ -19,7 +19,7 @@ public class LogoutCommand implements Command {
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
         if (session != null) {
-            session.invalidate();
+            session.removeAttribute("user");
         }
         resp.sendRedirect(MAIN_PAGE);
     }
