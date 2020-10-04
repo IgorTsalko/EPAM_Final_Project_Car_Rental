@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="header.jsp"%>
 
-<fmt:message key="form.login" var="login"/>
-<fmt:message key="form.password" var="password"/>
+<fmt:message key="form.login" var="form_login"/>
+<fmt:message key="form.password" var="form_password"/>
 <fmt:message key="login.wrong_data" var="wrong_data"/>
-<fmt:message key="login.error" var="bd_error"/>
+<fmt:message key="incorrect_data" var="incorrect_data"/>
+<fmt:message key="login.error" var="db_error"/>
 <fmt:message key="login_info" var="registration_info"/>
 <fmt:message key="login.registration_link" var="registration_link"/>
 
@@ -17,16 +18,19 @@
             <div class="login-form">
                 <form action="mainController" method="post">
                     <input type="hidden" name="command" value="authorization">
-                    <input type="text" name="login" placeholder="${login}">
-                    <input type="password" name="password" placeholder="${password}">
+                    <input type="text" pattern="^[a-zA-Z0-9_-]{3,25}$" name="login" placeholder="${form_login}" required>
+                    <input type="password" pattern="^[^\s]{6,18}$" name="password" placeholder="${form_password}" required>
                     <button type="submit">${log_in}</button>
-                    <c:if test="${pageContext.request.getParameter(\"message\") eq 'wrong_data'}">
-                        <p class="error-message">${wrong_data}</p>
-                    </c:if>
-                    <c:if test="${pageContext.request.getParameter(\"message\") eq 'bd_error'}">
-                        <p class="error-message">${bd_error}</p>
-                    </c:if>
                 </form>
+                <c:if test="${pageContext.request.getParameter(\"message\") eq 'wrong_data'}">
+                    <p class="error-message">${wrong_data}</p>
+                </c:if>
+                <c:if test="${pageContext.request.getParameter(\"message\") eq 'incorrect_data'}">
+                    <p class="error-message">${incorrect_data}</p>
+                </c:if>
+                <c:if test="${pageContext.request.getParameter(\"message\") eq 'db_error'}">
+                    <p class="error-message">${db_error}</p>
+                </c:if>
             </div>
             <div class="info-login-block">
                 <p>

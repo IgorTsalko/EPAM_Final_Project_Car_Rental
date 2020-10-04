@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class LogoutCommand implements Command {
 
-    private final static String MAIN_PAGE = "mainController?command=go_to_main_page";
+    private static final String MAIN_PAGE = "mainController?command=go_to_main_page";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

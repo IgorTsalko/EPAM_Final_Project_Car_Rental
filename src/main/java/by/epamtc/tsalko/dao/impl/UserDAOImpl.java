@@ -3,8 +3,8 @@ package by.epamtc.tsalko.dao.impl;
 import by.epamtc.tsalko.bean.AuthorizationData;
 import by.epamtc.tsalko.bean.RegistrationData;
 import by.epamtc.tsalko.bean.User;
-import by.epamtc.tsalko.dao.ConnectionProvider;
 import by.epamtc.tsalko.dao.UserDAO;
+import by.epamtc.tsalko.dao.connection.ConnectionProvider;
 import by.epamtc.tsalko.dao.exception.DAOException;
 import by.epamtc.tsalko.dao.exception.UserAlreadyExistsDAOException;
 import by.epamtc.tsalko.dao.exception.UserNotFoundDAOException;
@@ -28,16 +28,11 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User authorization(AuthorizationData authorizationData) throws DAOException {
-        User user = null;
+        User user;
 
-        ConnectionProvider connectionProvider;
-        Connection connection;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-
-        try {
-            connectionProvider = ConnectionProvider.getInstance();
-            connection = connectionProvider.getConnection();
+        try (Connection connection = ConnectionProvider.getInstance().getConnection()) {
             preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN_SQL);
 
             preparedStatement.setString(1, authorizationData.getLogin());
@@ -60,21 +55,19 @@ public class UserDAOImpl implements UserDAO {
         } catch (SQLException e) {
             logger.error("Severe database error!", e);
             throw new DAOException(e);
-        } catch (ClassNotFoundException e) {
-            // todo: log. Что то предпринимаем, ошибка java или др.
         } finally {
             if (resultSet != null) {
                 try {
                     resultSet.close();
                 } catch (SQLException e) {
-                    // todo: log и что то предпринимаем. Ошибка решаеться на уровне DAO. Ошибка закрытия
+                    logger.error("ResultSet close error!", e);
                 }
             }
             if (preparedStatement != null) {
                 try {
                     preparedStatement.close();
                 } catch (SQLException e) {
-                    // todo: log и что то предпринимаем. Ошибка решаеться на уровне DAO. Ошибка закрытия
+                    logger.error("PrepareStatement close error!", e);
                 }
             }
         }
@@ -86,13 +79,8 @@ public class UserDAOImpl implements UserDAO {
     public boolean registration(RegistrationData registrationData) throws DAOException {
         boolean registration = false;
 
-        ConnectionProvider connectionProvider;
-        Connection connection;
         PreparedStatement preparedStatement = null;
-
-        try {
-            connectionProvider = ConnectionProvider.getInstance();
-            connection = connectionProvider.getConnection();
+        try (Connection connection = ConnectionProvider.getInstance().getConnection()) {
             preparedStatement = connection.prepareStatement(INSERT_NEW_USER_SQL);
 
             preparedStatement.setString(1, registrationData.getEmail());
@@ -107,15 +95,13 @@ public class UserDAOImpl implements UserDAO {
         } catch (SQLIntegrityConstraintViolationException e) {
             throw new UserAlreadyExistsDAOException(e);
         } catch (SQLException e) {
-            // todo: log и что то предпринимаем. Ошибка решаеться на уровне DAO. Ошибка вставки
-        } catch (ClassNotFoundException e) {
-            // todo: log и что то предпринимаем. Ошибка решаеться на уровне DAO. Ошибка базы
+            logger.error("Severe database error!", e);
         } finally {
             if (preparedStatement != null) {
                 try {
                     preparedStatement.close();
-                } catch (SQLException throwable) {
-                    // todo: log и что то предпринимаем. Ошибка решаеться на уровне DAO. Ошибка закрытия
+                } catch (SQLException e) {
+                    logger.error("PrepareStatement close error!", e);
                 }
             }
         }

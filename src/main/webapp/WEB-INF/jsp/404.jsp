@@ -5,8 +5,11 @@
 <div id="content">
     <div class="container main-content">
         <div class="code404">
-            <h1>Извините, страница не найдена!</h1>
             <img src="${pageContext.request.contextPath}/img/404.png" alt="404">
+            <h2>Извините, страница не найдена!</h2>
+            <a href="${pageContext.request.contextPath}">
+                <p>вернуться на главную</p>
+            </a>
         </div>
     </div>
 </div>

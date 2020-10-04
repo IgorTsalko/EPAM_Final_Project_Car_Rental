@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class ExceptionHandler extends HttpServlet {
 
-    private final static String EXCEPTION_ATTRIBUTE = "exception";
+    private static final String EXCEPTION_ATTRIBUTE = "exception";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

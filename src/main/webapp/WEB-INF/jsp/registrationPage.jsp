@@ -7,11 +7,12 @@
 <fmt:message key="form.password" var="form_password"/>
 <fmt:message key="form.register" var="form_register"/>
 <fmt:message key="reg.successful" var="reg_successful"/>
+<fmt:message key="reg.error" var="reg_error"/>
+<fmt:message key="incorrect_data" var="incorrect_data"/>
 <fmt:message key="reg_info.text.start" var="info_text_start"/>
 <fmt:message key="reg_info.text.link" var="login_page"/>
 <fmt:message key="reg_info.text.end" var="info_text_end"/>
 <fmt:message key="reg_user_exists" var="reg_user_exists"/>
-<fmt:message key="reg.error" var="reg_error"/>
 <fmt:message key="reg.agreement" var="reg_agreement"/>
 <fmt:message key="reg.agreement.link" var="reg_agreement_link"/>
 
@@ -24,21 +25,24 @@
             <div class="registration-form">
                 <form action="mainController" method="post">
                     <input type="hidden" name="command" value="registration">
-                    <input type="text" name="login" required placeholder="${form_login}">
-                    <input type="password" name="password" required placeholder="${form_password}">
+                    <input type="text" pattern="^[a-zA-Z0-9_-]{3,25}$" name="login" placeholder="${form_login}" required>
+                    <input type="password" pattern="^[^\s]{6,18}$" name="password" placeholder="${form_password}" required>
+                    <input type="tel" name="phone" placeholder="${phone}" required>
                     <input type="email" name="email" placeholder="${email}">
-                    <input type="tel" name="phone" placeholder="${phone}">
                     <button type="submit">${form_register}</button>
                 </form>
-                <c:if test="${pageContext.request.getParameter(\"message\") eq 'registration_successful'}">
+                <c:if test="${pageContext.request.getParameter(\"message\") eq 'successful'}">
                     <h3>${reg_successful}</h3>
                     <p>${info_text_start} <a href="mainController?command=go_to_login_page">${login_page}</a> ${info_text_end}</p>
                 </c:if>
                 <c:if test="${pageContext.request.getParameter(\"message\") eq 'user_already_exists'}">
                     <p class="error-message">${reg_user_exists}</p>
                 </c:if>
-                <c:if test="${pageContext.request.getParameter(\"message\") eq 'registration_error'}">
+                <c:if test="${pageContext.request.getParameter(\"message\") eq 'error'}">
                     <p class="error-message">${reg_error}</p>
+                </c:if>
+                <c:if test="${pageContext.request.getParameter(\"message\") eq 'incorrect_data'}">
+                    <p class="error-message">${incorrect_data}</p>
                 </c:if>
             </div>
             <div class="info-registration-block">

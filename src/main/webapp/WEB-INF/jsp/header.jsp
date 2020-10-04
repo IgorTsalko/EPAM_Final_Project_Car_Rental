@@ -8,6 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Car_rental Igor Tsalko</title>
     <link rel="stylesheet" media="all" type="text/css" href="${pageContext.request.contextPath}/css/core.css">
+    <link href="${pageContext.request.contextPath}/img/favicon.png" rel="icon">
 
     <c:if test="${not empty sessionScope.local}">
         <fmt:setLocale value="${sessionScope.local}"/>
@@ -62,7 +63,7 @@
     </div>
     <div class="container">
         <div class="menu clear">
-            <a class="logo rowing-left" href="<c:url value="/"/>">
+            <a class="logo rowing-left" href="${pageContext.request.contextPath}">
                 <img src="${pageContext.request.contextPath}/img/logo.png" alt="Logo">
             </a>
             <a class="header-menu rowing-right" href="mainController?command=go_to_contact_page">${contacts_title}</a>

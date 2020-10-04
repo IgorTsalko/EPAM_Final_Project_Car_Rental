@@ -9,8 +9,8 @@ import java.io.IOException;
 
 public class AppLocalizationCommand implements Command {
 
-    private final static String PARAMETER_LOCAL = "local";
-    private final static String PARAMETER_PREVIOUS_COMMAND = "previous_command";
+    private static final String PARAMETER_LOCAL = "local";
+    private static final String PARAMETER_PREVIOUS_COMMAND = "previous_command";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

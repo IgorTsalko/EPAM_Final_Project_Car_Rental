@@ -5,8 +5,8 @@
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%level] %logger{36} - %msg%n"/>
         </Console>
         <RollingFile name="RollingFile"
-                     fileName="app.log"
-                     filePattern="app-%d{MM-dd-yyyy}.log"
+                     fileName="..\webapps_logs\car_rental_app.log"
+                     filePattern="..\webapps_logs\car_rental_app-%d{MM-dd-yyyy}.log"
                      ignoreExceptions="false">
             <PatternLayout>
                 <Pattern>%d [%p] %c{1} – %m%n</Pattern>

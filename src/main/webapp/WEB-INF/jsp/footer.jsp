@@ -52,7 +52,7 @@
                         <a href="http://twitter.com/" target="_blank"><img alt="" src="${pageContext.request.contextPath}/img/icon-footer-twitter.png"></a>
                     </div>
                     <div id="copyright" class="rowing-right">
-                        <p>${copyright}: Tsalko Igor +375(33)357-76-65</p>
+                        <p>${copyright}: Tsalko Igor +375(33)357-76-60</p>
                     </div>
                 </div>
 
