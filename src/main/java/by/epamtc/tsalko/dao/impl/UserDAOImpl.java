@@ -5,6 +5,7 @@ import by.epamtc.tsalko.bean.RegistrationData;
 import by.epamtc.tsalko.bean.User;
 import by.epamtc.tsalko.dao.UserDAO;
 import by.epamtc.tsalko.dao.connection.ConnectionProvider;
+import by.epamtc.tsalko.dao.exception.ConnectionPoolException;
 import by.epamtc.tsalko.dao.exception.DAOException;
 import by.epamtc.tsalko.dao.exception.UserAlreadyExistsDAOException;
 import by.epamtc.tsalko.dao.exception.UserNotFoundDAOException;
@@ -52,7 +53,7 @@ public class UserDAOImpl implements UserDAO {
             } else {
                 throw new UserNotFoundDAOException();
             }
-        } catch (SQLException e) {
+        } catch (ConnectionPoolException | SQLException e) {
             logger.error("Severe database error!", e);
             throw new DAOException(e);
         } finally {
@@ -92,6 +93,9 @@ public class UserDAOImpl implements UserDAO {
                 registration = true;
             }
 
+        } catch (ConnectionPoolException e) {
+            logger.error("Data base error!", e);
+            throw new DAOException(e);
         } catch (SQLIntegrityConstraintViolationException e) {
             throw new UserAlreadyExistsDAOException(e);
         } catch (SQLException e) {

@@ -7,8 +7,8 @@ public class UserValidator {
 
     private static final String LOGIN_REGEXP = "^[a-zA-Z0-9_-]{3,25}$";
     private static final String PASSWORD_REGEXP = "^[^\\s]{6,18}$";
-    private static final String EMAIL_REGEXP = "^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,6}$";
-    private static final String PHONE_REGEXP = "^[0-9\\(\\)-]+$";
+    private static final String EMAIL_REGEXP = "^[\\w.-_]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,6}$";
+    private static final String PHONE_REGEXP = "^[0-9\\(\\)-+\\s]+$";
 
     public static boolean loginValidation(AuthorizationData data) {
         String login = data.getLogin();

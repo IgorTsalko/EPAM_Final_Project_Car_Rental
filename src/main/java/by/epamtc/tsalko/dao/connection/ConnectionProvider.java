@@ -6,20 +6,22 @@ import java.sql.Connection;
 
 public class ConnectionProvider {
 
-    private static final ConnectionProvider instance = new ConnectionProvider();
-
+    private static ConnectionProvider instance;
     private static ConnectionPool connectionPool;
 
     private ConnectionProvider() {}
 
-    public static ConnectionProvider getInstance() {
+    public static ConnectionProvider getInstance() throws ConnectionPoolException {
+        if (instance == null) {
+            instance = new ConnectionProvider();
+        }
+        if (connectionPool == null) {
+            connectionPool = new ConnectionPool();
+        }
         return instance;
     }
 
     public Connection getConnection() throws ConnectionPoolException {
-        if (connectionPool == null) {
-            connectionPool = new ConnectionPool();
-        }
         return connectionPool.takeConnection();
     }
 }

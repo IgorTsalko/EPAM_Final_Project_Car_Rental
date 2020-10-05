@@ -22,14 +22,18 @@
                     <input type="password" pattern="^[^\s]{6,18}$" name="password" placeholder="${form_password}" required>
                     <button type="submit">${log_in}</button>
                 </form>
-                <c:if test="${pageContext.request.getParameter(\"message\") eq 'wrong_data'}">
-                    <p class="error-message">${wrong_data}</p>
-                </c:if>
-                <c:if test="${pageContext.request.getParameter(\"message\") eq 'incorrect_data'}">
-                    <p class="error-message">${incorrect_data}</p>
-                </c:if>
-                <c:if test="${pageContext.request.getParameter(\"message\") eq 'db_error'}">
-                    <p class="error-message">${db_error}</p>
+                <c:if test="${not empty pageContext.request.getParameter(\"message\")}">
+                    <c:choose>
+                        <c:when test="${pageContext.request.getParameter(\"message\") eq 'wrong_data'}">
+                            <p class="error-message">${wrong_data}</p>
+                        </c:when>
+                        <c:when test="${pageContext.request.getParameter(\"message\") eq 'incorrect_data'}">
+                            <p class="error-message">${incorrect_data}</p>
+                        </c:when>
+                        <c:when test="${pageContext.request.getParameter(\"message\") eq 'db_error'}">
+                            <p class="error-message">${db_error}</p>
+                        </c:when>
+                    </c:choose>
                 </c:if>
             </div>
             <div class="info-login-block">

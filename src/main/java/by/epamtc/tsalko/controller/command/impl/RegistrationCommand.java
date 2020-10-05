@@ -5,6 +5,7 @@ import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.controller.validator.UserValidator;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
+import by.epamtc.tsalko.service.exception.ServiceDataBaseException;
 import by.epamtc.tsalko.service.exception.ServiceException;
 import by.epamtc.tsalko.service.exception.UserAlreadyExistsServiceException;
 import org.apache.logging.log4j.LogManager;

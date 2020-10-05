@@ -12,8 +12,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
-// теперь класс доступен только в своем пакете и от него нельзя наследоваться
-final class ConnectionPool {
+public final class ConnectionPool {
 
     private static final Logger logger = LogManager.getLogger(ConnectionPool.class);
 
@@ -36,7 +35,9 @@ final class ConnectionPool {
     private String password;
     private int poolSize;
 
-    protected ConnectionPool() {
+    // теперь объект можно только в своем пакете, а от класса нельзя наследоваться
+    // работа с классом только через ConnectionProvider
+    protected ConnectionPool() throws ConnectionPoolException {
         driverName = dbParamBundle.getString(KEY_DB_DRIVER);
         url = dbParamBundle.getString(KEY_DB_URL);
         user = dbParamBundle.getString(KEY_DB_USER);
@@ -55,7 +56,7 @@ final class ConnectionPool {
         initPoolData();
     }
 
-    private void initPoolData() {
+    private void initPoolData() throws ConnectionPoolException {
         try {
             Class.forName(driverName);
 
@@ -65,9 +66,11 @@ final class ConnectionPool {
                 connectionQueue.add(pooledConnection);
             }
         } catch (SQLException e) {
-            logger.error(e);
+            logger.error("Cannot init pool data", e);
+            throw new ConnectionPoolException(e);
         } catch (ClassNotFoundException e) {
             logger.error("Cannot find database driver class", e);
+            throw new ConnectionPoolException(e);
         }
     }
 
@@ -77,8 +80,8 @@ final class ConnectionPool {
             connection = connectionQueue.take();
             givenAwayQueue.add(connection);
         } catch (InterruptedException e) {
-            logger.error("Cannot take connection");
-            throw new ConnectionPoolException("Cannot take connection", e);
+            logger.error("Error while waiting connection");
+            throw new ConnectionPoolException(e);
         }
         return connection;
     }
@@ -91,10 +94,6 @@ final class ConnectionPool {
         public PooledConnection(Connection connection) throws SQLException {
             this.connection = connection;
             this.connection.setAutoCommit(true);
-        }
-
-        public void reallyClose() throws SQLException {
-            connection.close();
         }
 
         @Override

@@ -25,25 +25,30 @@
             <div class="registration-form">
                 <form action="mainController" method="post">
                     <input type="hidden" name="command" value="registration">
-                    <input type="text" pattern="^[a-zA-Z0-9_-]{3,25}$" name="login" placeholder="${form_login}" required>
-                    <input type="password" pattern="^[^\s]{6,18}$" name="password" placeholder="${form_password}" required>
-                    <input type="tel" name="phone" placeholder="${phone}" required>
-                    <input type="email" name="email" placeholder="${email}">
+                    <input type="text" pattern="^[a-zA-Z0-9_-]{3,25}$" name="login" placeholder="* ${form_login}" required>
+                    <input type="password" pattern="^[^\s]{6,18}$" name="password" placeholder="* ${form_password}" required>
+                    <input type="tel" pattern="^[0-9\(\)-+\s]+$" name="phone" placeholder="* ${phone}" required>
+                    <input type="email" pattern="^[\w.-_]+@[a-zA-Z_]+?\.[a-zA-Z]{2,6}$" name="email" placeholder="  ${email}">
                     <button type="submit">${form_register}</button>
                 </form>
-                <c:if test="${pageContext.request.getParameter(\"message\") eq 'successful'}">
-                    <h3>${reg_successful}</h3>
-                    <p>${info_text_start} <a href="mainController?command=go_to_login_page">${login_page}</a> ${info_text_end}</p>
-                </c:if>
-                <c:if test="${pageContext.request.getParameter(\"message\") eq 'user_already_exists'}">
-                    <p class="error-message">${reg_user_exists}</p>
-                </c:if>
-                <c:if test="${pageContext.request.getParameter(\"message\") eq 'error'}">
-                    <p class="error-message">${reg_error}</p>
-                </c:if>
-                <c:if test="${pageContext.request.getParameter(\"message\") eq 'incorrect_data'}">
-                    <p class="error-message">${incorrect_data}</p>
-                </c:if>
+                <c:choose>
+                    <c:when test="${pageContext.request.getParameter(\"message\") eq 'successful'}">
+                        <h3>${reg_successful}</h3>
+                        <p>${info_text_start}
+                            <a href="mainController?command=go_to_login_page">${login_page}</a>
+                                ${info_text_end}
+                        </p>
+                    </c:when>
+                    <c:when test="${pageContext.request.getParameter(\"message\") eq 'user_already_exists'}">
+                        <p class="error-message">${reg_user_exists}</p>
+                    </c:when>
+                    <c:when test="${pageContext.request.getParameter(\"message\") eq 'error'}">
+                        <p class="error-message">${reg_error}</p>
+                    </c:when>
+                    <c:when test="${pageContext.request.getParameter(\"message\") eq 'incorrect_data'}">
+                        <p class="error-message">${incorrect_data}</p>
+                    </c:when>
+                </c:choose>
             </div>
             <div class="info-registration-block">
                 <p>${reg_agreement} <a href="#">${reg_agreement_link}</a></p>

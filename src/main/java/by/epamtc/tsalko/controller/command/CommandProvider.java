@@ -26,6 +26,10 @@ public class CommandProvider {
     }
 
     public Command getCommand(String commandName) {
-        return commands.get(ParameterName.valueOf(commandName.toUpperCase()));
+        Command command = null;
+        try {
+            command = commands.get(ParameterName.valueOf(commandName.toUpperCase()));
+        } catch (IllegalArgumentException ignore) {}
+        return command;
     }
 }

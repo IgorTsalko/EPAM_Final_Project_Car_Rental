@@ -32,7 +32,11 @@ public class MainController extends HttpServlet {
 
         String commandName = req.getParameter(PARAMETER_COMMAND);
         Command command = commandProvider.getCommand(commandName.toUpperCase());
-        command.execute(req, resp);
+        if (command != null) {
+            command.execute(req, resp);
+        } else {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 
 }
