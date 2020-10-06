@@ -2,8 +2,6 @@ package by.epamtc.tsalko.dao.connection;
 
 import by.epamtc.tsalko.dao.exception.ConnectionPoolException;
 
-import java.sql.Connection;
-
 public class ConnectionProvider {
 
     private static ConnectionProvider instance;
@@ -21,7 +19,7 @@ public class ConnectionProvider {
         return instance;
     }
 
-    public Connection getConnection() throws ConnectionPoolException {
-        return connectionPool.takeConnection();
+    public ConnectionPool getConnectionPool() {
+        return connectionPool;
     }
 }

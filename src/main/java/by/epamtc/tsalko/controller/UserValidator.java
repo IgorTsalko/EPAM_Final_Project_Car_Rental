@@ -1,4 +1,4 @@
-package by.epamtc.tsalko.controller.validator;
+package by.epamtc.tsalko.controller;
 
 import by.epamtc.tsalko.bean.AuthorizationData;
 import by.epamtc.tsalko.bean.RegistrationData;
@@ -24,7 +24,7 @@ public class UserValidator {
         String phone = data.getPhone();
         String email = data.getEmail();
 
-        if (email != null && !email.matches(EMAIL_REGEXP)) {
+        if (email != null && email.length() > 0 && !email.matches(EMAIL_REGEXP)) {
             return false;
         }
 

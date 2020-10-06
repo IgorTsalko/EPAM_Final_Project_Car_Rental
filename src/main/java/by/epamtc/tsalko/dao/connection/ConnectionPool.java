@@ -86,6 +86,59 @@ public final class ConnectionPool {
         return connection;
     }
 
+    public void closeConnection(Connection con, Statement st, ResultSet rs) {
+        try {
+            if (con != null) {
+                con.close();
+            }
+        } catch (SQLException e) {
+            logger.error("Attempting to close closed connection", e);
+        }
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+        } catch (SQLException e) {
+            logger.error("ResultSet close error!", e);
+        }
+        try {
+            if (st != null) {
+                st.close();
+            }
+        } catch (SQLException e) {
+            logger.error("Statement close error!", e);
+        }
+    }
+
+    public void closeConnection(Connection con, Statement st) {
+        try {
+            if (con != null) {
+                con.close();
+            }
+        } catch (SQLException e) {
+            logger.error("Attempting to close closed connection", e);
+        }
+        try {
+            if (st != null) {
+                st.close();
+            }
+        } catch (SQLException e) {
+            logger.error("Statement close error!", e);
+        }
+    }
+
+    public void dropAllConnections() {
+        for (int i = 0; i < DEFAULT_POOL_SIZE; i++) {
+            try {
+                ((PooledConnection) connectionQueue.take()).realClose();
+            } catch (SQLException e) {
+                logger.error("Cannot close connection", e);
+            } catch (InterruptedException e) {
+                logger.error("Cannot take connection", e);
+            }
+        }
+    }
+
     // Логический Connection
     private class PooledConnection implements Connection {
 
@@ -94,6 +147,10 @@ public final class ConnectionPool {
         public PooledConnection(Connection connection) throws SQLException {
             this.connection = connection;
             this.connection.setAutoCommit(true);
+        }
+
+        private void realClose() throws SQLException {
+            connection.close();
         }
 
         @Override

@@ -1,11 +1,11 @@
 package by.epamtc.tsalko.controller.command.impl;
 
 import by.epamtc.tsalko.bean.RegistrationData;
+import by.epamtc.tsalko.controller.Encoder;
 import by.epamtc.tsalko.controller.command.Command;
-import by.epamtc.tsalko.controller.validator.UserValidator;
+import by.epamtc.tsalko.controller.UserValidator;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
-import by.epamtc.tsalko.service.exception.ServiceDataBaseException;
 import by.epamtc.tsalko.service.exception.ServiceException;
 import by.epamtc.tsalko.service.exception.UserAlreadyExistsServiceException;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 public class RegistrationCommand implements Command {
 
@@ -33,6 +34,8 @@ public class RegistrationCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String page;
+
         String login = req.getParameter(PARAMETER_LOGIN);
         String password = req.getParameter(PARAMETER_PASSWORD);
         String phone = req.getParameter(PARAMETER_PHONE);
@@ -44,13 +47,14 @@ public class RegistrationCommand implements Command {
         registrationData.setPhone(phone);
         registrationData.setEmail(email);
 
-        String page;
-
         if (UserValidator.registrationValidation(registrationData)) {
             ServiceProvider serviceProvider = ServiceProvider.getInstance();
             UserService userService = serviceProvider.getUserService();
 
             try {
+                password = Encoder.encrypt(password);
+                registrationData.setPassword(password);
+
                 if (userService.registration(registrationData)) {
                     logger.info("User is registered");
                     page = REGISTRATION_PAGE + "&" + PARAMETER_SUCCESSFUL;
@@ -60,7 +64,7 @@ public class RegistrationCommand implements Command {
             } catch (UserAlreadyExistsServiceException e) {
                 logger.info("User tried to register a second time");
                 page = REGISTRATION_PAGE + "&" + PARAMETER_USER_EXISTS;
-            } catch (ServiceException e) {
+            } catch (NoSuchAlgorithmException | ServiceException e) {
                 page = REGISTRATION_PAGE + "&" + PARAMETER_ERROR;
             }
         } else {

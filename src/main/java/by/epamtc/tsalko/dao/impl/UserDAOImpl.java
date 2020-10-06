@@ -4,6 +4,7 @@ import by.epamtc.tsalko.bean.AuthorizationData;
 import by.epamtc.tsalko.bean.RegistrationData;
 import by.epamtc.tsalko.bean.User;
 import by.epamtc.tsalko.dao.UserDAO;
+import by.epamtc.tsalko.dao.connection.ConnectionPool;
 import by.epamtc.tsalko.dao.connection.ConnectionProvider;
 import by.epamtc.tsalko.dao.exception.ConnectionPoolException;
 import by.epamtc.tsalko.dao.exception.DAOException;
@@ -27,13 +28,26 @@ public class UserDAOImpl implements UserDAO {
             "INSERT INTO users (user_email, user_phone, user_login, user_password, user_rating, user_role) " +
                     "VALUES (?, ?, ?, ?, 1, 1)";
 
+
+    /** Executes SQL query and return object User if it exists or throws exception.
+     * Never return null
+     * @param authorizationData data about existing User
+     * @return object User that contains data from data base about user
+     * @exception DAOException if occurred severe problem with connection to data base
+     * @throws UserNotFoundDAOException if corresponding User not found
+     */
     @Override
     public User authorization(AuthorizationData authorizationData) throws DAOException {
         User user;
 
+        ConnectionPool connectionPool = null;
+        Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        try (Connection connection = ConnectionProvider.getInstance().getConnection()) {
+
+        try {
+            connectionPool = ConnectionProvider.getInstance().getConnectionPool();
+            connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN_SQL);
 
             preparedStatement.setString(1, authorizationData.getLogin());
@@ -57,34 +71,35 @@ public class UserDAOImpl implements UserDAO {
             logger.error("Severe database error!", e);
             throw new DAOException(e);
         } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    logger.error("ResultSet close error!", e);
-                }
-            }
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    logger.error("PrepareStatement close error!", e);
-                }
+            if (connection != null) {
+                connectionPool.closeConnection(connection, preparedStatement, resultSet);
             }
         }
 
         return user;
     }
 
+    /** Executes SQL query and enroll new User if in data base or throws exception.
+     * @param registrationData data about new User
+     * @return true if managed to enroll a new User
+     * @exception DAOException if occurred severe problem with connection to data base
+     * @throws UserAlreadyExistsDAOException if User already exists
+     */
     @Override
     public boolean registration(RegistrationData registrationData) throws DAOException {
         boolean registration = false;
 
+        ConnectionPool connectionPool = null;
+        Connection connection = null;
         PreparedStatement preparedStatement = null;
-        try (Connection connection = ConnectionProvider.getInstance().getConnection()) {
+
+        try {
+            connectionPool = ConnectionProvider.getInstance().getConnectionPool();
+            connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(INSERT_NEW_USER_SQL);
 
-            preparedStatement.setString(1, registrationData.getEmail());
+            preparedStatement.setString(1, (registrationData.getEmail().length() > 1)
+                    ?registrationData.getEmail() : null);
             preparedStatement.setString(2, registrationData.getPhone());
             preparedStatement.setString(3, registrationData.getLogin());
             preparedStatement.setString(4, registrationData.getPassword());
@@ -93,20 +108,13 @@ public class UserDAOImpl implements UserDAO {
                 registration = true;
             }
 
-        } catch (ConnectionPoolException e) {
-            logger.error("Data base error!", e);
-            throw new DAOException(e);
         } catch (SQLIntegrityConstraintViolationException e) {
             throw new UserAlreadyExistsDAOException(e);
-        } catch (SQLException e) {
+        } catch (ConnectionPoolException | SQLException e) {
             logger.error("Severe database error!", e);
         } finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    logger.error("PrepareStatement close error!", e);
-                }
+            if (connectionPool != null) {
+                connectionPool.closeConnection(connection, preparedStatement);
             }
         }
 

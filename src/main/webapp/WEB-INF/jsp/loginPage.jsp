@@ -5,7 +5,7 @@
 <fmt:message key="form.password" var="form_password"/>
 <fmt:message key="login.wrong_data" var="wrong_data"/>
 <fmt:message key="incorrect_data" var="incorrect_data"/>
-<fmt:message key="login.error" var="db_error"/>
+<fmt:message key="login.error" var="login_error"/>
 <fmt:message key="login_info" var="registration_info"/>
 <fmt:message key="login.registration_link" var="registration_link"/>
 
@@ -30,8 +30,8 @@
                         <c:when test="${pageContext.request.getParameter(\"message\") eq 'incorrect_data'}">
                             <p class="error-message">${incorrect_data}</p>
                         </c:when>
-                        <c:when test="${pageContext.request.getParameter(\"message\") eq 'db_error'}">
-                            <p class="error-message">${db_error}</p>
+                        <c:when test="${pageContext.request.getParameter(\"message\") eq 'login_error'}">
+                            <p class="error-message">${login_error}</p>
                         </c:when>
                     </c:choose>
                 </c:if>
