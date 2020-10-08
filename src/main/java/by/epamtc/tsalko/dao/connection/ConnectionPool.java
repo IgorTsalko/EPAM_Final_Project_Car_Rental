@@ -1,6 +1,6 @@
 package by.epamtc.tsalko.dao.connection;
 
-import by.epamtc.tsalko.dao.exception.ConnectionPoolException;
+import by.epamtc.tsalko.dao.exception.ConnectionPoolError;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,18 +16,17 @@ public final class ConnectionPool {
 
     private static final Logger logger = LogManager.getLogger(ConnectionPool.class);
 
-    private BlockingQueue<Connection> connectionQueue;
-    private BlockingQueue<Connection> givenAwayQueue;
+    private final static ConnectionPool instance = new ConnectionPool();
 
-    private final ResourceBundle dbParamBundle = ResourceBundle.getBundle("db");
-
-    private static final int DEFAULT_POOL_SIZE = 5;
+    private static BlockingQueue<Connection> connectionQueue;
+    private static BlockingQueue<Connection> givenAwayQueue;
 
     private static final String KEY_DB_DRIVER = "db.driver";
     private static final String KEY_DB_URL = "db.url";
     private static final String KEY_DB_USER = "db.user";
     private static final String KEY_DB_PASSWORD = "db.password";
     private static final String KEY_DB_POOL_SIZE = "db.poolsize";
+    private static final int DEFAULT_POOL_SIZE = 5;
 
     private String driverName;
     private String url;
@@ -35,9 +34,13 @@ public final class ConnectionPool {
     private String password;
     private int poolSize;
 
-    // теперь объект можно только в своем пакете, а от класса нельзя наследоваться
-    // работа с классом только через ConnectionProvider
-    protected ConnectionPool() throws ConnectionPoolException {
+    public static ConnectionPool getInstance() {
+        return instance;
+    }
+
+    private ConnectionPool() throws ConnectionPoolError {
+        ResourceBundle dbParamBundle = ResourceBundle.getBundle("db");
+
         driverName = dbParamBundle.getString(KEY_DB_DRIVER);
         url = dbParamBundle.getString(KEY_DB_URL);
         user = dbParamBundle.getString(KEY_DB_USER);
@@ -56,7 +59,7 @@ public final class ConnectionPool {
         initPoolData();
     }
 
-    private void initPoolData() throws ConnectionPoolException {
+    private void initPoolData() throws ConnectionPoolError {
         try {
             Class.forName(driverName);
 
@@ -67,21 +70,21 @@ public final class ConnectionPool {
             }
         } catch (SQLException e) {
             logger.error("Cannot init pool data", e);
-            throw new ConnectionPoolException(e);
+            throw new ConnectionPoolError(e);
         } catch (ClassNotFoundException e) {
             logger.error("Cannot find database driver class", e);
-            throw new ConnectionPoolException(e);
+            throw new ConnectionPoolError(e);
         }
     }
 
-    public Connection takeConnection() throws ConnectionPoolException {
+    public Connection takeConnection() throws ConnectionPoolError {
         Connection connection;
         try {
             connection = connectionQueue.take();
             givenAwayQueue.add(connection);
         } catch (InterruptedException e) {
             logger.error("Error while waiting connection");
-            throw new ConnectionPoolException(e);
+            throw new ConnectionPoolError(e);
         }
         return connection;
     }

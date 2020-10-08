@@ -87,7 +87,7 @@ header .menu-utility {
 }
 
 .searching-form {
-    max-width: 320px;
+    max-width: 330px;
     min-height: 220px;
     border-width: 1px;
     border-color: rgb(190,190,190);
@@ -207,6 +207,12 @@ button {
     position: relative;
 }
 
+.clear::after {
+    content: "";
+    clear:both;
+    display: table;
+}
+
 .clear {
     clear:both;
 }
@@ -251,8 +257,11 @@ li {
     text-align: -webkit-match-parent;
 }
 
-.code404 {
+.error-page-block {
     text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 590px;
 }
 
 .error-message {
@@ -283,28 +292,26 @@ li {
     font-size: 7em;
     font-weight: 600;
     color: #e2ffe2;
-    margin: 20px 30px 20px 0;
-}
-
-#user-data {
-    margin: 20px 30px 20px 0;
-}
-
-#user-data h2 {
-    margin: 0 0 20px 0;
+    margin-right: 30px;
 }
 
 #user-menu {
-    margin: 20px 0 20px 60px;
+    height: 45px;
     font-size: 16px;
+    border-bottom: 1px solid #ccc!important;;
 }
 
 .user-menu-tab {
-    margin-right: 20px;
+    margin-right: 25px;
+    padding: 20px 0 5px 0;
+}
+
+.selected-user-tab {
+    border-bottom: 3px solid #7dbf26;
+    padding: 20px 0 5px 0;
 }
 
 .user-menu-tab a {
-    text-transform: uppercase;
     color: #36495a;
     text-decoration: none;
 }
@@ -363,8 +370,35 @@ li {
     margin-top: 10px;
 }
 
-.code404 {
-    margin-left: auto;
-    margin-right: auto;
-    width: 590px;
+#user-menu-content {
+    margin: 20px 0;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    overflow: auto;
+    min-height: 300px;
+    max-height: 350px;
+}
+
+#stack-trace {
+    font-size: 0.9em;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+    background-color:#f5f5f5;
+}
+
+.user-data {
+    margin-top: 50px;
 }

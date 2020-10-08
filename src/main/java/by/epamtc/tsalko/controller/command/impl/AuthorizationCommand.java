@@ -31,7 +31,7 @@ public class AuthorizationCommand implements Command {
     private static final String ATTRIBUTE_USER = "user";
 
     private static final String LOGIN_PAGE = "mainController?command=go_to_login_page";
-    private static final String USER_PAGE = "mainController?command=go_to_user_page";
+    private static final String USER_PAGE = "mainController?command=go_to_user_page&user_data=orders";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

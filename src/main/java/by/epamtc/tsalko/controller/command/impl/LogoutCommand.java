@@ -1,9 +1,6 @@
 package by.epamtc.tsalko.controller.command.impl;
 
 import by.epamtc.tsalko.controller.command.Command;
-import by.epamtc.tsalko.service.ServiceProvider;
-import by.epamtc.tsalko.service.UserService;
-import by.epamtc.tsalko.service.exception.ServiceException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

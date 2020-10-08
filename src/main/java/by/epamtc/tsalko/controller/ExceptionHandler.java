@@ -1,5 +1,8 @@
 package by.epamtc.tsalko.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +11,8 @@ import java.io.IOException;
 
 public class ExceptionHandler extends HttpServlet {
 
+    private static final Logger logger = LogManager.getLogger(ExceptionHandler.class);
+
     private static final String EXCEPTION_ATTRIBUTE = "exception";
 
     @Override
@@ -15,9 +20,11 @@ public class ExceptionHandler extends HttpServlet {
         Throwable throwable = (Throwable) req.getAttribute("javax.servlet.error.exception");
 
         if (throwable != null) {
-            req.getSession().setAttribute(EXCEPTION_ATTRIBUTE, throwable);
-            resp.sendRedirect("exceptionPage.jsp");
+            logger.error("Occurred exception", throwable);
+            req.setAttribute(EXCEPTION_ATTRIBUTE, throwable);
         }
+        logger.error("Go to error page, code 500");
+        req.getRequestDispatcher("/WEB-INF/jsp/500.jsp").forward(req, resp);
     }
 
     @Override

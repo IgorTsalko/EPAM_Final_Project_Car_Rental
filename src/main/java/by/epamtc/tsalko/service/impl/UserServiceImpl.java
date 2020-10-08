@@ -1,5 +1,6 @@
 package by.epamtc.tsalko.service.impl;
 
+import by.epamtc.tsalko.bean.Order;
 import by.epamtc.tsalko.bean.User;
 import by.epamtc.tsalko.bean.RegistrationData;
 import by.epamtc.tsalko.bean.AuthorizationData;
@@ -12,6 +13,8 @@ import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.ServiceException;
 import by.epamtc.tsalko.service.exception.UserAlreadyExistsServiceException;
 import by.epamtc.tsalko.service.exception.UserNotFoundServiceException;
+
+import java.util.List;
 
 public class UserServiceImpl implements UserService {
 
@@ -51,5 +54,21 @@ public class UserServiceImpl implements UserService {
         }
 
         return registration;
+    }
+
+    @Override
+    public List<Order> getUserOrders(int userID) throws ServiceException {
+        List<Order> userOrders;
+
+        DAOProvider daoProvider = DAOProvider.getInstance();
+        UserDAO userDAO = daoProvider.getUserDAO();
+
+        try {
+            userOrders = userDAO.getUserOrders(userID);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+
+        return userOrders;
     }
 }
