@@ -1,9 +1,6 @@
 package by.epamtc.tsalko.dao.impl;
 
-import by.epamtc.tsalko.bean.AuthorizationData;
-import by.epamtc.tsalko.bean.Order;
-import by.epamtc.tsalko.bean.RegistrationData;
-import by.epamtc.tsalko.bean.User;
+import by.epamtc.tsalko.bean.*;
 import by.epamtc.tsalko.dao.UserDAO;
 import by.epamtc.tsalko.dao.connection.ConnectionPool;
 import by.epamtc.tsalko.dao.exception.ConnectionPoolError;
@@ -26,32 +23,54 @@ public class UserDAOImpl implements UserDAO {
     private static final String SELECT_USER_BY_LOGIN_SQL =
             "SELECT u.user_id, u.user_login, rol.user_role, rat.user_rating " +
                     "FROM users u JOIN user_roles rol ON u.user_role=rol.user_role_id " +
-                    "JOIN user_ratings rat ON u.user_rating=rat.user_rating_id WHERE u.user_login=? and u.user_password=?;";
+                    "JOIN user_ratings rat ON u.user_rating=rat.user_rating_id WHERE u.user_login=? " +
+                    "and u.user_password=?";
 
     private static final String INSERT_NEW_USER_SQL =
             "INSERT INTO users (user_email, user_phone, user_login, user_password, user_rating, user_role) " +
                     "VALUES (?, ?, ?, ?, 1, 1)";
 
     private static final String SELECT_ALL_USER_ORDERS =
-            "SELECT o.customer_id, o.user_order_id, o.user_order_date, s.order_status, o.rental_start," +
-                    "o.rental_end, o.car_id, c.car_brand, c.car_model, c.car_price_per_day, o.manager_id " +
+            "SELECT o.user_id, o.user_order_id, o.user_order_date, s.order_status, o.rental_start," +
+                    "o.rental_end, o.car_id, c.car_brand, c.car_model, c.car_price_per_day, " +
+                    "o.manager_id, o.user_order_comment " +
                     "FROM user_orders o JOIN cars c ON o.car_id=c.car_id JOIN order_statuses s " +
-                    "ON o.order_status=s.order_status_id WHERE o.customer_id=? ORDER BY user_order_date DESC";
+                    "ON o.order_status=s.order_status_id WHERE o.user_id=? ORDER BY user_order_date DESC";
+
+    private static final String SELECT_USER_PASSPORT =
+            "SELECT p.user_id, p.user_passport_id, p.user_passport_series, p.user_passport_number, " +
+                    "p.user_passport_date_of_issue, p.user_passport_issued_by, p.user_address, " +
+                    "p.user_surname, p.user_name, p.user_thirdname, p.user_date_of_birth " +
+                    "FROM user_passports p WHERE user_id=?";
 
     private static final String COLUMN_USER_ID = "user_id";
-    private static final String COLUMN_CUSTOMER_ID = "customer_id";
     private static final String COLUMN_USER_LOGIN = "user_login";
     private static final String COLUMN_USER_ROLE = "user_role";
     private static final String COLUMN_USER_RATING = "user_rating";
-    private static final String COLUMN_USER_ORDER_ID = "user_order_id";
-    private static final String COLUMN_USER_ORDER_DATE = "user_order_date";
+
+    private static final String COLUMN_ORDER_ID = "user_order_id";
+    private static final String COLUMN_ORDER_DATE = "user_order_date";
     private static final String COLUMN_ORDER_STATUS = "order_status";
-    private static final String COLUMN_RENTAL_START = "rental_start";
-    private static final String COLUMN_RENTAL_END = "rental_end";
+    private static final String COLUMN_ORDER_RENTAL_START = "rental_start";
+    private static final String COLUMN_ORDER_RENTAL_END = "rental_end";
+    private static final String COLUMN_COMMENT = "user_order_comment";
+
+    private static final String COLUMN_PASSPORT_ID = "user_passport_id";
+    private static final String COLUMN_PASSPORT_SERIES = "user_passport_series";
+    private static final String COLUMN_PASSPORT_NUMBER = "user_passport_number";
+    private static final String COLUMN_PASSPORT_DATE_OF_ISSUE = "user_passport_date_of_issue";
+    private static final String COLUMN_PASSPORT_ISSUED_BY = "user_passport_issued_by";
+    private static final String COLUMN_PASSPORT_USER_ADDRESS = "user_address";
+    private static final String COLUMN_PASSPORT_USER_SURNAME = "user_surname";
+    private static final String COLUMN_PASSPORT_USER_NAME = "user_name";
+    private static final String COLUMN_PASSPORT_USER_THIRDNAME = "user_thirdname";
+    private static final String COLUMN_PASSPORT_USER_DATE_OF_BIRTH = "user_date_of_birth";
+
     private static final String COLUMN_CAR_ID = "car_id";
     private static final String COLUMN_CAR_BRAND = "car_brand";
     private static final String COLUMN_CAR_MODEL = "car_model";
     private static final String COLUMN_CAR_PRICE_PER_DAY = "car_price_per_day";
+
     private static final String COLUMN_MANAGER_ID = "manager_id";
 
 
@@ -163,22 +182,23 @@ public class UserDAOImpl implements UserDAO {
             while (resultSet.next()) {
                 Order order = new Order();
 
-                order.setCustomerID(resultSet.getInt(COLUMN_CUSTOMER_ID));
-                order.setOrderId(resultSet.getInt(COLUMN_USER_ORDER_ID));
-                order.setOrderDate(resultSet.getDate(COLUMN_USER_ORDER_DATE));
+                order.setUserID(resultSet.getInt(COLUMN_USER_ID));
+                order.setOrderId(resultSet.getInt(COLUMN_ORDER_ID));
+                order.setOrderDate(resultSet.getDate(COLUMN_ORDER_DATE));
                 order.setOrderStatus(resultSet.getString(COLUMN_ORDER_STATUS));
-                order.setRentalStart(resultSet.getDate(COLUMN_RENTAL_START));
-                order.setRentalEnd(resultSet.getDate(COLUMN_RENTAL_END));
+                order.setRentalStart(resultSet.getTimestamp(COLUMN_ORDER_RENTAL_START));
+                order.setRentalEnd(resultSet.getTimestamp(COLUMN_ORDER_RENTAL_END));
                 order.setCarID(resultSet.getInt(COLUMN_CAR_ID));
                 order.setCarBrand(resultSet.getString(COLUMN_CAR_BRAND));
                 order.setCarModel(resultSet.getString(COLUMN_CAR_MODEL));
                 order.setCarPricePerDay(resultSet.getString(COLUMN_CAR_PRICE_PER_DAY));
+                order.setComment(resultSet.getString(COLUMN_COMMENT));
                 order.setManagerID(resultSet.getInt(COLUMN_MANAGER_ID));
 
                 userOrders.add(order);
             }
         } catch (SQLException e) {
-            logger.error("Severe database error!", e);
+            logger.error("Cannot retrieve user orders!", e);
             throw new DAOException(e);
         } finally {
             if (connection != null) {
@@ -187,5 +207,46 @@ public class UserDAOImpl implements UserDAO {
         }
 
         return userOrders;
+    }
+
+    @Override
+    public Passport getUserPassport(int userID) throws DAOException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_USER_PASSPORT);
+            preparedStatement.setInt(1, userID);
+            resultSet = preparedStatement.executeQuery();
+
+            if (!resultSet.next()) {
+                return null;
+            }
+
+            Passport passport = new Passport();
+
+            passport.setUserID(resultSet.getInt(COLUMN_USER_ID));
+            passport.setPassportID(resultSet.getInt(COLUMN_PASSPORT_ID));
+            passport.setPassportSeries(resultSet.getString(COLUMN_PASSPORT_SERIES));
+            passport.setPassportNumber(resultSet.getString(COLUMN_PASSPORT_NUMBER));
+            passport.setPassportDateOfIssue(resultSet.getDate(COLUMN_PASSPORT_DATE_OF_ISSUE));
+            passport.setPassportIssuedBy(resultSet.getString(COLUMN_PASSPORT_ISSUED_BY));
+            passport.setPassportUserAddress(resultSet.getString(COLUMN_PASSPORT_USER_ADDRESS));
+            passport.setPassportUserSurname(resultSet.getString(COLUMN_PASSPORT_USER_SURNAME));
+            passport.setPassportUserName(resultSet.getString(COLUMN_PASSPORT_USER_NAME));
+            passport.setPassportUserThirdName(resultSet.getString(COLUMN_PASSPORT_USER_THIRDNAME));
+            passport.setPassportUserDateOfBirth(resultSet.getDate(COLUMN_PASSPORT_USER_DATE_OF_BIRTH));
+
+            return passport;
+        } catch (SQLException e) {
+            logger.error("Cannot retrieve user passport!", e);
+            throw new DAOException(e);
+        }  finally {
+            if (connection != null) {
+                connectionPool.closeConnection(connection, preparedStatement, resultSet);
+            }
+        }
     }
 }

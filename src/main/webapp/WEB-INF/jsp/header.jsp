@@ -37,7 +37,7 @@
         <div class="container">
             <div class="user-info">
                 <c:if test="${sessionScope.user != null}">
-                    ${hello} <a href="mainController?command=go_to_user_page&user_data=orders"><strong>${sessionScope.user.login}</strong></a>
+                    ${hello} <a href="mainController?command=go_to_user_page_orders"><strong>${sessionScope.user.login}</strong></a>
                     <a href="mainController?command=logout">${log_out}</a>
                 </c:if>
 

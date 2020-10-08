@@ -30,7 +30,7 @@ public class RegistrationCommand implements Command {
     private static final String PARAMETER_ERROR = "message=error";
     private static final String PARAMETER_INCORRECT_DATA = "message=incorrect_data";
 
-    private static final String REGISTRATION_PAGE = "mainController?command=go_to_registration_page";
+    private static final String GO_TO_REGISTRATION_PAGE = "mainController?command=go_to_registration_page";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -57,18 +57,18 @@ public class RegistrationCommand implements Command {
 
                 if (userService.registration(registrationData)) {
                     logger.info("User is registered");
-                    page = REGISTRATION_PAGE + "&" + PARAMETER_SUCCESSFUL;
+                    page = GO_TO_REGISTRATION_PAGE + "&" + PARAMETER_SUCCESSFUL;
                 } else {
-                    page = REGISTRATION_PAGE + "&" + PARAMETER_ERROR;
+                    page = GO_TO_REGISTRATION_PAGE + "&" + PARAMETER_ERROR;
                 }
             } catch (UserAlreadyExistsServiceException e) {
                 logger.info("User tried to register a second time");
-                page = REGISTRATION_PAGE + "&" + PARAMETER_USER_EXISTS;
+                page = GO_TO_REGISTRATION_PAGE + "&" + PARAMETER_USER_EXISTS;
             } catch (NoSuchAlgorithmException | ServiceException e) {
-                page = REGISTRATION_PAGE + "&" + PARAMETER_ERROR;
+                page = GO_TO_REGISTRATION_PAGE + "&" + PARAMETER_ERROR;
             }
         } else {
-            page = REGISTRATION_PAGE + "&" + PARAMETER_INCORRECT_DATA;
+            page = GO_TO_REGISTRATION_PAGE + "&" + PARAMETER_INCORRECT_DATA;
         }
 
         resp.sendRedirect(page);

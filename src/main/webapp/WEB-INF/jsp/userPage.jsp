@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+
 <%@include file="header.jsp"%>
 
 <fmt:message key="user.role" var="user_role"/>
@@ -6,11 +8,7 @@
 <fmt:message key="user.orders.title" var="orders_title"/>
 <fmt:message key="user.passport_data.title" var="passport_data_title"/>
 <fmt:message key="user.cards.title" var="cards_title"/>
-<c:set var="user_data" value="${pageContext.request.getParameter(\"user_data\")}"/>
-
-<c:if test="${empty user_data}">
-    <c:set var="user_data" value="orders"/>
-</c:if>
+<c:set var="command" value="${pageContext.request.getParameter(\"command\")}"/>
 
 <%--START MAIN-CONTENT--%>
 <div id="content" class="clear">
@@ -22,7 +20,6 @@
 
         <c:if test="${not empty sessionScope.user}">
 
-
                     <div id="user-logo" class="rowing-left">
                         <p>${sessionScope.user.login.charAt(0)}</p>
                     </div>
@@ -31,25 +28,25 @@
 
                 <div class="user-data">
                     <div id="user-menu" class="clear">
-                        <div class="user-menu-tab rowing-left <c:if test="${user_data eq 'orders'}">selected-user-tab</c:if>">
-                            <a href="mainController?command=go_to_user_page&user_data=orders">${orders_title}</a>
+                        <div class="user-menu-tab rowing-left <c:if test="${fn:endsWith(command, 'orders')}">selected-user-tab</c:if>">
+                            <a href="mainController?command=go_to_user_page_orders">${orders_title}</a>
                         </div>
-                        <div class="user-menu-tab rowing-left <c:if test="${user_data eq 'passport'}">selected-user-tab</c:if>">
-                            <a href="mainController?command=go_to_user_page&user_data=passport">${passport_data_title}</a>
+                        <div class="user-menu-tab rowing-left <c:if test="${fn:endsWith(command, 'passport')}">selected-user-tab</c:if>">
+                            <a href="mainController?command=go_to_user_page_passport">${passport_data_title}</a>
                         </div>
-                        <div class="user-menu-tab rowing-left <c:if test="${user_data eq 'cards'}">selected-user-tab</c:if>">
-                            <a href="mainController?command=go_to_user_page&user_data=cards">${cards_title}</a>
+                        <div class="user-menu-tab rowing-left <c:if test="${fn:endsWith(command, 'cards')}">selected-user-tab</c:if>">
+                            <a href="mainController?command=go_to_user_page_cards">${cards_title}</a>
                         </div>
                     </div>
                     <div id="user-menu-content">
                         <c:choose>
-                            <c:when test="${user_data eq 'orders'}">
+                            <c:when test="${fn:endsWith(command, 'orders')}">
                                 <%@include file="orders.jsp"%>
                             </c:when>
-                            <c:when test="${user_data eq 'passport'}">
+                            <c:when test="${fn:endsWith(command, 'passport')}">
                                 <%@include file="passport.jsp"%>
                             </c:when>
-                            <c:when test="${user_data eq 'cards'}">
+                            <c:when test="${fn:endsWith(command, 'cards')}">
                                 <%@include file="cards.jsp"%>
                             </c:when>
                         </c:choose>

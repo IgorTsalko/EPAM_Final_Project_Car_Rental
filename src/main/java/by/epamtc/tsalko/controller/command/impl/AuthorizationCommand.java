@@ -30,8 +30,8 @@ public class AuthorizationCommand implements Command {
 
     private static final String ATTRIBUTE_USER = "user";
 
-    private static final String LOGIN_PAGE = "mainController?command=go_to_login_page";
-    private static final String USER_PAGE = "mainController?command=go_to_user_page&user_data=orders";
+    private static final String GO_TO_LOGIN_PAGE = "mainController?command=go_to_login_page";
+    private static final String GO_TO_USER_PAGE = "mainController?command=go_to_user_page_orders";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -55,15 +55,15 @@ public class AuthorizationCommand implements Command {
                 User user = userService.authorization(authorizationData);
                 req.getSession().setAttribute(ATTRIBUTE_USER, user);
                 logger.info("User is authorized");
-                page = USER_PAGE;
+                page = GO_TO_USER_PAGE;
             } catch (UserNotFoundServiceException e) {
                 logger.info("User has entered incorrect data");
-                page = LOGIN_PAGE + "&" + PARAMETER_WRONG_DATA;
+                page = GO_TO_LOGIN_PAGE + "&" + PARAMETER_WRONG_DATA;
             } catch (NoSuchAlgorithmException | ServiceException e) {
-                page = LOGIN_PAGE + "&" + PARAMETER_LOGIN_ERROR;
+                page = GO_TO_LOGIN_PAGE + "&" + PARAMETER_LOGIN_ERROR;
             }
         } else {
-            page = LOGIN_PAGE + "&" + PARAMETER_INCORRECT_DATA;
+            page = GO_TO_LOGIN_PAGE + "&" + PARAMETER_INCORRECT_DATA;
         }
 
         resp.sendRedirect(page);

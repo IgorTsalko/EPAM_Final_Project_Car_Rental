@@ -1,4 +1,4 @@
-package by.epamtc.tsalko.controller.command.impl;
+package by.epamtc.tsalko.controller.command.impl.go_to;
 
 import by.epamtc.tsalko.controller.command.Command;
 
@@ -7,10 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class GoToNewsCommand implements Command {
+public class GoToCatalogCommand implements Command {
+
+    private static final String CATALOG_PAGE = "/WEB-INF/jsp/catalog.jsp";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/jsp/news.jsp").forward(req, resp);
+        req.getRequestDispatcher(CATALOG_PAGE).forward(req, resp);
     }
 }

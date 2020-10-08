@@ -1,9 +1,6 @@
 package by.epamtc.tsalko.service.impl;
 
-import by.epamtc.tsalko.bean.Order;
-import by.epamtc.tsalko.bean.User;
-import by.epamtc.tsalko.bean.RegistrationData;
-import by.epamtc.tsalko.bean.AuthorizationData;
+import by.epamtc.tsalko.bean.*;
 import by.epamtc.tsalko.dao.DAOProvider;
 import by.epamtc.tsalko.dao.UserDAO;
 import by.epamtc.tsalko.dao.exception.DAOException;
@@ -70,5 +67,21 @@ public class UserServiceImpl implements UserService {
         }
 
         return userOrders;
+    }
+
+    @Override
+    public Passport getUserPassport(int userID) throws ServiceException {
+        Passport passport;
+
+        DAOProvider daoProvider = DAOProvider.getInstance();
+        UserDAO userDAO = daoProvider.getUserDAO();
+
+        try {
+            passport = userDAO.getUserPassport(userID);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+
+        return passport;
     }
 }
