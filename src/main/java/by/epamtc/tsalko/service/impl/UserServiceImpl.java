@@ -5,11 +5,11 @@ import by.epamtc.tsalko.dao.DAOProvider;
 import by.epamtc.tsalko.dao.UserDAO;
 import by.epamtc.tsalko.dao.exception.DAOException;
 import by.epamtc.tsalko.dao.exception.UserAlreadyExistsDAOException;
-import by.epamtc.tsalko.dao.exception.UserNotFoundDAOException;
+import by.epamtc.tsalko.dao.exception.EntityNotFoundDAOException;
 import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.ServiceException;
 import by.epamtc.tsalko.service.exception.UserAlreadyExistsServiceException;
-import by.epamtc.tsalko.service.exception.UserNotFoundServiceException;
+import by.epamtc.tsalko.service.exception.EntityNotFoundServiceException;
 
 import java.util.List;
 
@@ -25,8 +25,8 @@ public class UserServiceImpl implements UserService {
 
         try {
             user = userDAO.authorization(authorizationData);
-        } catch (UserNotFoundDAOException e) {
-            throw new UserNotFoundServiceException(e);
+        } catch (EntityNotFoundDAOException e) {
+            throw new EntityNotFoundServiceException(e);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
@@ -83,5 +83,21 @@ public class UserServiceImpl implements UserService {
         }
 
         return passport;
+    }
+
+    @Override
+    public List<Long> getUserCardAccounts(int userID) throws ServiceException {
+        List<Long> userCardAccounts;
+
+        DAOProvider daoProvider = DAOProvider.getInstance();
+        UserDAO userDAO = daoProvider.getUserDAO();
+
+        try {
+            userCardAccounts = userDAO.getUserCardAccounts(userID);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+
+        return userCardAccounts;
     }
 }

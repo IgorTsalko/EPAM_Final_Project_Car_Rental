@@ -12,7 +12,7 @@
 <fmt:message key="error.data_retrieve" var="data_retrieve_error"/>
 
 <c:choose>
-    <c:when test="${pageContext.request.getAttribute(\"message\") eq 'data_retrieve_error'}">
+    <c:when test="${requestScope.message eq 'data_retrieve_error'}">
         <p class="data-error">${data_retrieve_error}</p>
     </c:when>
     <c:otherwise>

@@ -18,6 +18,7 @@ public class Order implements Serializable {
     private String carBrand;
     private String carModel;
     private String carPricePerDay;
+    private String orderPrice;
     private String comment;
     private int managerID;
 
@@ -101,6 +102,14 @@ public class Order implements Serializable {
         this.carPricePerDay = carPricePerDay;
     }
 
+    public String getOrderPrice() {
+        return orderPrice;
+    }
+
+    public void setOrderPrice(String orderPrice) {
+        this.orderPrice = orderPrice;
+    }
+
     public String getComment() {
         return comment;
     }
@@ -133,13 +142,14 @@ public class Order implements Serializable {
                 Objects.equals(carBrand, order.carBrand) &&
                 Objects.equals(carModel, order.carModel) &&
                 Objects.equals(carPricePerDay, order.carPricePerDay) &&
+                Objects.equals(orderPrice, order.orderPrice) &&
                 Objects.equals(comment, order.comment);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(userID, orderId, orderDate, orderStatus, rentalStart, rentalEnd, carID,
-                carBrand, carModel, carPricePerDay, comment, managerID);
+                carBrand, carModel, carPricePerDay, orderPrice, comment, managerID);
     }
 
     @Override
@@ -155,6 +165,7 @@ public class Order implements Serializable {
                 ", carBrand='" + carBrand + '\'' +
                 ", carModel='" + carModel + '\'' +
                 ", carPricePerDay='" + carPricePerDay + '\'' +
+                ", orderPrice='" + orderPrice + '\'' +
                 ", comment='" + comment + '\'' +
                 ", managerID=" + managerID +
                 '}';

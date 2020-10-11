@@ -50,8 +50,8 @@ public class GoToUserPagePassportCommand implements Command {
                 logger.error("Cannot retrieve user passport", e);
                 req.setAttribute(ATTRIBUTE_MESSAGE, ERROR_DATA_RETRIEVE);
             }
-        }
 
-        req.getRequestDispatcher(USER_PAGE).forward(req, resp);
+            req.getRequestDispatcher(USER_PAGE).forward(req, resp);
+        }
     }
 }

@@ -19,7 +19,7 @@ public class CommandProvider {
         commands.put(ParameterName.GO_TO_MAIN_PAGE, new GoToMainPageCommand());
         commands.put(ParameterName.GO_TO_USER_PAGE_ORDERS, new GoToUserPageOrdersCommand());
         commands.put(ParameterName.GO_TO_USER_PAGE_PASSPORT, new GoToUserPagePassportCommand());
-        commands.put(ParameterName.GO_TO_USER_PAGE_CARDS, new GoToUserPageOrdersCommand());
+        commands.put(ParameterName.GO_TO_USER_PAGE_CARDS, new GoToUserPageCardsCommand());
         commands.put(ParameterName.GO_TO_LOGIN_PAGE, new GoToLoginPageCommand());
         commands.put(ParameterName.GO_TO_REGISTRATION_PAGE, new GoToRegistrationPageCommand());
         commands.put(ParameterName.GO_TO_CONTACT_PAGE, new GoToContactPageCommand());

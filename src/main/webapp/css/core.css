@@ -89,9 +89,7 @@ header .menu-utility {
 .searching-form {
     max-width: 330px;
     min-height: 220px;
-    border-width: 1px;
-    border-color: rgb(190,190,190);
-    border-style: solid;
+    border: 1px solid rgb(190,190,190);
     padding: 5px;
     background-color: white;
     position: absolute;
@@ -119,16 +117,15 @@ header .menu-utility {
 
 .main-text {
     position: absolute;
-    max-width: 300px;
-    line-height: normal;
-    text-align: right;
-    margin: 20px 0 0 680px;
+    width: 350px;
+    margin: 280px 0 0 620px;
+    background-color: #ffffff;
+    padding: 0 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
 }
 
 .main-text p {
-    font-size: xx-large;
-    font-weight: 600;
-    color: white;
+    font-size: 25px;
 }
 
 .main-image img {
@@ -413,4 +410,44 @@ tr:hover {
 
 .user-data {
     margin-top: 50px;
+}
+
+.card {
+    margin: 10px;
+    padding: 5px 20px;
+    border: 1px solid #c2dcf3;
+    border-radius: inherit;
+    background: aliceblue;
+}
+
+.car {
+    border: 1px solid #c2dcf3;
+    border-radius: 5px;
+    margin: 20px 0;
+    padding: 10px 30px;
+    background-color: #b1b1b124;
+}
+
+.car-title {
+    border-bottom: 1px solid #ddd;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.car-image {
+    margin: 20px 0;
+}
+
+.car-desc {
+    width: 400px;
+    margin-left: 20px;
+    margin-top: 15px;
+}
+
+.car-desc p {
+    margin: 5px 0;
+}
+
+.link a {
+    display: block;
 }

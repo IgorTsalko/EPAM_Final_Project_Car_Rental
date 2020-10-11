@@ -7,7 +7,7 @@
 <%--START MAIN-CONTENT--%>
 <div id="content">
     <div class="container main-content">
-        <div class="code404">
+        <div class="code404 error-page-block">
             <img src="${pageContext.request.contextPath}/img/page404.png" alt="404">
             <h2>${error_404_title}</h2>
             <a href="${pageContext.request.contextPath}">

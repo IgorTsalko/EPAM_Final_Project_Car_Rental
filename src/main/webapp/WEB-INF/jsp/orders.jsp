@@ -8,6 +8,8 @@
 <fmt:message key="user.order.order_price" var="order_price"/>
 <fmt:message key="user.order.not_exists" var="order_not_exists"/>
 <fmt:message key="error.data_retrieve" var="data_retrieve_error"/>
+<fmt:message key="user.order.message_start" var="message_start"/>
+<fmt:message key="user.order.message_end" var="message_end"/>
 
 <table>
     <tr>
@@ -20,23 +22,24 @@
     </tr>
 
     <c:choose>
-        <c:when test="${pageContext.request.getAttribute(\"message\") eq 'data_retrieve_error'}">
+        <c:when test="${requestScope.message eq 'data_retrieve_error'}">
             </table>
             <p class="data-error">${data_retrieve_error}</p>
         </c:when>
         <c:when test="${requestScope.user_orders.size() lt 1}">
             </table>
             <p class="message">${order_not_exists}</p>
+            <p class="message">${message_start}<a href="mainController?command=go_to_catalog"> ${catalog_title} </a>${message_end}</p>
         </c:when>
         <c:otherwise>
             <c:forEach items="${requestScope.user_orders}" var="order">
                 <tr>
                     <td>${order.orderDate}</td>
-                    <td>${order.orderStatus}</td>
+                    <td><fmt:message key="user.order.status.${order.orderStatus}"/></td>
                     <td><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${order.rentalStart}"/></td>
                     <td><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${order.rentalEnd}"/></td>
                     <td>${order.carBrand} ${order.carModel}</td>
-                    <td>${order.carPricePerDay}</td>
+                    <td>${order.orderPrice}</td>
                 </tr>
             </c:forEach>
             </table>

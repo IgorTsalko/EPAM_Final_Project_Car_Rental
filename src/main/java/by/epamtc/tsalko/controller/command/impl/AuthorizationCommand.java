@@ -8,7 +8,7 @@ import by.epamtc.tsalko.controller.UserValidator;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.ServiceException;
-import by.epamtc.tsalko.service.exception.UserNotFoundServiceException;
+import by.epamtc.tsalko.service.exception.EntityNotFoundServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -56,7 +56,7 @@ public class AuthorizationCommand implements Command {
                 req.getSession().setAttribute(ATTRIBUTE_USER, user);
                 logger.info("User is authorized");
                 page = GO_TO_USER_PAGE;
-            } catch (UserNotFoundServiceException e) {
+            } catch (EntityNotFoundServiceException e) {
                 logger.info("User has entered incorrect data");
                 page = GO_TO_LOGIN_PAGE + "&" + PARAMETER_WRONG_DATA;
             } catch (NoSuchAlgorithmException | ServiceException e) {

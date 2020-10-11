@@ -11,4 +11,5 @@ public interface UserService {
     boolean registration(RegistrationData registrationData) throws ServiceException;
     List<Order> getUserOrders(int userID) throws ServiceException;
     Passport getUserPassport(int userID) throws ServiceException;
+    List<Long> getUserCardAccounts(int userID) throws ServiceException;
 }

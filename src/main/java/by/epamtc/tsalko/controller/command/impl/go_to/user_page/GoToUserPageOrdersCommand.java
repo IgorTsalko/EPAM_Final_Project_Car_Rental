@@ -49,8 +49,7 @@ public class GoToUserPageOrdersCommand implements Command {
                 logger.error("Cannot retrieve user orders", e);
                 req.setAttribute(ATTRIBUTE_MESSAGE, ERROR_DATA_RETRIEVE);
             }
+            req.getRequestDispatcher(USER_PAGE).forward(req, resp);
         }
-
-        req.getRequestDispatcher(USER_PAGE).forward(req, resp);
     }
 }

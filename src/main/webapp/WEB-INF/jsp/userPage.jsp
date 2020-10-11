@@ -24,7 +24,7 @@
                         <p>${sessionScope.user.login.charAt(0)}</p>
                     </div>
                     <h3>${hello} ${sessionScope.user.login}</h3>
-                    <p>${user_role}: ${sessionScope.user.role}  •  ${user_rating}: ${sessionScope.user.rating}</p>
+                    <p>${user_role}: ${sessionScope.user.role} • ${user_rating}: ${sessionScope.user.rating}</p>
 
                 <div class="user-data">
                     <div id="user-menu" class="clear">
