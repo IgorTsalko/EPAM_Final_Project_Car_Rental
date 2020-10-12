@@ -21,7 +21,7 @@ public class UserDAOImpl implements UserDAO {
     private static final ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     private static final String SELECT_USER_BY_LOGIN_SQL =
-            "SELECT u.user_id, u.user_login, rol.user_role, rat.user_rating " +
+            "SELECT u.user_id, u.user_login, rol.user_role, rat.user_rating, rat.user_discount " +
                     "FROM users u JOIN user_roles rol ON u.user_role=rol.user_role_id " +
                     "JOIN user_ratings rat ON u.user_rating=rat.user_rating_id WHERE u.user_login=? " +
                     "and u.user_password=?";
@@ -37,6 +37,13 @@ public class UserDAOImpl implements UserDAO {
                     "FROM user_orders o JOIN cars c ON o.order_car_id=c.car_id JOIN order_statuses s " +
                     "ON o.order_status=s.order_status_id WHERE o.user_id=? ORDER BY order_date DESC";
 
+    private static final String SELECT_ALL_ORDERS =
+            "SELECT o.user_id, o.order_id, o.order_date, s.order_status, o.order_rental_start," +
+                    "o.order_rental_end, o.order_car_id, o.order_price, c.car_brand, c.car_model, " +
+                    "o.manager_id, o.order_comment " +
+                    "FROM user_orders o JOIN cars c ON o.order_car_id=c.car_id JOIN order_statuses s " +
+                    "ON o.order_status=s.order_status_id ORDER BY s.order_status_id DESC, o.order_date DESC";
+
     private static final String SELECT_USER_PASSPORT =
             "SELECT p.user_id, p.user_passport_id, p.user_passport_series, p.user_passport_number, " +
                     "p.user_passport_date_of_issue, p.user_passport_issued_by, p.user_address, " +
@@ -50,6 +57,7 @@ public class UserDAOImpl implements UserDAO {
     private static final String COLUMN_USER_LOGIN = "user_login";
     private static final String COLUMN_USER_ROLE = "user_role";
     private static final String COLUMN_USER_RATING = "user_rating";
+    private static final String COLUMN_USER_DISCOUNT = "user_discount";
 
     private static final String COLUMN_ORDER_ID = "order_id";
     private static final String COLUMN_ORDER_DATE = "order_date";
@@ -97,26 +105,21 @@ public class UserDAOImpl implements UserDAO {
         try {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN_SQL);
-
             preparedStatement.setString(1, authorizationData.getLogin());
             preparedStatement.setString(2, authorizationData.getPassword());
-
             resultSet = preparedStatement.executeQuery();
 
             if (!resultSet.next()) {
                 throw new EntityNotFoundDAOException();
             }
 
-            int id = resultSet.getInt(COLUMN_USER_ID);
-            String login = resultSet.getString(COLUMN_USER_LOGIN);
-            String role = resultSet.getString(COLUMN_USER_ROLE);
-            String rating = resultSet.getString(COLUMN_USER_RATING);
-
             user = new User();
-            user.setId(id);
-            user.setLogin(login);
-            user.setRole(role);
-            user.setRating(rating);
+
+            user.setId(resultSet.getInt(COLUMN_USER_ID));
+            user.setLogin(resultSet.getString(COLUMN_USER_LOGIN));
+            user.setRole(resultSet.getString(COLUMN_USER_ROLE));
+            user.setRating(resultSet.getString(COLUMN_USER_RATING));
+            user.setDiscount(resultSet.getInt(COLUMN_USER_DISCOUNT));
         } catch (ConnectionPoolError | SQLException e) {
             logger.error("Severe database error!", e);
             throw new DAOException(e);
@@ -181,26 +184,10 @@ public class UserDAOImpl implements UserDAO {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(SELECT_ALL_USER_ORDERS);
             preparedStatement.setInt(1, userID);
-
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Order order = new Order();
-
-                order.setUserID(resultSet.getInt(COLUMN_USER_ID));
-                order.setOrderId(resultSet.getInt(COLUMN_ORDER_ID));
-                order.setOrderDate(resultSet.getDate(COLUMN_ORDER_DATE));
-                order.setOrderStatus(resultSet.getString(COLUMN_ORDER_STATUS));
-                order.setRentalStart(resultSet.getTimestamp(COLUMN_ORDER_RENTAL_START));
-                order.setRentalEnd(resultSet.getTimestamp(COLUMN_ORDER_RENTAL_END));
-                order.setCarID(resultSet.getInt(COLUMN_ORDER_CAR_ID));
-                order.setCarBrand(resultSet.getString(COLUMN_CAR_BRAND));
-                order.setCarModel(resultSet.getString(COLUMN_CAR_MODEL));
-                order.setCarPricePerDay(resultSet.getString(COLUMN_ORDER_PRICE));
-                order.setOrderPrice(resultSet.getString(COLUMN_ORDER_PRICE));
-                order.setComment(resultSet.getString(COLUMN_COMMENT));
-                order.setManagerID(resultSet.getInt(COLUMN_MANAGER_ID));
-
+                Order order = createOrder(resultSet);
                 userOrders.add(order);
             }
         } catch (SQLException e) {
@@ -213,6 +200,35 @@ public class UserDAOImpl implements UserDAO {
         }
 
         return userOrders;
+    }
+
+    @Override
+    public List<Order> getAllOrders() throws DAOException {
+        List<Order> allOrders = new ArrayList<>();
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_ALL_ORDERS);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Order order = createOrder(resultSet);
+                allOrders.add(order);
+            }
+        } catch (SQLException e) {
+            logger.error("Cannot retrieve user orders!", e);
+            throw new DAOException(e);
+        } finally {
+            if (connection != null) {
+                connectionPool.closeConnection(connection, preparedStatement, resultSet);
+            }
+        }
+
+        return allOrders;
     }
 
     @Override
@@ -268,7 +284,6 @@ public class UserDAOImpl implements UserDAO {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(SELECT_ALL_USER_CARD_ACCOUNTS);
             preparedStatement.setInt(1, userID);
-
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -285,5 +300,25 @@ public class UserDAOImpl implements UserDAO {
         }
 
         return userCardAccounts;
+    }
+
+    private Order createOrder(ResultSet resultSet) throws SQLException {
+        Order order = new Order();
+
+        order.setUserID(resultSet.getInt(COLUMN_USER_ID));
+        order.setOrderId(resultSet.getInt(COLUMN_ORDER_ID));
+        order.setOrderDate(resultSet.getDate(COLUMN_ORDER_DATE));
+        order.setOrderStatus(resultSet.getString(COLUMN_ORDER_STATUS));
+        order.setRentalStart(resultSet.getTimestamp(COLUMN_ORDER_RENTAL_START));
+        order.setRentalEnd(resultSet.getTimestamp(COLUMN_ORDER_RENTAL_END));
+        order.setCarID(resultSet.getInt(COLUMN_ORDER_CAR_ID));
+        order.setCarBrand(resultSet.getString(COLUMN_CAR_BRAND));
+        order.setCarModel(resultSet.getString(COLUMN_CAR_MODEL));
+        order.setCarPricePerDay(resultSet.getString(COLUMN_ORDER_PRICE));
+        order.setOrderPrice(resultSet.getString(COLUMN_ORDER_PRICE));
+        order.setComment(resultSet.getString(COLUMN_COMMENT));
+        order.setManagerID(resultSet.getInt(COLUMN_MANAGER_ID));
+
+        return order;
     }
 }

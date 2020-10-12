@@ -9,14 +9,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Locale;
-import java.util.Map;
 
 public class MainController extends HttpServlet {
 
     private static final String PARAMETER_COMMAND = "command";
     private static final String PARAMETER_LOCAL = "local";
+
+    private static final String ATTRIBUTE_MAIN_CONTROLLER = "mainController";
+    private static final String ATTRIBUTE_PREVIOUS_REQUEST = "previous_request";
 
     private final CommandProvider commandProvider = new CommandProvider();
 
@@ -39,6 +40,9 @@ public class MainController extends HttpServlet {
         } else {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
+
+        String previousRequest = ATTRIBUTE_MAIN_CONTROLLER + "?" + req.getQueryString();
+        session.setAttribute(ATTRIBUTE_PREVIOUS_REQUEST, previousRequest);
     }
 
 }

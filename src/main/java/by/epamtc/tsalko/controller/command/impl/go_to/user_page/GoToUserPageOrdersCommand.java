@@ -26,7 +26,7 @@ public class GoToUserPageOrdersCommand implements Command {
 
     private static final String COMMAND_GO_TO_MAIN_PAGE = "mainController?command=go_to_main_page";
 
-    private static final String USER_PAGE = "/WEB-INF/jsp/userPage.jsp";
+    private static final String USER_PAGE = "/WEB-INF/jsp/user_page/userPage.jsp";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

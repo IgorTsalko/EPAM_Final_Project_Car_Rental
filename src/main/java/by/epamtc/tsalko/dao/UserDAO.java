@@ -10,6 +10,7 @@ public interface UserDAO {
     User authorization(AuthorizationData authorizationData) throws DAOException;
     boolean registration(RegistrationData registrationData) throws DAOException;
     List<Order> getUserOrders(int userID) throws DAOException;
+    List<Order> getAllOrders() throws DAOException;
     Passport getUserPassport(int userID) throws DAOException;
     List<Long> getUserCardAccounts(int userID) throws DAOException;
 }

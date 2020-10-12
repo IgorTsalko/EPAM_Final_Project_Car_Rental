@@ -1,6 +1,6 @@
 package by.epamtc.tsalko.controller.command.impl.go_to.user_page;
 
-import by.epamtc.tsalko.bean.Passport;
+import by.epamtc.tsalko.bean.Order;
 import by.epamtc.tsalko.bean.User;
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.ServiceProvider;
@@ -13,12 +13,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
-public class GoToUserPagePassportCommand implements Command {
+public class GoToUserPageAllOrdersCommand implements Command {
 
-    private static final Logger logger = LogManager.getLogger(GoToUserPagePassportCommand.class);
+    private static final Logger logger = LogManager.getLogger(GoToUserPageAllOrdersCommand.class);
 
-    private static final String ATTRIBUTE_USER_PASSPORT = "user_passport";
+    private static final String ATTRIBUTE_ALL_ORDERS = "all_orders";
     private static final String ATTRIBUTE_MESSAGE = "message";
 
     private static final String ERROR_DATA_RETRIEVE = "data_retrieve_error";
@@ -31,26 +32,22 @@ public class GoToUserPagePassportCommand implements Command {
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute("user");
 
-        if (user == null) {
-            logger.warn("An unauthorized user is trying to get personal data");
+        if (user == null || !user.getRole().equals("admin")) {
+            logger.warn("Attempt to obtain private data");
             resp.sendRedirect(COMMAND_GO_TO_MAIN_PAGE);
         } else {
             ServiceProvider serviceProvider = ServiceProvider.getInstance();
             UserService userService = serviceProvider.getUserService();
 
-            Passport passport;
-            int userID = user.getId();
+            List<Order> allOrders;
 
             try {
-                passport = userService.getUserPassport(userID);
-                if (passport != null) {
-                    req.setAttribute(ATTRIBUTE_USER_PASSPORT, passport);
-                }
+                allOrders = userService.getAllOrders();
+                req.setAttribute(ATTRIBUTE_ALL_ORDERS, allOrders);
             } catch (ServiceException e) {
-                logger.error("Cannot retrieve user passport", e);
+                logger.error("Cannot retrieve all orders", e);
                 req.setAttribute(ATTRIBUTE_MESSAGE, ERROR_DATA_RETRIEVE);
             }
-
             req.getRequestDispatcher(USER_PAGE).forward(req, resp);
         }
     }

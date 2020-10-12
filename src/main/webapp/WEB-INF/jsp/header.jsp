@@ -35,6 +35,12 @@
 <header class="boxShadow1">
     <div class="top">
         <div class="container">
+            <div class="header-contacts rowing-left">
+                <p><strong>+375(33)357-76-60</strong></p>
+            </div>
+            <div class="header-contacts rowing-left">
+                <p>с 9:00 до 21:00</p>
+            </div>
             <div class="user-info">
                 <c:if test="${sessionScope.user != null}">
                     ${hello} <a href="mainController?command=go_to_user_page_orders"><strong>${sessionScope.user.login}</strong></a>
@@ -49,12 +55,10 @@
                 <div id="localization">
                     <form action="mainController?command=app_localization" method="post">
                         <input type="hidden" name="local" value="ru"/>
-                        <input type="hidden" name="previous_command" value="${pageContext.request.getParameter("command")}">
                         <input type="submit" value="${button_ru}"/>
                     </form>
                     <form action="mainController?command=app_localization" method="post">
                         <input type="hidden" name="local" value="en"/>
-                        <input type="hidden" name="previous_command" value="${pageContext.request.getParameter("command")}">
                         <input type="submit" value="${button_en}"/>
                     </form>
                 </div>

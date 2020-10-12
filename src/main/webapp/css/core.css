@@ -117,8 +117,8 @@ header .menu-utility {
 
 .main-text {
     position: absolute;
-    width: 350px;
-    margin: 280px 0 0 620px;
+    width: 400px;
+    margin: 280px 0 0 570px;
     background-color: #ffffff;
     padding: 0 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
@@ -126,6 +126,8 @@ header .menu-utility {
 
 .main-text p {
     font-size: 25px;
+    font-weight: 600;
+    text-transform: uppercase;
 }
 
 .main-image img {
@@ -311,13 +313,16 @@ li {
 }
 
 .user-menu-tab {
-    margin-right: 25px;
-    padding: 20px 0 5px 0;
+    padding: 10px 20px;
+    margin-top: 8px;
+}
+
+.admin-tab {
+    background-color: #ff000b36;
 }
 
 .selected-user-tab {
     border-bottom: 3px solid #7dbf26;
-    padding: 20px 0 5px 0;
 }
 
 .user-menu-tab a {
@@ -450,4 +455,17 @@ tr:hover {
 
 .link a {
     display: block;
+}
+
+.header-contacts p {
+    margin: 5px 30px 5px 0;
+}
+
+#admin-table-header {
+    vertical-align: top;
+    text-align: center;
+}
+
+#admin-all-orders td:first-child {
+    text-align: center;
 }

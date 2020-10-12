@@ -70,6 +70,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<Order> getAllOrders() throws ServiceException {
+        List<Order> allOrders;
+
+        DAOProvider daoProvider = DAOProvider.getInstance();
+        UserDAO userDAO = daoProvider.getUserDAO();
+
+        try {
+            allOrders = userDAO.getAllOrders();
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+
+        return allOrders;
+    }
+
+    @Override
     public Passport getUserPassport(int userID) throws ServiceException {
         Passport passport;
 

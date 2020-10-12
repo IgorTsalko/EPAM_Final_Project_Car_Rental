@@ -11,6 +11,7 @@ public class User implements Serializable {
     private String login;
     private String role;
     private String rating;
+    private int discount;
 
     public int getId() {
         return id;
@@ -44,12 +45,21 @@ public class User implements Serializable {
         this.rating = rating;
     }
 
+    public int getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return id == user.id &&
+                discount == user.discount &&
                 Objects.equals(login, user.login) &&
                 Objects.equals(role, user.role) &&
                 Objects.equals(rating, user.rating);
@@ -57,7 +67,7 @@ public class User implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, role, rating);
+        return Objects.hash(id, login, role, rating, discount);
     }
 
     @Override
@@ -67,6 +77,7 @@ public class User implements Serializable {
                 ", login='" + login + '\'' +
                 ", role='" + role + '\'' +
                 ", rating='" + rating + '\'' +
+                ", discount=" + discount +
                 '}';
     }
 }

@@ -3,8 +3,6 @@
 
 <fmt:message key="error.data_retrieve" var="data_retrieve_error"/>
 <fmt:message key="car.transmission_title" var="transmission_title"/>
-<fmt:message key="car.transmission.at" var="at"/>
-<fmt:message key="car.transmission.mt" var="mt"/>
 
 <%--START MAIN-CONTENT--%>
 <div id="content">
@@ -19,7 +17,7 @@
             <c:otherwise>
                 <c:forEach items="${requestScope.cars}" var="car">
                     <div class="car clear link">
-                        <a href="1.html">
+                        <a href="mainController?command=go_to_car_page&car_id=${car.carID}">
                             <div class="car-image rowing-left">
                                 <img width="250" src="${pageContext.request.contextPath}${car.mainImageURI}" alt="carImage">
                             </div>
