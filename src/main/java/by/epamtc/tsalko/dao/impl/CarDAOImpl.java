@@ -26,7 +26,10 @@ public class CarDAOImpl implements CarDAO {
                     "car_fuel_type, car_odometer_value, car_price_per_day, car_available, car_comment, car_image_uri " +
                     "FROM cars c JOIN car_images i ON i.car_id=c.car_id GROUP BY c.car_id";
 
-    private static final String SELECT_CAR_BY_ID = "SELECT * FROM cars WHERE car_id=?";
+    private static final String SELECT_CAR_BY_ID =
+            "SELECT c.car_id, car_brand, car_model, car_year_production, car_transmission, car_engine_size, " +
+                    "car_fuel_type, car_odometer_value, car_price_per_day, car_available, car_comment," +
+                    "car_image_uri FROM cars c JOIN car_images i ON i.car_id=c.car_id WHERE c.car_id=?";
 
     private static final String SELECT_CAR_IMAGES_BY_ID = "SELECT car_image_uri FROM car_images WHERE car_id=?";
 
@@ -41,7 +44,6 @@ public class CarDAOImpl implements CarDAO {
     private static final String COLUMN_CAR_ODOMETER_VALUE = "car_odometer_value";
     private static final String COLUMN_CAR_PRICE_PER_DAY = "car_price_per_day";
     private static final String COLUMN_CAR_COMMENT = "car_comment";
-
     private static final String COLUMN_CAR_IMAGE_URI = "car_image_uri";
 
     @Override
@@ -55,7 +57,6 @@ public class CarDAOImpl implements CarDAO {
         try {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(SELECT_ALL_CARS);
-
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -63,7 +64,7 @@ public class CarDAOImpl implements CarDAO {
                 cars.add(car);
             }
         } catch (SQLException e) {
-            logger.error("Cannot retrieve cars!", e);
+            logger.error("Severe database error! Cannot retrieve all cars!", e);
             throw new DAOException(e);
         } finally {
             if (connection != null) {
@@ -86,7 +87,6 @@ public class CarDAOImpl implements CarDAO {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(SELECT_CAR_BY_ID);
             preparedStatement.setInt(1, carID);
-
             resultSet = preparedStatement.executeQuery();
 
             if (!resultSet.next()) {
@@ -95,7 +95,7 @@ public class CarDAOImpl implements CarDAO {
 
             car = createCar(resultSet);
         } catch (SQLException e) {
-            logger.error("Cannot retrieve cars!", e);
+            logger.error("Severe database error! Cannot retrieve car!", e);
             throw new DAOException(e);
         } finally {
             if (connection != null) {
@@ -104,6 +104,37 @@ public class CarDAOImpl implements CarDAO {
         }
 
         return car;
+    }
+
+    @Override
+    public List<String> getAllCarImagesByID(int carID) throws DAOException {
+        List<String> carImages;
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_CAR_IMAGES_BY_ID);
+            preparedStatement.setInt(1, carID);
+            resultSet = preparedStatement.executeQuery();
+
+            carImages = new ArrayList<>();
+
+            while (resultSet.next()) {
+                carImages.add(resultSet.getString(COLUMN_CAR_IMAGE_URI));
+            }
+        } catch (SQLException e) {
+            logger.error("Severe database error! Cannot retrieve car images!", e);
+            throw new DAOException(e);
+        } finally {
+            if (connection != null) {
+                connectionPool.closeConnection(connection, preparedStatement, resultSet);
+            }
+        }
+
+        return carImages;
     }
 
     private Car createCar(ResultSet resultSet) throws SQLException {

@@ -1,4 +1,4 @@
-package by.epamtc.tsalko.controller.command.impl.go_to.user_page;
+package by.epamtc.tsalko.controller.command.impl.go_to.personal_page;
 
 import by.epamtc.tsalko.bean.Passport;
 import by.epamtc.tsalko.bean.User;
@@ -14,9 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class GoToUserPagePassportCommand implements Command {
+public class GoToPersonalPagePassportCommand implements Command {
 
-    private static final Logger logger = LogManager.getLogger(GoToUserPagePassportCommand.class);
+    private static final Logger logger = LogManager.getLogger(GoToPersonalPagePassportCommand.class);
 
     private static final String ATTRIBUTE_USER_PASSPORT = "user_passport";
     private static final String ATTRIBUTE_MESSAGE = "message";
@@ -25,7 +25,7 @@ public class GoToUserPagePassportCommand implements Command {
 
     private static final String COMMAND_GO_TO_MAIN_PAGE = "mainController?command=go_to_main_page";
 
-    private static final String USER_PAGE = "/WEB-INF/jsp/user_page/userPage.jsp";
+    private static final String PERSONAL_PAGE = "/WEB-INF/jsp/personal_page/personalPage.jsp";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,11 +47,10 @@ public class GoToUserPagePassportCommand implements Command {
                     req.setAttribute(ATTRIBUTE_USER_PASSPORT, passport);
                 }
             } catch (ServiceException e) {
-                logger.error("Cannot retrieve user passport", e);
                 req.setAttribute(ATTRIBUTE_MESSAGE, ERROR_DATA_RETRIEVE);
             }
 
-            req.getRequestDispatcher(USER_PAGE).forward(req, resp);
+            req.getRequestDispatcher(PERSONAL_PAGE).forward(req, resp);
         }
     }
 }

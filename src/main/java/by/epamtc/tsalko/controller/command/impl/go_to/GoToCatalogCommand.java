@@ -5,8 +5,6 @@ import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.CarService;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.exception.ServiceException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,8 +13,6 @@ import java.io.IOException;
 import java.util.List;
 
 public class GoToCatalogCommand implements Command {
-
-    private static final Logger logger = LogManager.getLogger(GoToCatalogCommand.class);
 
     private static final String ATTRIBUTE_CARS = "cars";
     private static final String ATTRIBUTE_MESSAGE = "message";
@@ -36,7 +32,6 @@ public class GoToCatalogCommand implements Command {
             cars = carService.getAllCars();
             req.setAttribute(ATTRIBUTE_CARS, cars);
         } catch (ServiceException e) {
-            logger.error("Cannot retrieve cars", e);
             req.setAttribute(ATTRIBUTE_MESSAGE, ERROR_DATA_RETRIEVE);
         }
 

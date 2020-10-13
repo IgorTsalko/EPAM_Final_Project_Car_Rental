@@ -3,7 +3,7 @@
 
 <fmt:message key="error_500_title" var="error_500_title"/>
 <fmt:message key="error_500_desc" var="error_500_desc"/>
-<fmt:message key="stack-trace-title" var="stack_trace_title"/>
+<fmt:message key="stack_trace_title" var="stack_trace_title"/>
 <fmt:message key="go_to_main_page" var="go_to_main_page"/>
 
 <%--START MAIN-CONTENT--%>

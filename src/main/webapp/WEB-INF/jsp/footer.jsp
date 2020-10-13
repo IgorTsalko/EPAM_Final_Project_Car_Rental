@@ -1,8 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<fmt:message key="help_title" var="help_title"/>
-<fmt:message key="about_rent_title" var="about_rent_title"/>
-<fmt:message key="information_title" var="information_title"/>
+<fmt:message key="more_about_us" var="more_about_us"/>
+<fmt:message key="company_history" var="company_history"/>
+<fmt:message key="mobile_app" var="mobile_app"/>
+<fmt:message key="news_about_us" var="news_about_us"/>
+<fmt:message key="reviews" var="reviews"/>
+<fmt:message key="vacancies" var="vacancies"/>
+<fmt:message key="about_rent" var="about_rent"/>
+<fmt:message key="information" var="information"/>
+<fmt:message key="test.404_page" var="page_404"/>
+<fmt:message key="test.500_page" var="page_500"/>
 <fmt:message key="copyright" var="copyright"/>
 
 <!-- START FOOTER -->
@@ -11,18 +18,18 @@
 
                 <div class="footer-info clear">
                     <div class="footer-block rowing-left">
-                        <h3>${help_title}</h3>
+                        <h3>${more_about_us}</h3>
                         <ul>
-                            <li><a href="someLink">Some link №1</a></li>
-                            <li><a href="someLink">Some link №2</a></li>
-                            <li><a href="someLink">Some link №3</a></li>
-                            <li><a href="someLink">Some link №4</a></li>
-                            <li><a href="someLink">Some link №5</a></li>
+                            <li><a href="someLink">${company_history}</a></li>
+                            <li><a href="https://play.google.com/store" target="_blank">${mobile_app}</a></li>
+                            <li><a href="https://www.nytimes.com" target="_blank">${news_about_us}</a></li>
+                            <li><a href="someLink">${reviews}</a></li>
+                            <li><a href="someLink">${vacancies}</a></li>
                         </ul>
                     </div>
 
                     <div class="footer-block rowing-left">
-                        <h3>${about_rent_title}</h3>
+                        <h3>${about_rent}</h3>
                         <ul>
                             <li><a href="mainController?command=go_to_contact_page">${contacts_title}</a></li>
                             <li><a href="mainController?command=go_to_news">${news_title}</a></li>
@@ -32,11 +39,10 @@
                     </div>
 
                     <div class="footer-block rowing-left">
-                        <h3>${information_title}</h3>
+                        <h3>${information}</h3>
                         <ul>
-                            <li><a href="someLink">Some info №1</a></li>
-                            <li><a href="someLink">Some info №2</a></li>
-                            <li><a href="someLink">Some info №3</a></li>
+                            <li><a href="some-page-that-does-not-exist">${page_404}</a></li>
+                            <li><a href="mainController?command=go_to_test_page_500">${page_500}</a></li>
                         </ul>
                     </div>
 

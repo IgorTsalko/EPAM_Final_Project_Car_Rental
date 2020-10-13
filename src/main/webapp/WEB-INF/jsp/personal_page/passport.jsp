@@ -1,14 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <c:set var="passport" value="${requestScope.user_passport}"/>
 
-<fmt:message key="user.surname" var="surname"/>
-<fmt:message key="user.name" var="name"/>
-<fmt:message key="user.thirdname" var="thirdname"/>
-<fmt:message key="user.date_of_birth" var="date_of_birth"/>
-<fmt:message key="user.address" var="address"/>
-<fmt:message key="user.passport.serial_and_number" var="passport_serial_and_number"/>
-<fmt:message key="user.passport.issued_by" var="passport_issued_by"/>
-<fmt:message key="user.passport.date_of_issue" var="passport_date_of_issue"/>
+<fmt:message key="passport.surname" var="surname"/>
+<fmt:message key="passport.name" var="name"/>
+<fmt:message key="passport.thirdname" var="thirdname"/>
+<fmt:message key="passport.date_of_birth" var="date_of_birth"/>
+<fmt:message key="passport.address" var="address"/>
+<fmt:message key="passport.serial_and_number" var="passport_serial_and_number"/>
+<fmt:message key="passport.issued_by" var="passport_issued_by"/>
+<fmt:message key="passport.date_of_issue" var="passport_date_of_issue"/>
 <fmt:message key="error.data_retrieve" var="data_retrieve_error"/>
 
 <c:choose>

@@ -1,18 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="header.jsp"%>
 
-<fmt:message key="form.email" var="email"/>
-<fmt:message key="form.phone" var="phone"/>
-<fmt:message key="form.login" var="form_login"/>
-<fmt:message key="form.password" var="form_password"/>
-<fmt:message key="form.register" var="form_register"/>
+<fmt:message key="email" var="email"/>
+<fmt:message key="phone" var="phone"/>
+<fmt:message key="login" var="form_login"/>
+<fmt:message key="password" var="form_password"/>
+<fmt:message key="register" var="form_register"/>
 <fmt:message key="reg.successful" var="reg_successful"/>
 <fmt:message key="reg.error" var="reg_error"/>
 <fmt:message key="incorrect_data" var="incorrect_data"/>
 <fmt:message key="reg_info.text.start" var="info_text_start"/>
 <fmt:message key="reg_info.text.link" var="login_page"/>
 <fmt:message key="reg_info.text.end" var="info_text_end"/>
-<fmt:message key="reg_user_exists" var="reg_user_exists"/>
+<fmt:message key="reg.user_exists" var="reg_user_exists"/>
 <fmt:message key="reg.agreement" var="reg_agreement"/>
 <fmt:message key="reg.agreement.link" var="reg_agreement_link"/>
 

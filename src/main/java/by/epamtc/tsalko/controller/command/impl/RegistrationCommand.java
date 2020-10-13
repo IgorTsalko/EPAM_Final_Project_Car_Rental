@@ -62,7 +62,7 @@ public class RegistrationCommand implements Command {
                     page = GO_TO_REGISTRATION_PAGE + "&" + PARAMETER_ERROR;
                 }
             } catch (UserAlreadyExistsServiceException e) {
-                logger.info("User tried to register a second time");
+                logger.warn("User tried to register a second time");
                 page = GO_TO_REGISTRATION_PAGE + "&" + PARAMETER_USER_EXISTS;
             } catch (NoSuchAlgorithmException | ServiceException e) {
                 page = GO_TO_REGISTRATION_PAGE + "&" + PARAMETER_ERROR;

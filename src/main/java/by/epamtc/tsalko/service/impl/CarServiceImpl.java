@@ -3,7 +3,6 @@ package by.epamtc.tsalko.service.impl;
 import by.epamtc.tsalko.bean.Car;
 import by.epamtc.tsalko.dao.CarDAO;
 import by.epamtc.tsalko.dao.DAOProvider;
-import by.epamtc.tsalko.dao.UserDAO;
 import by.epamtc.tsalko.dao.exception.DAOException;
 import by.epamtc.tsalko.service.CarService;
 import by.epamtc.tsalko.service.exception.ServiceException;
@@ -42,5 +41,21 @@ public class CarServiceImpl implements CarService {
         }
 
         return car;
+    }
+
+    @Override
+    public List<String> getAllCarImagesByID(int carID) throws ServiceException {
+        List<String> carImages;
+
+        DAOProvider daoProvider = DAOProvider.getInstance();
+        CarDAO carDAO = daoProvider.getCarDAO();
+
+        try {
+            carImages = carDAO.getAllCarImagesByID(carID);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+
+        return carImages;
     }
 }

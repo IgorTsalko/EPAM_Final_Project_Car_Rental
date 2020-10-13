@@ -1,12 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="header.jsp"%>
 
-<fmt:message key="form.search_title" var="search"/>
-<fmt:message key="searching_form_title" var="form_title"/>
+<fmt:message key="search" var="search"/>
+<fmt:message key="searching_form" var="form_title"/>
 <fmt:message key="pick_up_date" var="pick_up_date"/>
-<fmt:message key="pick_up_time" var="pick_up_time"/>
 <fmt:message key="drop_off_date" var="drop_off_date"/>
-<fmt:message key="drop_off_time" var="drop_off_time"/>
 
 <%--START MAIN-CONTENT--%>
 <div id="content">
@@ -14,28 +12,20 @@
 
         <div class="main">
 
-            <div class="searching-form boxShadow clear">
+            <div id="main-search" class="searching-form boxShadow clear">
                 <form class="" action="someAction" method="post">
                     <div class="field">
                         <p id="searching-form-title">${form_title}</p>
                     </div>
-                    <div class="field rowing-left">
+                    <div class="field">
                         <p>${pick_up_date}</p>
                         <input type="date">
                     </div>
-                    <div class="field rowing-right">
-                        <p>${pick_up_time}</p>
-                        <input type="time" value="11:00" min="08:00" max="22:00">
-                    </div>
-                    <div class="field rowing-left">
+                    <div class="field">
                         <p>${drop_off_date}</p>
                         <input type="date">
                     </div>
-                    <div class="field rowing-right">
-                        <p>${drop_off_time}</p>
-                        <input type="time" value="11:00" min="08:00" max="22:00">
-                    </div>
-                    <div class="field rowing-right">
+                    <div class="field">
                         <button type="submit">${search}</button>
                     </div>
                 </form>

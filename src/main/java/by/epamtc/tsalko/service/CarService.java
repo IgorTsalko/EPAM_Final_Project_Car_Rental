@@ -9,4 +9,5 @@ public interface CarService {
 
     List<Car> getAllCars() throws ServiceException;
     Car getCarByID(int carID) throws ServiceException;
+    List<String> getAllCarImagesByID(int carID) throws ServiceException;
 }

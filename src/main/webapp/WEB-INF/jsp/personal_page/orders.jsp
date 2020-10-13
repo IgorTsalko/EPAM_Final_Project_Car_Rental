@@ -1,15 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<fmt:message key="user.order.date" var="order_date"/>
-<fmt:message key="user.order.status" var="order_status"/>
-<fmt:message key="user.order.rental_start" var="order_rental_start"/>
-<fmt:message key="user.order.rental_end" var="order_rental_end"/>
-<fmt:message key="user.order.car" var="order_car"/>
-<fmt:message key="user.order.order_price" var="order_price"/>
-<fmt:message key="user.order.not_exists" var="order_not_exists"/>
+<fmt:message key="order.date" var="order_date"/>
+<fmt:message key="order.status" var="order_status"/>
+<fmt:message key="order.rental_start" var="order_rental_start"/>
+<fmt:message key="order.rental_end" var="order_rental_end"/>
+<fmt:message key="order.car" var="order_car"/>
+<fmt:message key="order.price" var="order_price"/>
+<fmt:message key="order.not_exists" var="order_not_exists"/>
 <fmt:message key="error.data_retrieve" var="data_retrieve_error"/>
-<fmt:message key="user.order.message_start" var="message_start"/>
-<fmt:message key="user.order.message_end" var="message_end"/>
+<fmt:message key="order.message_start" var="message_start"/>
+<fmt:message key="order.message_end" var="message_end"/>
 
 <table>
     <tr>
@@ -35,7 +35,7 @@
             <c:forEach items="${requestScope.user_orders}" var="order">
                 <tr>
                     <td>${order.orderDate}</td>
-                    <td><fmt:message key="user.order.status.${order.orderStatus}"/></td>
+                    <td><fmt:message key="order.status.${order.orderStatus}"/></td>
                     <td><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${order.rentalStart}"/></td>
                     <td><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${order.rentalEnd}"/></td>
                     <td>${order.carBrand} ${order.carModel}</td>

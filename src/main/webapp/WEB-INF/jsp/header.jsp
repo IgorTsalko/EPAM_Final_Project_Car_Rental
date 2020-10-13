@@ -20,15 +20,15 @@
     <fmt:message key="header.button.en" var="button_en"/>
 
     <fmt:message key="hello" var="hello"/>
-    <fmt:message key="log_in_title" var="log_in"/>
-    <fmt:message key="log_out_title" var="log_out"/>
-    <fmt:message key="registration_title" var="registration"/>
+    <fmt:message key="log_in" var="log_in"/>
+    <fmt:message key="log_out" var="log_out"/>
+    <fmt:message key="registration" var="registration"/>
 
-    <fmt:message key="contacts_title" var="contacts_title"/>
-    <fmt:message key="catalog_title" var="catalog_title"/>
-    <fmt:message key="stocks_title" var="stocks_title"/>
-    <fmt:message key="rules_title" var="rules_title"/>
-    <fmt:message key="news_title" var="news_title"/>
+    <fmt:message key="contacts" var="contacts_title"/>
+    <fmt:message key="catalog" var="catalog_title"/>
+    <fmt:message key="stocks" var="stocks_title"/>
+    <fmt:message key="rules" var="rules_title"/>
+    <fmt:message key="news" var="news_title"/>
 </head>
 <body>
 <!-- START HEADER -->
@@ -43,7 +43,7 @@
             </div>
             <div class="user-info">
                 <c:if test="${sessionScope.user != null}">
-                    ${hello} <a href="mainController?command=go_to_user_page_orders"><strong>${sessionScope.user.login}</strong></a>
+                    ${hello} <a href="mainController?command=go_to_personal_page"><strong>${sessionScope.user.login}</strong></a>
                     <a href="mainController?command=logout">${log_out}</a>
                 </c:if>
 
@@ -55,11 +55,11 @@
                 <div id="localization">
                     <form action="mainController?command=app_localization" method="post">
                         <input type="hidden" name="local" value="ru"/>
-                        <input type="submit" value="${button_ru}"/>
+                        <button type="submit">${button_ru}</button>
                     </form>
                     <form action="mainController?command=app_localization" method="post">
                         <input type="hidden" name="local" value="en"/>
-                        <input type="submit" value="${button_en}"/>
+                        <button type="submit">${button_en}</button>
                     </form>
                 </div>
             </div>

@@ -2,7 +2,11 @@
 <%@include file="header.jsp"%>
 
 <fmt:message key="error.data_retrieve" var="data_retrieve_error"/>
-<fmt:message key="car.transmission_title" var="transmission_title"/>
+<fmt:message key="car.transmission" var="transmission_title"/>
+<fmt:message key="car.engine_size" var="engine_size"/>
+<fmt:message key="car.engine_size_unit" var="engine_size_unit"/>
+<fmt:message key="car.fuel_type" var="fuel_type"/>
+<fmt:message key="price_per_day" var="price_per_day"/>
 
 <%--START MAIN-CONTENT--%>
 <div id="content">
@@ -23,11 +27,10 @@
                             </div>
                             <div class="car-desc rowing-left">
                                 <p class="car-title">${car.brand} ${car.model} ${car.yearProduction}</p>
-                                <p>Доступна: ${car.available}</p>
                                 <p>${transmission_title}: <fmt:message key="car.transmission.${car.transmission}"/></p>
-                                <p>Объем двигателя: ${car.engineSize}</p>
-                                <p>Тип топлива: ${car.fuelType}</p>
-                                <p><strong>${car.pricePerDay}</strong> руб в день</p>
+                                <p>${engine_size}: ${car.engineSize} ${engine_size_unit}</p>
+                                <p>${fuel_type}: <fmt:message key="car.fuel_type.${car.fuelType}"/></p>
+                                <p><strong>${car.pricePerDay}</strong> ${price_per_day}</p>
                                 <p>${car.comment}</p>
                             </div>
                         </a>

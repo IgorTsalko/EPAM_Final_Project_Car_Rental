@@ -20,13 +20,18 @@ public class UserDAOImpl implements UserDAO {
 
     private static final ConnectionPool connectionPool = ConnectionPool.getInstance();
 
-    private static final String SELECT_USER_BY_LOGIN_SQL =
+    private static final String SELECT_USER_BY_LOGIN =
             "SELECT u.user_id, u.user_login, rol.user_role, rat.user_rating, rat.user_discount " +
                     "FROM users u JOIN user_roles rol ON u.user_role=rol.user_role_id " +
                     "JOIN user_ratings rat ON u.user_rating=rat.user_rating_id WHERE u.user_login=? " +
                     "and u.user_password=?";
 
-    private static final String INSERT_NEW_USER_SQL =
+    private static final String SELECT_ALL_USERS =
+            "SELECT u.user_id, u.user_login, rol.user_role, rat.user_rating, rat.user_discount " +
+                    "FROM users u JOIN user_roles rol ON u.user_role=rol.user_role_id " +
+                    "JOIN user_ratings rat ON u.user_rating=rat.user_rating_id ORDER BY user_role_id DESC, u.user_id";
+
+    private static final String INSERT_NEW_USER =
             "INSERT INTO users (user_email, user_phone, user_login, user_password, user_rating, user_role) " +
                     "VALUES (?, ?, ?, ?, 1, 1)";
 
@@ -42,7 +47,7 @@ public class UserDAOImpl implements UserDAO {
                     "o.order_rental_end, o.order_car_id, o.order_price, c.car_brand, c.car_model, " +
                     "o.manager_id, o.order_comment " +
                     "FROM user_orders o JOIN cars c ON o.order_car_id=c.car_id JOIN order_statuses s " +
-                    "ON o.order_status=s.order_status_id ORDER BY s.order_status_id DESC, o.order_date DESC";
+                    "ON o.order_status=s.order_status_id ORDER BY s.order_status_id, o.order_date DESC";
 
     private static final String SELECT_USER_PASSPORT =
             "SELECT p.user_id, p.user_passport_id, p.user_passport_series, p.user_passport_number, " +
@@ -104,7 +109,7 @@ public class UserDAOImpl implements UserDAO {
 
         try {
             connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN_SQL);
+            preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN);
             preparedStatement.setString(1, authorizationData.getLogin());
             preparedStatement.setString(2, authorizationData.getPassword());
             resultSet = preparedStatement.executeQuery();
@@ -113,15 +118,9 @@ public class UserDAOImpl implements UserDAO {
                 throw new EntityNotFoundDAOException();
             }
 
-            user = new User();
-
-            user.setId(resultSet.getInt(COLUMN_USER_ID));
-            user.setLogin(resultSet.getString(COLUMN_USER_LOGIN));
-            user.setRole(resultSet.getString(COLUMN_USER_ROLE));
-            user.setRating(resultSet.getString(COLUMN_USER_RATING));
-            user.setDiscount(resultSet.getInt(COLUMN_USER_DISCOUNT));
+            user = createUser(resultSet);
         } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error!", e);
+            logger.error("Severe database error! Cannot authorize", e);
             throw new DAOException(e);
         } finally {
             if (connection != null) {
@@ -147,7 +146,7 @@ public class UserDAOImpl implements UserDAO {
 
         try {
             connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(INSERT_NEW_USER_SQL);
+            preparedStatement = connection.prepareStatement(INSERT_NEW_USER);
 
             preparedStatement.setString(1, (registrationData.getEmail().length() > 1)
                     ?registrationData.getEmail() : null);
@@ -162,7 +161,7 @@ public class UserDAOImpl implements UserDAO {
         } catch (SQLIntegrityConstraintViolationException e) {
             throw new UserAlreadyExistsDAOException(e);
         } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error!", e);
+            logger.error("Severe database error! Cannot register", e);
         } finally {
             if (connectionPool != null) {
                 connectionPool.closeConnection(connection, preparedStatement);
@@ -170,6 +169,37 @@ public class UserDAOImpl implements UserDAO {
         }
 
         return registration;
+    }
+
+    @Override
+    public List<User> getAllUsers() throws DAOException {
+        List<User> users;
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_ALL_USERS);
+            resultSet = preparedStatement.executeQuery();
+
+            users = new ArrayList<>();
+
+            while (resultSet.next()) {
+                User user = createUser(resultSet);
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            logger.error("Severe database error! Cannot retrieve all user orders!", e);
+            throw new DAOException(e);
+        } finally {
+            if (connection != null) {
+                connectionPool.closeConnection(connection, preparedStatement, resultSet);
+            }
+        }
+
+        return users;
     }
 
     @Override
@@ -191,7 +221,7 @@ public class UserDAOImpl implements UserDAO {
                 userOrders.add(order);
             }
         } catch (SQLException e) {
-            logger.error("Cannot retrieve user orders!", e);
+            logger.error("Severe database error! Cannot retrieve user orders!", e);
             throw new DAOException(e);
         } finally {
             if (connection != null) {
@@ -220,7 +250,7 @@ public class UserDAOImpl implements UserDAO {
                 allOrders.add(order);
             }
         } catch (SQLException e) {
-            logger.error("Cannot retrieve user orders!", e);
+            logger.error("Severe database error! Cannot retrieve all user orders!", e);
             throw new DAOException(e);
         } finally {
             if (connection != null) {
@@ -263,7 +293,7 @@ public class UserDAOImpl implements UserDAO {
 
             return passport;
         } catch (SQLException e) {
-            logger.error("Cannot retrieve user passport!", e);
+            logger.error("Severe database error! Cannot retrieve user passport!", e);
             throw new DAOException(e);
         }  finally {
             if (connection != null) {
@@ -291,7 +321,7 @@ public class UserDAOImpl implements UserDAO {
                 userCardAccounts.add(cardAccount);
             }
         } catch (SQLException e) {
-            logger.error("Cannot retrieve user cards!", e);
+            logger.error("Severe database error! Cannot retrieve user cards!", e);
             throw new DAOException(e);
         } finally {
             if (connection != null) {
@@ -302,15 +332,25 @@ public class UserDAOImpl implements UserDAO {
         return userCardAccounts;
     }
 
+    private User createUser(ResultSet resultSet) throws SQLException {
+        User user = new User();
+        user.setId(resultSet.getInt(COLUMN_USER_ID));
+        user.setLogin(resultSet.getString(COLUMN_USER_LOGIN));
+        user.setRole(resultSet.getString(COLUMN_USER_ROLE));
+        user.setRating(resultSet.getString(COLUMN_USER_RATING));
+        user.setDiscount(resultSet.getInt(COLUMN_USER_DISCOUNT));
+
+        return user;
+    }
+
     private Order createOrder(ResultSet resultSet) throws SQLException {
         Order order = new Order();
-
         order.setUserID(resultSet.getInt(COLUMN_USER_ID));
         order.setOrderId(resultSet.getInt(COLUMN_ORDER_ID));
         order.setOrderDate(resultSet.getDate(COLUMN_ORDER_DATE));
         order.setOrderStatus(resultSet.getString(COLUMN_ORDER_STATUS));
-        order.setRentalStart(resultSet.getTimestamp(COLUMN_ORDER_RENTAL_START));
-        order.setRentalEnd(resultSet.getTimestamp(COLUMN_ORDER_RENTAL_END));
+        order.setRentalStart(resultSet.getDate(COLUMN_ORDER_RENTAL_START));
+        order.setRentalEnd(resultSet.getDate(COLUMN_ORDER_RENTAL_END));
         order.setCarID(resultSet.getInt(COLUMN_ORDER_CAR_ID));
         order.setCarBrand(resultSet.getString(COLUMN_CAR_BRAND));
         order.setCarModel(resultSet.getString(COLUMN_CAR_MODEL));

@@ -9,4 +9,5 @@ public interface CarDAO {
 
     List<Car> getAllCars() throws DAOException;
     Car getCarByID(int carID) throws DAOException;
+    List<String> getAllCarImagesByID(int carID) throws DAOException;
 }

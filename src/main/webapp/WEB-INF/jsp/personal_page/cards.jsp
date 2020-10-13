@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <fmt:message key="error.data_retrieve" var="data_retrieve_error"/>
-<fmt:message key="user.card.not_exists" var="card_not_exists"/>
+<fmt:message key="card.not_exists" var="card_not_exists"/>
 
 <c:choose>
     <c:when test="${requestScope.message eq 'data_retrieve_error'}">

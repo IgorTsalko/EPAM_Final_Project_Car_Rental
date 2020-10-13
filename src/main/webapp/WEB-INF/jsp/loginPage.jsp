@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="header.jsp"%>
 
-<fmt:message key="form.login" var="form_login"/>
-<fmt:message key="form.password" var="form_password"/>
+<fmt:message key="login" var="form_login"/>
+<fmt:message key="password" var="form_password"/>
 <fmt:message key="login.wrong_data" var="wrong_data"/>
 <fmt:message key="incorrect_data" var="incorrect_data"/>
 <fmt:message key="login.error" var="login_error"/>

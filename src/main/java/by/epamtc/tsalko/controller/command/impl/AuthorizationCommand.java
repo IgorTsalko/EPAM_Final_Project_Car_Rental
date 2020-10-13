@@ -31,7 +31,7 @@ public class AuthorizationCommand implements Command {
     private static final String ATTRIBUTE_USER = "user";
 
     private static final String GO_TO_LOGIN_PAGE = "mainController?command=go_to_login_page";
-    private static final String GO_TO_USER_PAGE = "mainController?command=go_to_user_page_orders";
+    private static final String GO_TO_PERSONAL_PAGE = "mainController?command=go_to_personal_page";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -55,9 +55,9 @@ public class AuthorizationCommand implements Command {
                 User user = userService.authorization(authorizationData);
                 req.getSession().setAttribute(ATTRIBUTE_USER, user);
                 logger.info("User is authorized");
-                page = GO_TO_USER_PAGE;
+                page = GO_TO_PERSONAL_PAGE;
             } catch (EntityNotFoundServiceException e) {
-                logger.info("User has entered incorrect data");
+                logger.warn("User has entered incorrect data");
                 page = GO_TO_LOGIN_PAGE + "&" + PARAMETER_WRONG_DATA;
             } catch (NoSuchAlgorithmException | ServiceException e) {
                 page = GO_TO_LOGIN_PAGE + "&" + PARAMETER_LOGIN_ERROR;
