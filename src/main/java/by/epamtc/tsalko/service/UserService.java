@@ -9,6 +9,7 @@ public interface UserService {
 
     User authorization(AuthorizationData authorizationData) throws ServiceException;
     boolean registration(RegistrationData registrationData) throws ServiceException;
+    UserDetails getUserDetails(int userID) throws ServiceException;
     List<User> getAllUsers() throws ServiceException;
     List<Order> getUserOrders(int userID) throws ServiceException;
     List<Order> getAllOrders() throws ServiceException;

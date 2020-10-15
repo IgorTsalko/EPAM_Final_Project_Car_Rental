@@ -17,8 +17,7 @@ public class Order implements Serializable {
     private int carID;
     private String carBrand;
     private String carModel;
-    private String carPricePerDay;
-    private String orderPrice;
+    private String billSum;
     private String comment;
     private int managerID;
 
@@ -94,20 +93,12 @@ public class Order implements Serializable {
         this.carModel = carModel;
     }
 
-    public String getCarPricePerDay() {
-        return carPricePerDay;
+    public String getBillSum() {
+        return billSum;
     }
 
-    public void setCarPricePerDay(String carPricePerDay) {
-        this.carPricePerDay = carPricePerDay;
-    }
-
-    public String getOrderPrice() {
-        return orderPrice;
-    }
-
-    public void setOrderPrice(String orderPrice) {
-        this.orderPrice = orderPrice;
+    public void setBillSum(String billSum) {
+        this.billSum = billSum;
     }
 
     public String getComment() {
@@ -141,15 +132,14 @@ public class Order implements Serializable {
                 Objects.equals(rentalEnd, order.rentalEnd) &&
                 Objects.equals(carBrand, order.carBrand) &&
                 Objects.equals(carModel, order.carModel) &&
-                Objects.equals(carPricePerDay, order.carPricePerDay) &&
-                Objects.equals(orderPrice, order.orderPrice) &&
+                Objects.equals(billSum, order.billSum) &&
                 Objects.equals(comment, order.comment);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(userID, orderId, orderDate, orderStatus, rentalStart, rentalEnd, carID,
-                carBrand, carModel, carPricePerDay, orderPrice, comment, managerID);
+                carBrand, carModel, billSum, comment, managerID);
     }
 
     @Override
@@ -164,8 +154,7 @@ public class Order implements Serializable {
                 ", carID=" + carID +
                 ", carBrand='" + carBrand + '\'' +
                 ", carModel='" + carModel + '\'' +
-                ", carPricePerDay='" + carPricePerDay + '\'' +
-                ", orderPrice='" + orderPrice + '\'' +
+                ", orderPrice='" + billSum + '\'' +
                 ", comment='" + comment + '\'' +
                 ", managerID=" + managerID +
                 '}';

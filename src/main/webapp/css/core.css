@@ -105,6 +105,7 @@ header .menu-utility {
     width: 230px;
     height: 230px;
     border: 1px solid rgb(190,190,190);
+    border-radius: 5px;
     padding: 5px;
     background-color: white;
     position: absolute;
@@ -176,6 +177,7 @@ header .menu-utility {
     width: 320px;
     border-width: 1px;
     border-color: rgb(190,190,190);
+    border-radius: 5px;
     border-style: solid;
     padding: 15px;
     margin-bottom: 20px;
@@ -187,6 +189,8 @@ header .menu-utility {
     height: 35px;
     margin: 10px;
     padding: 0 10px;
+    border-radius: 2px;
+    border: 1px solid #979797;
 }
 
 .registration-form h3, .registration-form p {
@@ -205,6 +209,7 @@ button {
     background-color: #3498db;
     color: white;
     font-weight: 600;
+    cursor: pointer;
 }
 
 button:hover {
@@ -409,7 +414,7 @@ li {
     padding: 10px;
     border-radius: 5px;
     overflow: auto;
-    min-height: 300px;
+    min-height: 320px;
     max-height: 350px;
 }
 
@@ -456,6 +461,7 @@ tr:hover {
     border-bottom: 1px solid #ddd;
     font-size: 18px;
     font-weight: 600;
+    padding-bottom: 5px;
 }
 
 .car-image {
@@ -464,8 +470,7 @@ tr:hover {
 
 .car-desc {
     width: 400px;
-    margin-left: 20px;
-    margin-top: 15px;
+    margin: 15px 20px 0 20px;
 }
 
 .car-desc p {
@@ -582,4 +587,102 @@ tr:hover {
     margin-top: 10px;
     font-size: 20px;
     margin-left: 10px;
+}
+
+.quick-order {
+    display: flex;
+    margin: 15px 20px 0 20px;
+    width: 210px;
+    height: 200px;
+}
+
+.quick-order form {
+    margin: auto;
+    text-align: center;
+}
+
+.quick-order label {
+    text-align: center;
+    font-size: 22px;
+}
+
+.quick-order button, .quick-order input {
+    width: 100%;
+    height: 35px;
+}
+
+.quick-order button {
+    margin-top: 15px;
+}
+
+.quick-order input {
+    margin-top: 15px;
+    box-sizing: border-box;
+    padding-left: 10px;
+    border-radius: 2px;
+    border: 1px solid #979797;
+}
+
+.user-details {
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+.data-labels {
+    min-width: 130px;
+    margin-right: 10px;
+}
+
+.data-labels .data-field {
+    padding-top: 5px;
+}
+
+.data-labels, .user-data-fields {
+    margin: 10px 0;
+}
+
+.user-data-fields {
+    width: 300px;
+}
+
+.user-details .data-labels p {
+    margin: 0;
+    padding: 5px 10px 5px 0;
+}
+
+.user-data-fields input {
+    padding: 5px;
+    border-radius: 2px;
+    border: 1px solid #979797;
+    float: left;
+    margin-right: 5px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.user-details .data-field {
+    height: 32px;
+    padding: 0;
+}
+
+.edit-button {
+    color: #313131;
+    background-color: aliceblue;
+    border: 1px solid #cee3f5;
+    border-radius: 2px;
+    font-weight: 500;
+    cursor: pointer;
+    text-transform: none;
+    padding: 3px 6px;
+    min-width: 100px;
+}
+
+.edit-button:hover {
+    color: #313131;
+    background-color: #e7f3fd;
+    border: 1px solid #cee3f5;
+}
+
+.confirm-button {
+    font-weight: 600!important;
 }

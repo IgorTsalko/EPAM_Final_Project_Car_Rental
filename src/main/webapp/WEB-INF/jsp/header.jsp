@@ -8,6 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Car_rental Igor Tsalko</title>
     <link rel="stylesheet" media="all" type="text/css" href="${pageContext.request.contextPath}/css/core.css">
+    <script type="text/javascript" async="" src="${pageContext.request.contextPath}/js/common.js"></script>
     <link href="${pageContext.request.contextPath}/img/favicon.png" rel="icon">
 
     <c:if test="${not empty sessionScope.local}">

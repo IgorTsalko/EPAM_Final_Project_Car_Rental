@@ -2,6 +2,7 @@
 <%@include file="header.jsp"%>
 
 <fmt:message key="error.data_retrieve" var="data_retrieve_error"/>
+<fmt:message key="car.nearest_available_date" var="nearest_available_date"/>
 <fmt:message key="car.transmission" var="transmission_title"/>
 <fmt:message key="car.engine_size" var="engine_size"/>
 <fmt:message key="car.engine_size_unit" var="engine_size_unit"/>
@@ -12,12 +13,6 @@
 <fmt:message key="pick_up_date" var="pick_up_date"/>
 <fmt:message key="drop_off_date" var="drop_off_date"/>
 <fmt:message key="to_rent" var="to_rent"/>
-
-<script type="text/javascript">
-    function change_image(image_src) {
-        document.getElementById("main_car_img").src = image_src;
-    }
-</script>
 
 <%--START MAIN-CONTENT--%>
 <div id="content">
@@ -32,7 +27,7 @@
                         <img id="main_car_img" src="${pageContext.request.contextPath}${requestScope.car_images[0]}">
                     </div>
                     <c:forEach items="${requestScope.car_images}" var="car_image">
-                        <a href="javascript:change_image('${pageContext.request.contextPath}${car_image}')">
+                        <a href="javascript:changeImage('${pageContext.request.contextPath}${car_image}')">
                             <img class="small-car-img" src="${pageContext.request.contextPath}${car_image}">
                         </a>
                     </c:forEach>
@@ -54,8 +49,12 @@
                         </div>
                     </div>
 
-                    <p id="car-price"><strong>${requestScope.car.pricePerDay}</strong> ${price_per_day}</p>
+                    <p id="car-price">
+                        <strong>
+                            <fmt:formatNumber minFractionDigits="2" value="${requestScope.car.pricePerDay}"/>
+                        </strong> ${price_per_day}</p>
 
+                    <p>${nearest_available_date}: 2020-10-16</p>
                     <div id="order-form">
                         <form action="someAction" method="post">
                             <div class="rowing-left">

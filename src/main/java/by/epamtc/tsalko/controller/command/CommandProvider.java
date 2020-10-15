@@ -23,6 +23,7 @@ public class CommandProvider {
         commands.put(ParameterName.GO_TO_PERSONAL_PAGE_CARDS, new GoToPersonalPageCardsCommand());
         commands.put(ParameterName.GO_TO_PERSONAL_PAGE_ALL_ORDERS, new GoToPersonalPageAllOrdersCommand());
         commands.put(ParameterName.GO_TO_PERSONAL_PAGE_ALL_USERS, new GoToPersonalPageAllUsersCommand());
+        commands.put(ParameterName.SHOW_USER_DETAILS, new ShowUserDetailsCommand());
         commands.put(ParameterName.GO_TO_LOGIN_PAGE, new GoToLoginPageCommand());
         commands.put(ParameterName.GO_TO_REGISTRATION_PAGE, new GoToRegistrationPageCommand());
         commands.put(ParameterName.GO_TO_CONTACT_PAGE, new GoToContactPageCommand());

@@ -20,11 +20,17 @@ public class UserDAOImpl implements UserDAO {
 
     private static final ConnectionPool connectionPool = ConnectionPool.getInstance();
 
-    private static final String SELECT_USER_BY_LOGIN =
+    private static final String SELECT_USER_BY_LOGIN_AND_PASS =
             "SELECT u.user_id, u.user_login, rol.user_role, rat.user_rating, rat.user_discount " +
                     "FROM users u JOIN user_roles rol ON u.user_role=rol.user_role_id " +
                     "JOIN user_ratings rat ON u.user_rating=rat.user_rating_id WHERE u.user_login=? " +
                     "and u.user_password=?";
+
+    private static final String SELECT_USER_BY_ID =
+            "SELECT u.user_id, u.user_login, u.user_email, u.user_phone, u.user_registration_date, " +
+                    "rol.user_role, rat.user_rating, rat.user_discount " +
+                    "FROM users u JOIN user_roles rol ON u.user_role=rol.user_role_id " +
+                    "JOIN user_ratings rat ON u.user_rating=rat.user_rating_id WHERE u.user_id=?";
 
     private static final String SELECT_ALL_USERS =
             "SELECT u.user_id, u.user_login, rol.user_role, rat.user_rating, rat.user_discount " +
@@ -35,19 +41,19 @@ public class UserDAOImpl implements UserDAO {
             "INSERT INTO users (user_email, user_phone, user_login, user_password, user_rating, user_role) " +
                     "VALUES (?, ?, ?, ?, 1, 1)";
 
-    private static final String SELECT_ALL_USER_ORDERS =
-            "SELECT o.user_id, o.order_id, o.order_date, s.order_status, o.order_rental_start," +
-                    "o.order_rental_end, o.order_car_id, o.order_price, c.car_brand, c.car_model, " +
-                    "o.manager_id, o.order_comment " +
+    private static final String SELECT_ALL_USER_ORDERS_BY_ID =
+            "SELECT o.user_id, o.order_id, o.order_date, s.order_status, o.order_rental_start, o.order_rental_end, " +
+                    "o.order_car_id, c.car_brand, c.car_model, SUM(b.bill_sum) as bill_sum, o.manager_id, o.order_comment " +
                     "FROM user_orders o JOIN cars c ON o.order_car_id=c.car_id JOIN order_statuses s " +
-                    "ON o.order_status=s.order_status_id WHERE o.user_id=? ORDER BY order_date DESC";
+                    "ON o.order_status=s.order_status_id JOIN bills b ON b.user_order_id=o.order_id " +
+                    "WHERE o.user_id=? GROUP BY o.order_id ORDER BY s.order_status_id, o.order_date DESC";
 
     private static final String SELECT_ALL_ORDERS =
-            "SELECT o.user_id, o.order_id, o.order_date, s.order_status, o.order_rental_start," +
-                    "o.order_rental_end, o.order_car_id, o.order_price, c.car_brand, c.car_model, " +
-                    "o.manager_id, o.order_comment " +
+            "SELECT o.user_id, o.order_id, o.order_date, s.order_status, o.order_rental_start, o.order_rental_end, " +
+                    "o.order_car_id, c.car_brand, c.car_model, SUM(b.bill_sum) as bill_sum, o.manager_id, o.order_comment " +
                     "FROM user_orders o JOIN cars c ON o.order_car_id=c.car_id JOIN order_statuses s " +
-                    "ON o.order_status=s.order_status_id ORDER BY s.order_status_id, o.order_date DESC";
+                    "ON o.order_status=s.order_status_id JOIN bills b ON b.user_order_id=o.order_id " +
+                    "GROUP BY o.order_id ORDER BY s.order_status_id, o.order_date DESC";
 
     private static final String SELECT_USER_PASSPORT =
             "SELECT p.user_id, p.user_passport_id, p.user_passport_series, p.user_passport_number, " +
@@ -63,6 +69,9 @@ public class UserDAOImpl implements UserDAO {
     private static final String COLUMN_USER_ROLE = "user_role";
     private static final String COLUMN_USER_RATING = "user_rating";
     private static final String COLUMN_USER_DISCOUNT = "user_discount";
+    private static final String COLUMN_USER_PHONE = "user_phone";
+    private static final String COLUMN_USER_EMAIL = "user_email";
+    private static final String COLUMN_USER_REGISTRATION_DATE = "user_registration_date";
 
     private static final String COLUMN_ORDER_ID = "order_id";
     private static final String COLUMN_ORDER_DATE = "order_date";
@@ -70,8 +79,9 @@ public class UserDAOImpl implements UserDAO {
     private static final String COLUMN_ORDER_RENTAL_START = "order_rental_start";
     private static final String COLUMN_ORDER_RENTAL_END = "order_rental_end";
     private static final String COLUMN_ORDER_CAR_ID = "order_car_id";
-    private static final String COLUMN_ORDER_PRICE = "order_price";
     private static final String COLUMN_COMMENT = "order_comment";
+
+    private static final String COLUMN_BILL_SUM = "bill_sum";
 
     private static final String COLUMN_PASSPORT_ID = "user_passport_id";
     private static final String COLUMN_PASSPORT_SERIES = "user_passport_series";
@@ -109,7 +119,7 @@ public class UserDAOImpl implements UserDAO {
 
         try {
             connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN);
+            preparedStatement = connection.prepareStatement(SELECT_USER_BY_LOGIN_AND_PASS);
             preparedStatement.setString(1, authorizationData.getLogin());
             preparedStatement.setString(2, authorizationData.getPassword());
             resultSet = preparedStatement.executeQuery();
@@ -172,6 +182,43 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
+    public UserDetails getUserDetails(int userID) throws DAOException {
+        UserDetails userDetails;
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_USER_BY_ID);
+            preparedStatement.setInt(1, userID);
+            resultSet = preparedStatement.executeQuery();
+
+            userDetails = new UserDetails();
+
+            if (resultSet.next()) {
+                userDetails.setUserID(resultSet.getInt(COLUMN_USER_ID));
+                userDetails.setUserLogin(resultSet.getString(COLUMN_USER_LOGIN));
+                userDetails.setUserRole(resultSet.getString(COLUMN_USER_ROLE));
+                userDetails.setUserRating(resultSet.getString(COLUMN_USER_RATING));
+                userDetails.setUserPhone(resultSet.getString(COLUMN_USER_PHONE));
+                userDetails.setUserEmail(resultSet.getString(COLUMN_USER_EMAIL));
+                userDetails.setUserRegistrationDate(resultSet.getTimestamp(COLUMN_USER_REGISTRATION_DATE));
+            }
+        } catch (ConnectionPoolError | SQLException e) {
+            logger.error("Severe database error! Cannot retrieve user details", e);
+            throw new DAOException(e);
+        } finally {
+            if (connection != null) {
+                connectionPool.closeConnection(connection, preparedStatement, resultSet);
+            }
+        }
+
+        return userDetails;
+    }
+
+    @Override
     public List<User> getAllUsers() throws DAOException {
         List<User> users;
 
@@ -212,7 +259,7 @@ public class UserDAOImpl implements UserDAO {
 
         try {
             connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(SELECT_ALL_USER_ORDERS);
+            preparedStatement = connection.prepareStatement(SELECT_ALL_USER_ORDERS_BY_ID);
             preparedStatement.setInt(1, userID);
             resultSet = preparedStatement.executeQuery();
 
@@ -354,8 +401,7 @@ public class UserDAOImpl implements UserDAO {
         order.setCarID(resultSet.getInt(COLUMN_ORDER_CAR_ID));
         order.setCarBrand(resultSet.getString(COLUMN_CAR_BRAND));
         order.setCarModel(resultSet.getString(COLUMN_CAR_MODEL));
-        order.setCarPricePerDay(resultSet.getString(COLUMN_ORDER_PRICE));
-        order.setOrderPrice(resultSet.getString(COLUMN_ORDER_PRICE));
+        order.setBillSum(resultSet.getString(COLUMN_BILL_SUM));
         order.setComment(resultSet.getString(COLUMN_COMMENT));
         order.setManagerID(resultSet.getInt(COLUMN_MANAGER_ID));
 

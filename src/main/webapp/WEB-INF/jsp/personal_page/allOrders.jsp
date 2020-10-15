@@ -5,12 +5,13 @@
 <fmt:message key="order.rental_start" var="order_rental_start"/>
 <fmt:message key="order.rental_end" var="order_rental_end"/>
 <fmt:message key="order.car" var="order_car"/>
-<fmt:message key="order.price" var="order_price"/>
+<fmt:message key="order.bill_sum" var="bill_sum"/>
 <fmt:message key="order.comment" var="order_comment"/>
 <fmt:message key="order.not_exists" var="order_not_exists"/>
 <fmt:message key="error.data_retrieve" var="data_retrieve_error"/>
 <fmt:message key="order.message_start" var="message_start"/>
 <fmt:message key="order.message_end" var="message_end"/>
+<fmt:message key="currency" var="currency"/>
 
 <table>
     <tr>
@@ -20,7 +21,7 @@
         <th style="width: 90px;">${order_rental_start}</th>
         <th style="width: 90px;">${order_rental_end}</th>
         <th style="width: 150px;">${order_car}</th>
-        <th>${order_price}</th>
+        <th>${bill_sum}</th>
         <th>${order_comment}</th>
     </tr>
 
@@ -35,7 +36,7 @@
         <c:otherwise>
             <c:forEach items="${requestScope.all_orders}" var="order">
                 <tr>
-                    <td style="text-align: center;">${order.userID}</td>
+                    <td>${order.userID}</td>
                     <td>${order.orderDate}</td>
                     <td style="text-align: center;" class="
                         <c:choose>
@@ -51,7 +52,9 @@
                     <td>${order.rentalStart}</td>
                     <td>${order.rentalEnd}</td>
                     <td>${order.carBrand} ${order.carModel}</td>
-                    <td style="width: 80px; text-align: center;">${order.orderPrice}</td>
+                    <td style="width: 80px; text-align: center;">
+                        <fmt:formatNumber minFractionDigits="2" value="${order.billSum}"/> ${currency}
+                    </td>
                     <td>${order.comment}</td>
                 </tr>
             </c:forEach>

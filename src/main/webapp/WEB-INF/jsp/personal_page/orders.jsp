@@ -5,11 +5,12 @@
 <fmt:message key="order.rental_start" var="order_rental_start"/>
 <fmt:message key="order.rental_end" var="order_rental_end"/>
 <fmt:message key="order.car" var="order_car"/>
-<fmt:message key="order.price" var="order_price"/>
+<fmt:message key="order.bill_sum" var="bill_sum"/>
 <fmt:message key="order.not_exists" var="order_not_exists"/>
 <fmt:message key="error.data_retrieve" var="data_retrieve_error"/>
 <fmt:message key="order.message_start" var="message_start"/>
 <fmt:message key="order.message_end" var="message_end"/>
+<fmt:message key="currency" var="currency"/>
 
 <table>
     <tr>
@@ -18,7 +19,7 @@
         <th>${order_rental_start}</th>
         <th>${order_rental_end}</th>
         <th>${order_car}</th>
-        <th>${order_price}</th>
+        <th>${bill_sum}</th>
     </tr>
 
     <c:choose>
@@ -29,17 +30,22 @@
         <c:when test="${requestScope.user_orders.size() lt 1}">
             </table>
             <p class="message">${order_not_exists}</p>
-            <p class="message">${message_start}<a href="mainController?command=go_to_catalog"> ${catalog_title} </a>${message_end}</p>
+            <p class="message">${message_start}
+                <a href="mainController?command=go_to_catalog"> ${catalog_title} </a>
+                    ${message_end}
+            </p>
         </c:when>
         <c:otherwise>
             <c:forEach items="${requestScope.user_orders}" var="order">
                 <tr>
                     <td>${order.orderDate}</td>
                     <td><fmt:message key="order.status.${order.orderStatus}"/></td>
-                    <td><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${order.rentalStart}"/></td>
-                    <td><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${order.rentalEnd}"/></td>
+                    <td>${order.rentalStart}</td>
+                    <td>${order.rentalEnd}</td>
                     <td>${order.carBrand} ${order.carModel}</td>
-                    <td>${order.orderPrice}</td>
+                    <td>
+                        <fmt:formatNumber minFractionDigits="2" value="${order.billSum}"/> ${currency}
+                    </td>
                 </tr>
             </c:forEach>
             </table>
