@@ -10,7 +10,7 @@
 <div id="content">
     <div class="container main-content">
         <div class="error-page-block">
-            <img src="${pageContext.request.contextPath}/img/page500.png" alt="500">
+            <img src="img/page500.png" alt="500">
             <h2>${error_500_title}</h2>
             <p>${error_500_desc}</p>
             <a href="${pageContext.request.contextPath}">

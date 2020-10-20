@@ -16,8 +16,8 @@ public class MainController extends HttpServlet {
     private static final String PARAMETER_COMMAND = "command";
     private static final String PARAMETER_LOCAL = "local";
 
-    private static final String ATTRIBUTE_MAIN_CONTROLLER = "mainController";
-    private static final String ATTRIBUTE_PREVIOUS_REQUEST = "previous_request";
+    private static final String MAIN_CONTROLLER = "mainController";
+    private static final String PREVIOUS_REQUEST = "previous_request";
 
     private final CommandProvider commandProvider = new CommandProvider();
 
@@ -41,8 +41,8 @@ public class MainController extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
 
-        String previousRequest = ATTRIBUTE_MAIN_CONTROLLER + "?" + req.getQueryString();
-        session.setAttribute(ATTRIBUTE_PREVIOUS_REQUEST, previousRequest);
+        String previousRequest = MAIN_CONTROLLER + "?" + req.getQueryString();
+        session.setAttribute(PREVIOUS_REQUEST, previousRequest);
     }
 
 }

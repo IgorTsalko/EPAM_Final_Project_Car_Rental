@@ -1,6 +1,6 @@
 package by.epamtc.tsalko.service.impl;
 
-import by.epamtc.tsalko.bean.Car;
+import by.epamtc.tsalko.bean.car.Car;
 import by.epamtc.tsalko.dao.CarDAO;
 import by.epamtc.tsalko.dao.DAOProvider;
 import by.epamtc.tsalko.dao.exception.DAOException;

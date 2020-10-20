@@ -1,4 +1,4 @@
-package by.epamtc.tsalko.bean;
+package by.epamtc.tsalko.bean.car;
 
 import java.io.Serializable;
 import java.util.Objects;

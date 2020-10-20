@@ -1,12 +1,11 @@
-package by.epamtc.tsalko.controller.command.impl.go_to.personal_page;
+package by.epamtc.tsalko.controller.command.impl.user.go_to;
 
-import by.epamtc.tsalko.bean.User;
+import by.epamtc.tsalko.bean.user.User;
+import by.epamtc.tsalko.controller.UserVerifier;
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.ServiceException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,24 +15,22 @@ import java.util.List;
 
 public class GoToPersonalPageAllUsersCommand implements Command {
 
-    private static final Logger logger = LogManager.getLogger(GoToPersonalPageAllUsersCommand.class);
+    private static final String ATTRIBUTE_USER = "user";
 
-    private static final String ATTRIBUTE_ALL_USERS = "all_users";
-    private static final String ATTRIBUTE_MESSAGE = "message";
+    private static final String ALL_USERS = "all_users";
 
+    private static final String MESSAGE_ALL_USERS = "message_all_users";
     private static final String ERROR_DATA_RETRIEVE = "data_retrieve_error";
 
-    private static final String COMMAND_GO_TO_MAIN_PAGE = "mainController?command=go_to_main_page";
-
+    private static final String GO_TO_MAIN_PAGE = "mainController?command=go_to_main_page";
     private static final String PERSONAL_PAGE = "/WEB-INF/jsp/personal_page/personalPage.jsp";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = (User) req.getSession().getAttribute("user");
+        User user = (User) req.getSession().getAttribute(ATTRIBUTE_USER);
 
-        if (user == null || !user.getRole().equals("admin")) {
-            logger.warn("Attempt to obtain private data");
-            resp.sendRedirect(COMMAND_GO_TO_MAIN_PAGE);
+        if (!UserVerifier.isAdmin(user)) {
+            resp.sendRedirect(GO_TO_MAIN_PAGE);
         } else {
             ServiceProvider serviceProvider = ServiceProvider.getInstance();
             UserService userService = serviceProvider.getUserService();
@@ -42,9 +39,9 @@ public class GoToPersonalPageAllUsersCommand implements Command {
 
             try {
                 allUsers = userService.getAllUsers();
-                req.setAttribute(ATTRIBUTE_ALL_USERS, allUsers);
+                req.setAttribute(ALL_USERS, allUsers);
             } catch (ServiceException e) {
-                req.setAttribute(ATTRIBUTE_MESSAGE, ERROR_DATA_RETRIEVE);
+                req.setAttribute(MESSAGE_ALL_USERS, ERROR_DATA_RETRIEVE);
             }
             req.getRequestDispatcher(PERSONAL_PAGE).forward(req, resp);
         }

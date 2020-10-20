@@ -35,7 +35,7 @@
                 <p>Аренда авто без залога!</p>
             </div>
             <div class="main-image">
-                <img src="${pageContext.request.contextPath}/img/car_rental.jpg" alt="">
+                <img src="img/car_rental.jpg" alt="">
             </div>
         </div>
 

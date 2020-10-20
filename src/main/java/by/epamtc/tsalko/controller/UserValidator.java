@@ -1,21 +1,34 @@
 package by.epamtc.tsalko.controller;
 
-import by.epamtc.tsalko.bean.AuthorizationData;
-import by.epamtc.tsalko.bean.RegistrationData;
+import by.epamtc.tsalko.bean.user.*;
+
+import java.util.Date;
 
 public class UserValidator {
 
-    private static final String LOGIN_REGEXP = "^[a-zA-Z0-9_-]{3,25}$";
+    private static final String LOGIN_REGEXP = "^[^\\s$/()]{3,25}$";
     private static final String PASSWORD_REGEXP = "^[^\\s]{6,18}$";
-    private static final String EMAIL_REGEXP = "^[\\w.-_]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,6}$";
+
+    private static final String EMAIL_REGEXP = "^[^\\s]+@[^\\s]+\\.[^\\s]+$";
     private static final String PHONE_REGEXP = "^[0-9\\(\\)-+\\s]+$";
+
+    private static final String PASSPORT_SERIES_REGEXP = "[a-zA-Zа-яА-Я]{2}";
+    private static final String PASSPORT_NUMBER_REGEXP = "[\\d]{7}";
+    private static final String PASSPORT_ISSUED_BY_REGEXP = ".{1,255}";
+    private static final String PASSPORT_USER_ADDRESS_REGEXP = ".{1,255}";
+    private static final String PASSPORT_USER_SURNAME_REGEXP = "[a-zA-Zа-яА-Я]{3,50}";
+    private static final String PASSPORT_USER_NAME_REGEXP = "[a-zA-Zа-яА-Я]{3,50}";
+    private static final String PASSPORT_USER_THIRDNAME_REGEXP = "[a-zA-Zа-яА-Я]{3,50}";
+
+    private static final String CARD_USER_FIRSTNAME_REGEXP = "[a-zA-Z]{3,50}";
+    private static final String CARD_USER_LASTNAME_REGEXP = "[a-zA-Z]{3,50}";
 
     public static boolean loginValidation(AuthorizationData data) {
         String login = data.getLogin();
         String password = data.getPassword();
 
-        return login != null && password != null
-                && login.matches(LOGIN_REGEXP) && password.matches(PASSWORD_REGEXP);
+        return login != null && login.matches(LOGIN_REGEXP)
+                && password != null && password.matches(PASSWORD_REGEXP);
     }
 
     public static boolean registrationValidation(RegistrationData data) {
@@ -24,15 +37,67 @@ public class UserValidator {
         String phone = data.getPhone();
         String email = data.getEmail();
 
-        if (email != null && email.length() > 0 && !email.matches(EMAIL_REGEXP)) {
-            return false;
-        }
+        return (email == null || email.length() == 0 || email.matches(EMAIL_REGEXP))
+                && login != null && login.matches(LOGIN_REGEXP)
+                && password != null && password.matches(PASSWORD_REGEXP)
+                && phone != null && phone.matches(PHONE_REGEXP);
+    }
 
-        if (login != null && password != null && phone != null) {
-            return login.matches(LOGIN_REGEXP) && password.matches(PASSWORD_REGEXP)
-                    && phone.matches(PHONE_REGEXP);
-        } else {
-            return false;
-        }
+    public static boolean userDetailsValidation(UserDetails userDetails) {
+        int userID = userDetails.getUserID();
+        int roleID = userDetails.getUserRoleID();
+        int ratingID = userDetails.getUserRatingID();
+        String phone = userDetails.getUserPhone();
+        String email = userDetails.getUserEmail();
+
+        return userID > 0
+                &&(email == null || email.length() == 0 || email.matches(EMAIL_REGEXP))
+                && phone != null && phone.matches(PHONE_REGEXP)
+                && roleID >= 0
+                && ratingID >= 0;
+    }
+
+    public static boolean userPassportValidation(Passport passport) {
+        int userID = passport.getUserID();
+        String passportSeries = passport.getPassportSeries();
+        String passportNumber = passport.getPassportNumber();
+        Date passportDateOfIssue = passport.getPassportDateOfIssue();
+        String passportIssuedBy = passport.getPassportIssuedBy();
+        String passportUserAddress = passport.getPassportUserAddress();
+        String passportUserSurname = passport.getPassportUserSurname();
+        String passportUserName = passport.getPassportUserName();
+        String passportUserThirdName = passport.getPassportUserThirdName();
+        Date passportUserDateOfBirth = passport.getPassportUserDateOfBirth();
+
+        return userID > 0
+                && passportSeries != null && passportSeries.matches(PASSPORT_SERIES_REGEXP)
+                && passportNumber != null && passportNumber.matches(PASSPORT_NUMBER_REGEXP)
+                && passportDateOfIssue != null
+                && passportIssuedBy != null && passportIssuedBy.matches(PASSPORT_ISSUED_BY_REGEXP)
+                && passportUserAddress != null && passportUserAddress.matches(PASSPORT_USER_ADDRESS_REGEXP)
+                && passportUserSurname != null && passportUserSurname.matches(PASSPORT_USER_SURNAME_REGEXP)
+                && passportUserName != null && passportUserName.matches(PASSPORT_USER_NAME_REGEXP)
+                && passportUserThirdName != null && passportUserThirdName.matches(PASSPORT_USER_THIRDNAME_REGEXP)
+                && passportUserDateOfBirth != null;
+    }
+
+    public static boolean BankCardValidation(Bankcard bankCard) {
+        int userID = bankCard.getUserID();
+        long bankcardNumber = bankCard.getBankcardNumber();
+        Date cardValidTrue = bankCard.getBankcardValidTrue();
+        String cardUserFirstname = bankCard.getBankcardUserFirstname();
+        String cardUserLastname = bankCard.getBankcardUserLastname();
+        String authorizationCode = bankCard.getBankcardCVV();
+
+        return userID > 0
+                && bankcardNumber >= 1000_0000_0000_000L && bankcardNumber <= 9999_9999_9999_9999L
+                && cardValidTrue != null
+                && cardUserFirstname != null && cardUserFirstname.matches(CARD_USER_FIRSTNAME_REGEXP)
+                && cardUserLastname != null && cardUserLastname.matches(CARD_USER_LASTNAME_REGEXP)
+                && authorizationCode != null && authorizationCode.length() == 3;
+    }
+
+    public static boolean userBankCardDeleteValidation(int userID, long bankCardNumber) {
+        return userID > 0 && bankCardNumber >= 1000_0000_0000_000L && bankCardNumber <= 9999_9999_9999_9999L;
     }
 }

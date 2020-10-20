@@ -1,9 +1,7 @@
-package by.epamtc.tsalko.controller.command.impl.go_to.personal_page;
+package by.epamtc.tsalko.controller.command.impl.user.go_to;
 
-import by.epamtc.tsalko.bean.User;
+import by.epamtc.tsalko.bean.user.User;
 import by.epamtc.tsalko.controller.command.Command;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,19 +10,17 @@ import java.io.IOException;
 
 public class GoToPersonalPageCommand implements Command {
 
-    private static final Logger logger = LogManager.getLogger(GoToPersonalPageCommand.class);
+    private static final String ATTRIBUTE_USER = "user";
 
-    private static final String COMMAND_GO_TO_MAIN_PAGE = "mainController?command=go_to_main_page";
-
+    private static final String GO_TO_MAIN_PAGE = "mainController?command=go_to_main_page";
     private static final String PERSONAL_PAGE = "/WEB-INF/jsp/personal_page/personalPage.jsp";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = (User) req.getSession().getAttribute("user");
+        User user = (User) req.getSession().getAttribute(ATTRIBUTE_USER);
 
         if (user == null) {
-            logger.warn("Attempt to obtain private data");
-            resp.sendRedirect(COMMAND_GO_TO_MAIN_PAGE);
+            resp.sendRedirect(GO_TO_MAIN_PAGE);
         } else {
             req.getRequestDispatcher(PERSONAL_PAGE).forward(req, resp);
         }

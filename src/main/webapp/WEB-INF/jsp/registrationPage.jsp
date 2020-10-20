@@ -8,7 +8,7 @@
 <fmt:message key="register" var="form_register"/>
 <fmt:message key="reg.successful" var="reg_successful"/>
 <fmt:message key="reg.error" var="reg_error"/>
-<fmt:message key="incorrect_data" var="incorrect_data"/>
+<fmt:message key="data.incorrect_data" var="incorrect_data"/>
 <fmt:message key="reg_info.text.start" var="info_text_start"/>
 <fmt:message key="reg_info.text.link" var="login_page"/>
 <fmt:message key="reg_info.text.end" var="info_text_end"/>
@@ -32,26 +32,26 @@
                     <button type="submit">${form_register}</button>
                 </form>
                 <c:choose>
-                    <c:when test="${pageContext.request.getParameter(\"message\") eq 'successful'}">
+                    <c:when test="${pageContext.request.getParameter(\"message_registration\") eq 'successful'}">
                         <h3>${reg_successful}</h3>
                         <p>${info_text_start}
                             <a href="mainController?command=go_to_login_page">${login_page}</a>
                                 ${info_text_end}
                         </p>
                     </c:when>
-                    <c:when test="${pageContext.request.getParameter(\"message\") eq 'user_already_exists'}">
+                    <c:when test="${pageContext.request.getParameter(\"message_registration\") eq 'user_exists'}">
                         <p class="error-message">${reg_user_exists}</p>
                     </c:when>
-                    <c:when test="${pageContext.request.getParameter(\"message\") eq 'error'}">
+                    <c:when test="${pageContext.request.getParameter(\"message_registration\") eq 'error'}">
                         <p class="error-message">${reg_error}</p>
                     </c:when>
-                    <c:when test="${pageContext.request.getParameter(\"message\") eq 'incorrect_data'}">
+                    <c:when test="${pageContext.request.getParameter(\"message_registration\") eq 'incorrect_data'}">
                         <p class="error-message">${incorrect_data}</p>
                     </c:when>
                 </c:choose>
             </div>
             <div class="info-registration-block">
-                <p>${reg_agreement} <a href="#">${reg_agreement_link}</a></p>
+                <p>${reg_agreement} <a href="mainController?command=go_to_login_page">${reg_agreement_link}</a></p>
             </div>
         </div>
 

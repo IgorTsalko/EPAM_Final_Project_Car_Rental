@@ -1,40 +1,36 @@
 package by.epamtc.tsalko.controller.command.impl;
 
-import by.epamtc.tsalko.bean.RegistrationData;
-import by.epamtc.tsalko.controller.Encoder;
+import by.epamtc.tsalko.bean.user.RegistrationData;
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.controller.UserValidator;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.ServiceException;
-import by.epamtc.tsalko.service.exception.UserAlreadyExistsServiceException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import by.epamtc.tsalko.service.exception.EntityAlreadyExistsServiceException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 
 public class RegistrationCommand implements Command {
 
-    private static final Logger logger = LogManager.getLogger(RegistrationCommand.class);
-
-    private static final String PARAMETER_EMAIL = "email";
-    private static final String PARAMETER_PHONE = "phone";
     private static final String PARAMETER_LOGIN = "login";
     private static final String PARAMETER_PASSWORD = "password";
-    private static final String PARAMETER_SUCCESSFUL = "message=successful";
-    private static final String PARAMETER_USER_EXISTS = "message=user_already_exists";
-    private static final String PARAMETER_ERROR = "message=error";
-    private static final String PARAMETER_INCORRECT_DATA = "message=incorrect_data";
+    private static final String PARAMETER_EMAIL = "email";
+    private static final String PARAMETER_PHONE = "phone";
+
+    private static final String MESSAGE_REGISTRATION = "&message_registration=";
+    private static final String SUCCESSFUL = "successful";
+    private static final String USER_EXISTS = "user_exists";
+    private static final String ERROR = "error";
+    private static final String INCORRECT_DATA = "data.incorrect_data";
 
     private static final String GO_TO_REGISTRATION_PAGE = "mainController?command=go_to_registration_page";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String page;
+        String page = GO_TO_REGISTRATION_PAGE;
 
         String login = req.getParameter(PARAMETER_LOGIN);
         String password = req.getParameter(PARAMETER_PASSWORD);
@@ -52,23 +48,18 @@ public class RegistrationCommand implements Command {
             UserService userService = serviceProvider.getUserService();
 
             try {
-                password = Encoder.encrypt(password);
-                registrationData.setPassword(password);
-
                 if (userService.registration(registrationData)) {
-                    logger.info("User is registered");
-                    page = GO_TO_REGISTRATION_PAGE + "&" + PARAMETER_SUCCESSFUL;
+                    page += MESSAGE_REGISTRATION + SUCCESSFUL;
                 } else {
-                    page = GO_TO_REGISTRATION_PAGE + "&" + PARAMETER_ERROR;
+                    page += MESSAGE_REGISTRATION + ERROR;
                 }
-            } catch (UserAlreadyExistsServiceException e) {
-                logger.warn("User tried to register a second time");
-                page = GO_TO_REGISTRATION_PAGE + "&" + PARAMETER_USER_EXISTS;
-            } catch (NoSuchAlgorithmException | ServiceException e) {
-                page = GO_TO_REGISTRATION_PAGE + "&" + PARAMETER_ERROR;
+            } catch (EntityAlreadyExistsServiceException e) {
+                page += MESSAGE_REGISTRATION + USER_EXISTS;
+            } catch (ServiceException e) {
+                page += MESSAGE_REGISTRATION + ERROR;
             }
         } else {
-            page = GO_TO_REGISTRATION_PAGE + "&" + PARAMETER_INCORRECT_DATA;
+            page += MESSAGE_REGISTRATION + INCORRECT_DATA;
         }
 
         resp.sendRedirect(page);

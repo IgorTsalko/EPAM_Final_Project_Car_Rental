@@ -1,6 +1,7 @@
-package by.epamtc.tsalko.bean;
+package by.epamtc.tsalko.bean.user;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 public class User implements Serializable {
@@ -12,6 +13,7 @@ public class User implements Serializable {
     private String role;
     private String rating;
     private int discount;
+    private Date registrationDate;
 
     public int getId() {
         return id;
@@ -53,6 +55,14 @@ public class User implements Serializable {
         this.discount = discount;
     }
 
+    public Date getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(Date registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -62,12 +72,13 @@ public class User implements Serializable {
                 discount == user.discount &&
                 Objects.equals(login, user.login) &&
                 Objects.equals(role, user.role) &&
-                Objects.equals(rating, user.rating);
+                Objects.equals(rating, user.rating) &&
+                Objects.equals(registrationDate, user.registrationDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, role, rating, discount);
+        return Objects.hash(id, login, role, rating, discount, registrationDate);
     }
 
     @Override
@@ -78,6 +89,7 @@ public class User implements Serializable {
                 ", role='" + role + '\'' +
                 ", rating='" + rating + '\'' +
                 ", discount=" + discount +
+                ", registrationDate=" + registrationDate +
                 '}';
     }
 }

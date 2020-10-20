@@ -1,6 +1,6 @@
 package by.epamtc.tsalko.dao;
 
-import by.epamtc.tsalko.bean.Car;
+import by.epamtc.tsalko.bean.car.Car;
 import by.epamtc.tsalko.dao.exception.DAOException;
 
 import java.util.List;

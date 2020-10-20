@@ -8,7 +8,7 @@
 <fmt:message key="order.bill_sum" var="bill_sum"/>
 <fmt:message key="order.comment" var="order_comment"/>
 <fmt:message key="order.not_exists" var="order_not_exists"/>
-<fmt:message key="error.data_retrieve" var="data_retrieve_error"/>
+<fmt:message key="data.retrieve_error" var="data_retrieve_error"/>
 <fmt:message key="order.message_start" var="message_start"/>
 <fmt:message key="order.message_end" var="message_end"/>
 <fmt:message key="currency" var="currency"/>
@@ -29,7 +29,7 @@
         <c:when test="${sessionScope.user.role ne 'admin'}">
             <c:redirect url="mainController?command=go_to_main_page"/>
         </c:when>
-        <c:when test="${requestScope.message eq 'data_retrieve_error'}">
+        <c:when test="${requestScope.message_all_orders eq 'data_retrieve_error'}">
             </table>
             <p class="data-error">${data_retrieve_error}</p>
         </c:when>

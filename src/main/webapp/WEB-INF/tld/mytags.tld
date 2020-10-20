@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.1"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee">
+    <tlib-version>1.0</tlib-version>
+    <description>MyCustomTags</description>
+    <short-name>mytags</short-name>
+<!--    <uri>/WEB-INF/tld/mytags.tld</uri>-->
+    <uri>http://localhost:8080/CarRentalFinalProjectJWD/mytag</uri>
+
+    <tag>
+        <name>paymentSystem</name>
+        <tag-class>by.epamtc.tsalko.view.tag.PaymentSystemTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>cardNumber</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <elexprvalue>true</elexprvalue>
+        </attribute>
+    </tag>
+</taglib>

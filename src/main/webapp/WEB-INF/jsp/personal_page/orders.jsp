@@ -7,7 +7,7 @@
 <fmt:message key="order.car" var="order_car"/>
 <fmt:message key="order.bill_sum" var="bill_sum"/>
 <fmt:message key="order.not_exists" var="order_not_exists"/>
-<fmt:message key="error.data_retrieve" var="data_retrieve_error"/>
+<fmt:message key="data.retrieve_error" var="data_retrieve_error"/>
 <fmt:message key="order.message_start" var="message_start"/>
 <fmt:message key="order.message_end" var="message_end"/>
 <fmt:message key="currency" var="currency"/>
@@ -21,9 +21,8 @@
         <th>${order_car}</th>
         <th>${bill_sum}</th>
     </tr>
-
     <c:choose>
-        <c:when test="${requestScope.message eq 'data_retrieve_error'}">
+        <c:when test="${requestScope.message_orders eq 'data_retrieve_error'}">
             </table>
             <p class="data-error">${data_retrieve_error}</p>
         </c:when>

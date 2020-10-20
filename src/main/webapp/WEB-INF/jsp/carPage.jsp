@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="header.jsp"%>
 
-<fmt:message key="error.data_retrieve" var="data_retrieve_error"/>
+<fmt:message key="data.retrieve_error" var="data_retrieve_error"/>
 <fmt:message key="car.nearest_available_date" var="nearest_available_date"/>
 <fmt:message key="car.transmission" var="transmission_title"/>
 <fmt:message key="car.engine_size" var="engine_size"/>
@@ -24,11 +24,11 @@
             <c:otherwise>
                 <div id="car-images" class="rowing-left">
                     <div id="main-car-image">
-                        <img id="main_car_img" src="${pageContext.request.contextPath}${requestScope.car_images[0]}">
+                        <img id="main_car_img" src="${requestScope.car_images[0]}">
                     </div>
                     <c:forEach items="${requestScope.car_images}" var="car_image">
-                        <a href="javascript:changeImage('${pageContext.request.contextPath}${car_image}')">
-                            <img class="small-car-img" src="${pageContext.request.contextPath}${car_image}">
+                        <a href="javascript:changeImage('${car_image}')">
+                            <img class="small-car-img" src="${car_image}">
                         </a>
                     </c:forEach>
                 </div>
@@ -54,7 +54,7 @@
                             <fmt:formatNumber minFractionDigits="2" value="${requestScope.car.pricePerDay}"/>
                         </strong> ${price_per_day}</p>
 
-                    <p>${nearest_available_date}: 2020-10-16</p>
+                    <p id="available-date">${nearest_available_date}: 2020-10-16</p>
                     <div id="order-form">
                         <form action="someAction" method="post">
                             <div class="rowing-left">

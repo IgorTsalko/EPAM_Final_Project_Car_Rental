@@ -28,6 +28,12 @@ header .menu-utility {
     height: 30px;
 }
 
+input,
+select {
+    border-radius: 2px;
+    border: 1px solid #979797;
+}
+
 .user-info {
     float: right;
     padding: 5px;
@@ -87,8 +93,6 @@ header .menu-utility {
 }
 
 #main-search input {
-    border-radius: 2px;
-    border: 1px solid #979797;
     width: 100%;
     height: 35px;
     padding: 8px;
@@ -189,8 +193,6 @@ header .menu-utility {
     height: 35px;
     margin: 10px;
     padding: 0 10px;
-    border-radius: 2px;
-    border: 1px solid #979797;
 }
 
 .registration-form h3, .registration-form p {
@@ -411,11 +413,17 @@ li {
 #user-menu-content {
     margin: 20px 0;
     border: 1px solid #ccc;
-    padding: 10px;
+    padding: 10px 20px;
     border-radius: 5px;
     overflow: auto;
     min-height: 320px;
-    max-height: 350px;
+    max-height: 400px;
+}
+
+#user-menu-content p,
+#user-menu-content h2,
+#user-menu-content h3 {
+    margin-left: 20px;
 }
 
 #stack-trace {
@@ -433,6 +441,10 @@ th, td {
     border-bottom: 1px solid #ddd;
 }
 
+table tr:first-child {
+    background-color: #efefef;
+}
+
 tr:hover {
     background-color:#f5f5f5;
 }
@@ -441,12 +453,46 @@ tr:hover {
     margin-top: 50px;
 }
 
-.card {
-    margin: 10px;
-    padding: 5px 20px;
+.bankcard {
+    margin: 10px 0 10px 0;
+    padding: 0 20px 0 0;
     border: 1px solid #c2dcf3;
-    border-radius: inherit;
+    border-radius: 3px;
     background: aliceblue;
+    display: flex;
+}
+
+.bankcard form {
+    display: flex;
+}
+
+.bankcard-image,
+.bankcard-number {
+    display: flex;
+}
+
+.bankcard-number {
+    margin-left: 20px;
+}
+
+.bankcard-number p,
+.bankcard-image img {
+    margin: auto;
+}
+
+.bankcard-delete {
+    margin-right: 25px;
+}
+
+.bankcard-delete button {
+    height: 100%;
+    border-radius: 3px 1px 1px 3px;
+    background-color: #b8cee2;
+    border-width: 0;
+}
+
+.bankcard-delete button:hover {
+    background-color: rgba(237, 31, 36, 0.7);
 }
 
 .car {
@@ -575,8 +621,6 @@ tr:hover {
 
 #order-form input {
     height: 25px;
-    border-radius: 2px;
-    border: 1px solid #979797;
     padding: 5px;
     width: 143px
 }
@@ -619,8 +663,6 @@ tr:hover {
     margin-top: 15px;
     box-sizing: border-box;
     padding-left: 10px;
-    border-radius: 2px;
-    border: 1px solid #979797;
 }
 
 .user-details {
@@ -633,11 +675,8 @@ tr:hover {
     margin-right: 10px;
 }
 
-.data-labels .data-field {
-    padding-top: 5px;
-}
-
-.data-labels, .user-data-fields {
+.data-labels,
+.user-data-fields {
     margin: 10px 0;
 }
 
@@ -645,22 +684,21 @@ tr:hover {
     width: 300px;
 }
 
-.user-details .data-labels p {
+.data-labels p {
     margin: 0;
     padding: 5px 10px 5px 0;
 }
 
-.user-data-fields input {
+.user-data-fields input,
+.user-data-fields select {
     padding: 5px;
-    border-radius: 2px;
-    border: 1px solid #979797;
-    float: left;
     margin-right: 5px;
     box-sizing: border-box;
     width: 100%;
+    float: left;
 }
 
-.user-details .data-field {
+.data-field {
     height: 32px;
     padding: 0;
 }
@@ -675,6 +713,7 @@ tr:hover {
     text-transform: none;
     padding: 3px 6px;
     min-width: 100px;
+    margin: 0 10px 5px 0;
 }
 
 .edit-button:hover {
@@ -685,4 +724,136 @@ tr:hover {
 
 .confirm-button {
     font-weight: 600!important;
+}
+
+#car-information #available-date  {
+    margin: 0 0 6px 10px;
+    font-size: 13px;
+    color: #5d5d5d;
+}
+
+#registration-date {
+    margin: -10px 0 6px 10px;
+    font-size: 13px;
+    color: #5d5d5d;
+}
+
+.update-error,
+.incorrect-data-error {
+    color: red;
+    margin: 5px 0;
+}
+
+#front-side-bankcard,
+#back-side-bankcard {
+    float: left;
+    margin: 0 10px 15px 10px;
+    padding: 45px 19px 0 19px;
+    border-radius: 10px;
+    width: 300px;
+    height: 170px;
+    background-color: whitesmoke;
+    box-shadow: 2px 2px 0 #b9b9b9;
+}
+
+#front-side-bankcard {
+    float: left;
+}
+
+#front-side-bankcard input,
+#back-side-bankcard input {
+    height: 35px;
+    padding: 5px 8px;
+    font-size: 16px;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: 2px;
+    box-sizing: border-box;
+}
+
+#bankcard-number {
+    float: left;
+    width: 200px;
+    margin-bottom: 15px;
+}
+
+#bankcard-number input {
+    width: 186px;
+}
+
+#bankcard-valid-true {
+    float: right;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+#bankcard-valid-true input {
+    width: 44px;
+    text-align: center;
+}
+
+#bankcard-valid-true input:first-of-type {
+    margin-left: 8px;
+}
+
+#bankcard-owner input {
+    width: 148px;
+}
+
+#bankcard-cvv {
+    margin-top: 10px;
+    float: right;
+}
+
+#bankcard-cvv input {
+    width: 47px;
+}
+
+#bankcard-strip {
+    width: 338px;
+    height: 50px;
+    background-color: #b9b9b9;
+    margin-top: -10px;
+    margin-left: -19px;
+}
+
+#add-bankcard-button {
+    margin: 0 15px;
+}
+
+#add-bankcard-button button {
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    width: 200px;
+    margin-right: 10px;
+}
+
+.cancel-button {
+    background-color: #f2f2f2;
+    color: #000;
+    font-weight: 300;
+    border-color: #f2f2f2;
+}
+
+.cancel-button:hover {
+    background-color: #e6e6e6;
+}
+
+#add-bankcard-button p {
+    padding: 0;
+    margin: 0 0 5px 0;
+}
+
+.link-add-bankcard {
+    color: #2e9cc3;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.payment-systems {
+    margin: 20px 20px 0 0;
+}
+
+.data-updated {
+    color: green;
+    margin: 5px 0 0 0;
 }

@@ -1,4 +1,4 @@
-package by.epamtc.tsalko.controller;
+package by.epamtc.tsalko.service.encrypt;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

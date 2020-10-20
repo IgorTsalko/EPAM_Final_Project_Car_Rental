@@ -1,6 +1,6 @@
 package by.epamtc.tsalko.controller.command.impl.go_to;
 
-import by.epamtc.tsalko.bean.Car;
+import by.epamtc.tsalko.bean.car.Car;
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.CarService;
 import by.epamtc.tsalko.service.ServiceProvider;

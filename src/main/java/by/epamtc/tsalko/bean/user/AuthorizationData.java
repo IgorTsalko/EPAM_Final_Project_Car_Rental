@@ -1,4 +1,4 @@
-package by.epamtc.tsalko.bean;
+package by.epamtc.tsalko.bean.user;
 
 import java.io.Serializable;
 import java.util.Objects;

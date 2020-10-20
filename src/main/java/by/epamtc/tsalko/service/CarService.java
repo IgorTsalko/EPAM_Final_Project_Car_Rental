@@ -1,6 +1,6 @@
 package by.epamtc.tsalko.service;
 
-import by.epamtc.tsalko.bean.Car;
+import by.epamtc.tsalko.bean.car.Car;
 import by.epamtc.tsalko.service.exception.ServiceException;
 
 import java.util.List;

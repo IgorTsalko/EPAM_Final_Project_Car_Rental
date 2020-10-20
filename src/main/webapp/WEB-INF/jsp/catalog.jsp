@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@include file="header.jsp"%>
 
-<fmt:message key="error.data_retrieve" var="data_retrieve_error"/>
+<fmt:message key="data.retrieve_error" var="data_retrieve_error"/>
 <fmt:message key="car.transmission" var="transmission_title"/>
 <fmt:message key="car.engine_size" var="engine_size"/>
 <fmt:message key="car.engine_size_unit" var="engine_size_unit"/>
@@ -25,7 +25,7 @@
                     <div class="car clear link">
                         <a href="mainController?command=go_to_car_page&car_id=${car.carID}">
                             <div class="car-image rowing-left">
-                                <img width="250" src="${pageContext.request.contextPath}${car.mainImageURI}" alt="carImage">
+                                <img width="250" src="${car.mainImageURI}" alt="carImage">
                             </div>
                             <div class="car-desc rowing-left">
                                 <p class="car-title">${car.brand} ${car.model} ${car.yearProduction}</p>

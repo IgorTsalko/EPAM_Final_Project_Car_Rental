@@ -1,34 +1,30 @@
 package by.epamtc.tsalko.controller.command.impl;
 
-import by.epamtc.tsalko.bean.AuthorizationData;
-import by.epamtc.tsalko.bean.User;
-import by.epamtc.tsalko.controller.Encoder;
+import by.epamtc.tsalko.bean.user.AuthorizationData;
+import by.epamtc.tsalko.bean.user.User;
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.controller.UserValidator;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.ServiceException;
 import by.epamtc.tsalko.service.exception.EntityNotFoundServiceException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 
 public class AuthorizationCommand implements Command {
 
-    private static final Logger logger = LogManager.getLogger(AuthorizationCommand.class);
+    private static final String ATTRIBUTE_USER = "user";
 
     private static final String PARAMETER_LOGIN = "login";
     private static final String PARAMETER_PASSWORD = "password";
-    private static final String PARAMETER_WRONG_DATA = "message=wrong_data";
-    private static final String PARAMETER_LOGIN_ERROR = "message=login_error";
-    private static final String PARAMETER_INCORRECT_DATA = "message=incorrect_data";
 
-    private static final String ATTRIBUTE_USER = "user";
+    private static final String MESSAGE_AUTHORIZATION = "&message_authorization=";
+    private static final String WRONG_DATA = "wrong_data";
+    private static final String ERROR = "error";
+    private static final String INCORRECT_DATA = "data.incorrect_data";
 
     private static final String GO_TO_LOGIN_PAGE = "mainController?command=go_to_login_page";
     private static final String GO_TO_MAIN_PAGE = "mainController?command=go_to_main_page";
@@ -49,21 +45,16 @@ public class AuthorizationCommand implements Command {
             UserService userService = serviceProvider.getUserService();
 
             try {
-                password = Encoder.encrypt(password);
-                authorizationData.setPassword(password);
-
                 User user = userService.authorization(authorizationData);
                 req.getSession().setAttribute(ATTRIBUTE_USER, user);
-                logger.info("User is authorized");
                 page = GO_TO_MAIN_PAGE;
             } catch (EntityNotFoundServiceException e) {
-                logger.warn("User has entered incorrect data");
-                page = GO_TO_LOGIN_PAGE + "&" + PARAMETER_WRONG_DATA;
-            } catch (NoSuchAlgorithmException | ServiceException e) {
-                page = GO_TO_LOGIN_PAGE + "&" + PARAMETER_LOGIN_ERROR;
+                page = GO_TO_LOGIN_PAGE + MESSAGE_AUTHORIZATION + WRONG_DATA;
+            } catch (ServiceException e) {
+                page = GO_TO_LOGIN_PAGE + MESSAGE_AUTHORIZATION + ERROR;
             }
         } else {
-            page = GO_TO_LOGIN_PAGE + "&" + PARAMETER_INCORRECT_DATA;
+            page = GO_TO_LOGIN_PAGE + MESSAGE_AUTHORIZATION + INCORRECT_DATA;
         }
 
         resp.sendRedirect(page);

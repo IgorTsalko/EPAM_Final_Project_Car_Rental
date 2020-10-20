@@ -1,4 +1,4 @@
-package by.epamtc.tsalko.bean;
+package by.epamtc.tsalko.bean.user;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,8 +10,10 @@ public class UserDetails implements Serializable {
 
     private int userID;
     private String userLogin;
-    private String userRole;
-    private String userRating;
+    private String userRoleName;
+    private int userRoleID;
+    private String userRatingName;
+    private int userRatingID;
     private String userPhone;
     private String userEmail;
     private Date userRegistrationDate;
@@ -32,20 +34,36 @@ public class UserDetails implements Serializable {
         this.userLogin = userLogin;
     }
 
-    public String getUserRole() {
-        return userRole;
+    public String getUserRoleName() {
+        return userRoleName;
     }
 
-    public void setUserRole(String userRole) {
-        this.userRole = userRole;
+    public void setUserRoleName(String userRoleName) {
+        this.userRoleName = userRoleName;
     }
 
-    public String getUserRating() {
-        return userRating;
+    public int getUserRoleID() {
+        return userRoleID;
     }
 
-    public void setUserRating(String userRating) {
-        this.userRating = userRating;
+    public void setUserRoleID(int userRoleID) {
+        this.userRoleID = userRoleID;
+    }
+
+    public String getUserRatingName() {
+        return userRatingName;
+    }
+
+    public void setUserRatingName(String userRatingName) {
+        this.userRatingName = userRatingName;
+    }
+
+    public int getUserRatingID() {
+        return userRatingID;
+    }
+
+    public void setUserRatingID(int userRatingID) {
+        this.userRatingID = userRatingID;
     }
 
     public String getUserPhone() {
@@ -78,9 +96,11 @@ public class UserDetails implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         UserDetails that = (UserDetails) o;
         return userID == that.userID &&
+                userRoleID == that.userRoleID &&
+                userRatingID == that.userRatingID &&
                 Objects.equals(userLogin, that.userLogin) &&
-                Objects.equals(userRole, that.userRole) &&
-                Objects.equals(userRating, that.userRating) &&
+                Objects.equals(userRoleName, that.userRoleName) &&
+                Objects.equals(userRatingName, that.userRatingName) &&
                 Objects.equals(userPhone, that.userPhone) &&
                 Objects.equals(userEmail, that.userEmail) &&
                 Objects.equals(userRegistrationDate, that.userRegistrationDate);
@@ -88,7 +108,8 @@ public class UserDetails implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userID, userLogin, userRole, userRating, userPhone, userEmail, userRegistrationDate);
+        return Objects.hash(userID, userLogin, userRoleName, userRoleID, userRatingName,
+                userRatingID, userPhone, userEmail, userRegistrationDate);
     }
 
     @Override
@@ -96,8 +117,10 @@ public class UserDetails implements Serializable {
         return this.getClass().getSimpleName() + "{" +
                 "userID=" + userID +
                 ", userLogin='" + userLogin + '\'' +
-                ", userRole='" + userRole + '\'' +
-                ", userRating='" + userRating + '\'' +
+                ", userRoleName='" + userRoleName + '\'' +
+                ", userRoleID=" + userRoleID +
+                ", userRatingName='" + userRatingName + '\'' +
+                ", userRatingID=" + userRatingID +
                 ", userPhone='" + userPhone + '\'' +
                 ", userEmail='" + userEmail + '\'' +
                 ", userRegistrationDate=" + userRegistrationDate +

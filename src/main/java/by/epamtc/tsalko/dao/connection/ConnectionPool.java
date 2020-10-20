@@ -131,7 +131,7 @@ public final class ConnectionPool {
     }
 
     public void dropAllConnections() {
-        for (int i = 0; i < DEFAULT_POOL_SIZE; i++) {
+        for (int i = 0; i < poolSize; i++) {
             try {
                 ((PooledConnection) connectionQueue.take()).realClose();
             } catch (SQLException e) {

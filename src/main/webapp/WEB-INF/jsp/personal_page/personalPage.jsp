@@ -6,11 +6,14 @@
 <fmt:message key="user.role" var="role"/>
 <fmt:message key="user.rating" var="rating"/>
 <fmt:message key="user.discount" var="discount"/>
+<fmt:message key="user.registration_date" var="registration_date"/>
+<fmt:message key="user.details" var="details_title"/>
 <fmt:message key="user.orders" var="orders_title"/>
 <fmt:message key="user.passport_data" var="passport_data"/>
-<fmt:message key="user.cards" var="cards"/>
+<fmt:message key="user.bankcards_title" var="bankcards_title"/>
 <fmt:message key="user.all_orders" var="all_orders"/>
 <fmt:message key="user.all_users" var="all_users"/>
+<fmt:message key="bankcard.adding_title" var="bankcard_adding_title"/>
 <c:set var="command" value="${pageContext.request.getParameter(\"command\")}"/>
 
 <%--START MAIN-CONTENT--%>
@@ -32,6 +35,8 @@
                     <p>${sessionScope.user.login.charAt(0)}</p>
                 </div>
                 <h3>${hello} ${sessionScope.user.login}</h3>
+                <p id="registration-date">${registration_date}: <fmt:formatDate pattern="yyyy-MM-dd / HH:mm"
+                                                         value="${sessionScope.user.registrationDate}"/></p>
                 <p>${role}: ${sessionScope.user.role} • ${rating}: ${sessionScope.user.rating} • ${discount}: ${sessionScope.user.discount}%</p>
 
                 <div class="user-data">
@@ -47,11 +52,16 @@
                         <div class="user-menu-tab rowing-left <c:if test="${command eq 'go_to_personal_page_orders'}">selected-tab</c:if>">
                             <a href="mainController?command=go_to_personal_page_orders">${orders_title}</a>
                         </div>
+                        <div class="user-menu-tab rowing-left <c:if test="${command eq 'go_to_personal_page_details'}">selected-tab</c:if>">
+                            <a href="mainController?command=go_to_personal_page_details">${details_title}</a>
+                        </div>
                         <div class="user-menu-tab rowing-left <c:if test="${command eq 'go_to_personal_page_passport'}">selected-tab</c:if>">
                             <a href="mainController?command=go_to_personal_page_passport">${passport_data}</a>
                         </div>
-                        <div class="user-menu-tab rowing-left <c:if test="${command eq 'go_to_personal_page_cards'}">selected-tab</c:if>">
-                            <a href="mainController?command=go_to_personal_page_cards">${cards}</a>
+                        <div class="user-menu-tab rowing-left
+                            <c:if test="${command eq 'go_to_personal_page_bankcards'}">selected-tab</c:if>
+                            <c:if test="${command eq 'go_to_personal_page_add_bankcard'}">selected-tab</c:if>">
+                            <a href="mainController?command=go_to_personal_page_bankcards">${bankcards_title}</a>
                         </div>
                     </div>
                     <div id="user-menu-content">
@@ -59,11 +69,20 @@
                             <c:when test="${command eq 'go_to_personal_page_orders'}">
                                 <%@include file="orders.jsp"%>
                             </c:when>
+                            <c:when test="${command eq 'go_to_personal_page_details'}">
+                                <%@include file="userDetails.jsp"%>
+                            </c:when>
                             <c:when test="${command eq 'go_to_personal_page_passport'}">
                                 <%@include file="passport.jsp"%>
                             </c:when>
-                            <c:when test="${command eq 'go_to_personal_page_cards'}">
-                                <%@include file="cards.jsp"%>
+                            <c:when test="${command eq 'go_to_personal_page_bankcards'}">
+                                <p class="link-add-bankcard">
+                                    <a href="mainController?command=go_to_personal_page_add_bankcard">&#10010; ${bankcard_adding_title}</a>
+                                </p>
+                                <%@include file="bankcards.jsp"%>
+                            </c:when>
+                            <c:when test="${command eq 'go_to_personal_page_add_bankcard'}">
+                                <%@include file="addBankcard.jsp"%>
                             </c:when>
                             <c:when test="${command eq 'go_to_personal_page_all_orders'}">
                                 <%@include file="allOrders.jsp"%>
