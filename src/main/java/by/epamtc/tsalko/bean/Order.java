@@ -9,6 +9,7 @@ public class Order implements Serializable {
     private static final long serialVersionUID = 1648826363500527628L;
 
     private int userID;
+    private String userLogin;
     private int orderId;
     private Date orderDate;
     private String orderStatus;
@@ -27,6 +28,14 @@ public class Order implements Serializable {
 
     public void setUserID(int userID) {
         this.userID = userID;
+    }
+
+    public String getUserLogin() {
+        return userLogin;
+    }
+
+    public void setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
     }
 
     public int getOrderId() {
@@ -126,6 +135,7 @@ public class Order implements Serializable {
                 orderId == order.orderId &&
                 carID == order.carID &&
                 managerID == order.managerID &&
+                Objects.equals(userLogin, order.userLogin) &&
                 Objects.equals(orderDate, order.orderDate) &&
                 Objects.equals(orderStatus, order.orderStatus) &&
                 Objects.equals(rentalStart, order.rentalStart) &&
@@ -138,14 +148,16 @@ public class Order implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userID, orderId, orderDate, orderStatus, rentalStart, rentalEnd, carID,
-                carBrand, carModel, billSum, comment, managerID);
+        return Objects.hash(userID, userLogin, orderId, orderDate, orderStatus, rentalStart,
+                rentalEnd, carID, carBrand, carModel, billSum, comment, managerID);
     }
+
 
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
                 "userID=" + userID +
+                ", userLogin='" + userLogin + '\'' +
                 ", orderId=" + orderId +
                 ", orderDate=" + orderDate +
                 ", orderStatus='" + orderStatus + '\'' +
@@ -154,7 +166,7 @@ public class Order implements Serializable {
                 ", carID=" + carID +
                 ", carBrand='" + carBrand + '\'' +
                 ", carModel='" + carModel + '\'' +
-                ", orderPrice='" + billSum + '\'' +
+                ", billSum='" + billSum + '\'' +
                 ", comment='" + comment + '\'' +
                 ", managerID=" + managerID +
                 '}';

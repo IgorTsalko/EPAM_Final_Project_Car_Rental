@@ -16,12 +16,18 @@ import java.util.List;
 
 public class GoToPersonalPageAllOrdersCommand implements Command {
 
+    private static final int LINE_AMOUNT = 4;
+
     private static final String ATTRIBUTE_USER = "user";
 
-    private static final String ALL_ORDERS = "all_orders";
+    private static final String ORDERS = "orders";
+    private static final String OFFSET = "offset";
+    private static final String PAGE = "page";
 
-    private static final String MESSAGE_ALL_ORDERS = "message_all_orders";
+    private static final String MESSAGE_ORDERS = "message_orders";
     private static final String ERROR_DATA_RETRIEVE = "data_retrieve_error";
+    private static final String LAST_PAGE = "last_page";
+    private static final String FIRST_PAGE = "first_page";
 
     private static final String GO_TO_MAIN_PAGE = "mainController?command=go_to_main_page";
     private static final String PERSONAL_PAGE = "/WEB-INF/jsp/personal_page/personalPage.jsp";
@@ -36,13 +42,30 @@ public class GoToPersonalPageAllOrdersCommand implements Command {
             ServiceProvider serviceProvider = ServiceProvider.getInstance();
             UserService userService = serviceProvider.getUserService();
 
-            List<Order> allOrders;
+            List<Order> orders;
+
+            int page = 1;
+            try {
+                page = Integer.parseInt(req.getParameter(PAGE));
+            } catch (NumberFormatException ignore) {/*NOPE*/}
+
+            if (page < 1) page = 1;
 
             try {
-                allOrders = userService.getAllOrders();
-                req.setAttribute(ALL_ORDERS, allOrders);
+                int offset = (page - 1) * LINE_AMOUNT;
+                orders = userService.getOrders(offset, LINE_AMOUNT);
+
+                if (orders.size() < LINE_AMOUNT) {
+                    req.setAttribute(MESSAGE_ORDERS, LAST_PAGE);
+                }
+                if (page == 1) {
+                    req.setAttribute(MESSAGE_ORDERS, FIRST_PAGE);
+                }
+                req.setAttribute(OFFSET, offset);
+                req.setAttribute(ORDERS, orders);
+                req.setAttribute(PAGE, page);
             } catch (ServiceException e) {
-                req.setAttribute(MESSAGE_ALL_ORDERS, ERROR_DATA_RETRIEVE);
+                req.setAttribute(MESSAGE_ORDERS, ERROR_DATA_RETRIEVE);
             }
             req.getRequestDispatcher(PERSONAL_PAGE).forward(req, resp);
         }

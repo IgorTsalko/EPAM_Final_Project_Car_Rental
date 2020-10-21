@@ -14,7 +14,7 @@ public interface UserDAO {
     UserDetails getUserDetails(int userID) throws DAOException;
     List<User> getAllUsers() throws DAOException;
     List<Order> getUserOrders(int userID) throws DAOException;
-    List<Order> getAllOrders() throws DAOException;
+    List<Order> getOrders(int offset, int linesAmount) throws DAOException;
     Passport getUserPassport(int userID) throws DAOException;
     List<Long> getBankcardNumbers(int userID) throws DAOException;
 

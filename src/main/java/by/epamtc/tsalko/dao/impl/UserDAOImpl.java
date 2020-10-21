@@ -55,13 +55,14 @@ public class UserDAOImpl implements UserDAO {
                     "ON o.order_status=s.order_status_id JOIN bills b ON b.user_order_id=o.order_id " +
                     "WHERE o.user_id=? GROUP BY o.order_id ORDER BY s.order_status_id, o.order_date DESC";
 
-    private static final String SELECT_ALL_ORDERS =
-            "SELECT o.user_id, o.order_id, o.order_date, s.order_status, o.order_rental_start, " +
+    private static final String SELECT_ORDERS =
+            "SELECT o.user_id, u.user_login, o.order_id, o.order_date, s.order_status, o.order_rental_start, " +
                     "o.order_rental_end, o.order_car_id, c.car_brand, c.car_model, " +
                     "SUM(b.bill_sum) as bill_sum, o.manager_id, o.order_comment " +
                     "FROM user_orders o JOIN cars c ON o.order_car_id=c.car_id JOIN order_statuses s " +
                     "ON o.order_status=s.order_status_id JOIN bills b ON b.user_order_id=o.order_id " +
-                    "GROUP BY o.order_id ORDER BY s.order_status_id, o.order_date DESC";
+                    "JOIN users u ON u.user_id=o.user_id " +
+                    "GROUP BY o.order_id ORDER BY s.order_status_id, o.order_date DESC LIMIT ?, ?";
 
     private static final String SELECT_USER_PASSPORT_BY_USER_ID =
             "SELECT p.user_id, p.user_passport_id, p.user_passport_series, p.user_passport_number, " +
@@ -302,7 +303,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<Order> getAllOrders() throws DAOException {
+    public List<Order> getOrders(int offset, int linesAmount) throws DAOException {
         List<Order> allOrders = new ArrayList<>();
 
         Connection connection = null;
@@ -311,7 +312,9 @@ public class UserDAOImpl implements UserDAO {
 
         try {
             connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(SELECT_ALL_ORDERS);
+            preparedStatement = connection.prepareStatement(SELECT_ORDERS);
+            preparedStatement.setInt(1, offset);
+            preparedStatement.setInt(2, linesAmount);
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -546,6 +549,7 @@ public class UserDAOImpl implements UserDAO {
     private Order createOrder(ResultSet resultSet) throws SQLException {
         Order order = new Order();
         order.setUserID(resultSet.getInt(COLUMN_USER_ID));
+        order.setUserLogin(resultSet.getString(COLUMN_USER_LOGIN));
         order.setOrderId(resultSet.getInt(COLUMN_ORDER_ID));
         order.setOrderDate(resultSet.getDate(COLUMN_ORDER_DATE));
         order.setOrderStatus(resultSet.getString(COLUMN_ORDER_STATUS));

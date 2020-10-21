@@ -14,7 +14,7 @@ public interface UserService {
     UserDetails getUserDetails(int userID) throws ServiceException;
     List<User> getAllUsers() throws ServiceException;
     List<Order> getUserOrders(int userID) throws ServiceException;
-    List<Order> getAllOrders() throws ServiceException;
+    List<Order> getOrders(int offset, int linesAmount) throws ServiceException;
     Passport getUserPassport(int userID) throws ServiceException;
     List<Long> getBankcardNumbers(int userID) throws ServiceException;
 

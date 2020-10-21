@@ -109,14 +109,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Order> getAllOrders() throws ServiceException {
+    public List<Order> getOrders(int offset, int linesAmount) throws ServiceException {
         List<Order> allOrders;
 
         DAOProvider daoProvider = DAOProvider.getInstance();
         UserDAO userDAO = daoProvider.getUserDAO();
 
         try {
-            allOrders = userDAO.getAllOrders();
+            allOrders = userDAO.getOrders(offset, linesAmount);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
