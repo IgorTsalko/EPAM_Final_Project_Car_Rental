@@ -1,5 +1,5 @@
 html {
-    font-family: Helvetica,Arial,sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: .75em;
     line-height: 18px;
 }
@@ -12,6 +12,53 @@ body {
     line-height: inherit;
     position: relative;
     margin: 0;
+}
+
+a {
+    transition: all .3s;
+    color: #00529c;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+ul {
+    list-style-type: none;
+}
+
+li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+
+button {
+    transition: all .3s;
+    text-transform: uppercase;
+    font-size: 1em;
+    border-radius: 3px;
+    border-color: #2e94d8;
+    background-color: #3498db;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #5db2ea;
+}
+
+input,
+select {
+    transition: all .3s;
+    border-radius: 2px;
+    border: 1px solid #979797;
+}
+
+input:hover,
+select:hover {
+    box-shadow: #3498db38 0px 2px 6px 0px;
 }
 
 header {
@@ -28,12 +75,6 @@ header .menu-utility {
     height: 30px;
 }
 
-input,
-select {
-    border-radius: 2px;
-    border: 1px solid #979797;
-}
-
 .user-info {
     float: right;
     padding: 5px;
@@ -41,7 +82,6 @@ select {
 
 .user-info a {
     margin: 0 15px 0 0;
-    text-decoration: none;
 }
 
 .container {
@@ -60,15 +100,6 @@ select {
 
 .header-button-right {
     left: 75%;
-}
-
-.header-menu {
-    margin: 50px 0 0 45px;
-    font-size: 16px;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: #36495a;
-    text-decoration: none;
 }
 
 .field {
@@ -203,21 +234,6 @@ select {
     text-align: center;
 }
 
-button {
-    text-transform: uppercase;
-    font-size: 1em;
-    border-radius: 3px;
-    border-color: #2e94d8;
-    background-color: #3498db;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #5db2ea;
-}
-
 .login-form button, .registration-form button {
     width: 300px;
     height: 35px;
@@ -262,24 +278,6 @@ footer ul {
 
 .footer-info a {
     line-height: 20px;
-}
-
-a {
-    color: #00529c;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-ul {
-    list-style-type: none;
-}
-
-li {
-    display: list-item;
-    text-align: -webkit-match-parent;
 }
 
 .error-page-block {
@@ -330,30 +328,6 @@ li {
     font-weight: 600;
     color: #e2ffe2;
     margin-right: 30px;
-}
-
-#user-menu {
-    height: 45px;
-    font-size: 16px;
-    border-bottom: 1px solid #ccc!important;;
-}
-
-.user-menu-tab {
-    padding: 10px 20px;
-    margin-top: 8px;
-}
-
-.admin-tab {
-    background-color: #ff000b36;
-}
-
-.selected-tab {
-    border-bottom: 3px solid #7dbf26;
-}
-
-.user-menu-tab a {
-    color: #36495a;
-    text-decoration: none;
 }
 
 .info-login-block {
@@ -412,12 +386,7 @@ li {
 
 #user-menu-content {
     margin: 20px 0;
-    border: 1px solid #ccc;
-    padding: 10px 20px;
-    border-radius: 5px;
-    overflow: auto;
     min-height: 320px;
-    max-height: 400px;
 }
 
 #user-menu-content p,
@@ -533,12 +502,14 @@ tr:hover {
 
 .new-order {
     background-color: #9de044;
-    border-color: white;
+    border: none;
+    font-size: 16px;
 }
 
 .expired-order {
     background-color: lightcoral;
-    border-color: white;
+    border: none;
+    font-size: 16px;
 }
 
 .small-car-img {
@@ -582,7 +553,6 @@ tr:hover {
 }
 
 .car-features li {
-    font-family: "Trebuchet MS", "Lucida Sans";
     padding: 7px 20px;
     margin-bottom: 10px;
     border-radius: 5px;
@@ -849,6 +819,10 @@ tr:hover {
     font-weight: 600;
 }
 
+.link-add-bankcard a:hover {
+    text-decoration: none;
+}
+
 .payment-systems {
     margin: 20px 20px 0 0;
 }
@@ -856,4 +830,88 @@ tr:hover {
 .data-updated {
     color: green;
     margin: 5px 0 0 0;
+}
+
+.user-menu-tab {
+    margin-top: 8px;
+}
+
+.user-menu-tab a {
+    padding: 10px 20px;
+    color: #36495a;
+    text-decoration: none;
+}
+
+.user-menu-tab a:hover {
+    box-shadow:0px -5px 0 #5b8db9 inset;
+    background-color: #f0f8ffa1;
+}
+
+#user-menu {
+    height: 35px;
+    font-size: 16px;
+    border-bottom: 1px solid #ccc!important;;
+}
+
+.admin-tab a {
+    background-color: #ed5464b3;
+    color: white;
+}
+
+.admin-tab a:hover {
+    background-color: #ee6371;
+    box-shadow: 0px -5px 0 #096363 inset!important;
+}
+
+.admin-tab.selected-tab a {
+    box-shadow: 0px -4px 0 #5a514f inset;
+}
+
+.selected-tab a {
+    box-shadow:0px -4px 0 #9de044 inset;
+}
+
+#main-menu {
+    margin-top: 50px;
+}
+
+.header-menu {
+    font-size: 16px;
+    text-transform: uppercase;
+    color: #36495a;
+    text-decoration: none;
+}
+
+.header-menu a {
+    padding: 15px;
+}
+
+.header-menu a:hover {
+    box-shadow:0px -5px 0 #5b8db9 inset;
+    text-decoration: none;
+}
+
+footer ul {
+    list-style-type: circle;
+}
+
+.pages-back {
+    float: right;
+    padding: 20px 10px 20px 0;
+}
+
+.pages-forward {
+    float: left;
+    padding: 20px 0 20px 10px;
+}
+
+.pages-back,
+.pages-forward {
+    font-size: 18px;
+    margin: 0!important;
+}
+
+.pages-back a,
+.pages-forward a {
+    text-decoration: none;
 }

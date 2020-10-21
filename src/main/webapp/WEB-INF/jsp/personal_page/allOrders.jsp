@@ -59,5 +59,7 @@
                 </tr>
             </c:forEach>
             </table>
+            <div class="pages-back"><a href="">назад &#9658;</a></div>
+            <div class="pages-forward"><a href="">&#9668; вперед</a></div>
         </c:otherwise>
     </c:choose>

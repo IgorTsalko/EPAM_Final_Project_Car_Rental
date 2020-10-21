@@ -7,9 +7,10 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Car_rental Igor Tsalko</title>
-    <link rel="stylesheet" media="all" type="text/css" href="css/core.css">
-    <script type="text/javascript" async="" src="js/common.js"></script>
     <link href="img/favicon.png" rel="icon">
+    <link rel="stylesheet" media="all" type="text/css" href="css/core.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <script type="text/javascript" async="" src="js/common.js"></script>
 
     <c:if test="${not empty sessionScope.local}">
         <fmt:setLocale value="${sessionScope.local}"/>
@@ -30,6 +31,8 @@
     <fmt:message key="stocks" var="stocks_title"/>
     <fmt:message key="rules" var="rules_title"/>
     <fmt:message key="news" var="news_title"/>
+
+    <c:set var="command" value="${pageContext.request.getParameter(\"command\")}"/>
 </head>
 <body>
 <!-- START HEADER -->
@@ -71,11 +74,23 @@
             <a class="logo rowing-left" href="${pageContext.request.contextPath}">
                 <img src="img/logo.png" alt="Logo">
             </a>
-            <a class="header-menu rowing-right" href="mainController?command=go_to_contact_page">${contacts_title}</a>
-            <a class="header-menu rowing-right" href="mainController?command=go_to_catalog">${catalog_title}</a>
-            <a class="header-menu rowing-right" href="mainController?command=go_to_stocks">${stocks_title}</a>
-            <a class="header-menu rowing-right" href="mainController?command=go_to_rules">${rules_title}</a>
-            <a class="header-menu rowing-right" href="mainController?command=go_to_news">${news_title}</a>
+            <div id="main-menu" class="rowing-right">
+                <div class="header-menu rowing-right <c:if test="${command eq 'go_to_contact_page'}">selected-tab</c:if>">
+                    <a href="mainController?command=go_to_contact_page">${contacts_title}</a>
+                </div>
+                <div class="header-menu rowing-right <c:if test="${command eq 'go_to_catalog'}">selected-tab</c:if>">
+                    <a href="mainController?command=go_to_catalog">${catalog_title}</a>
+                </div>
+                <div class="header-menu rowing-right <c:if test="${command eq 'go_to_stocks'}">selected-tab</c:if>">
+                    <a href="mainController?command=go_to_stocks">${stocks_title}</a>
+                </div>
+                <div class="header-menu rowing-right <c:if test="${command eq 'go_to_rules'}">selected-tab</c:if>">
+                    <a href="mainController?command=go_to_rules">${rules_title}</a>
+                </div>
+                <div class="header-menu rowing-right <c:if test="${command eq 'go_to_news'}">selected-tab</c:if>">
+                    <a href="mainController?command=go_to_news">${news_title}</a>
+                </div>
+            </div>
         </div>
     </div>
 </header>
