@@ -38,7 +38,6 @@ button {
     text-transform: uppercase;
     font-size: 1em;
     border-radius: 3px;
-    border-color: #2e94d8;
     background-color: #3498db;
     color: white;
     font-weight: 600;
@@ -47,6 +46,19 @@ button {
 
 button:hover {
     background-color: #5db2ea;
+}
+
+button:active {
+    transition: none;
+    box-shadow: #00000038 0px 2px 4px 0px inset;
+}
+
+button,
+button:hover,
+button:active,
+button:focus {
+    border: none;
+    outline: none;
 }
 
 input,
@@ -337,7 +349,8 @@ footer ul {
 
 .info-registration-block {
     text-align: center;
-    margin: 40px;
+    margin: 20px;
+    font-size: 16px;
 }
 
 .features {
@@ -872,7 +885,7 @@ tr:hover {
 }
 
 #main-menu {
-    margin-top: 50px;
+    margin-top: 52px;
 }
 
 .header-menu {
@@ -914,4 +927,107 @@ footer ul {
 .pages-back a,
 .pages-forward a {
     text-decoration: none;
+}
+
+.inactive {
+    background-color: #d0dae0!important;
+}
+
+.inactive:hover {
+    background-color: #d0dae0!important;
+}
+
+.checkbox1 {
+    position: relative;
+    padding-left: 35px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.checkbox1 input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: -3px;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    box-shadow: #00000038 0px 2px 4px 0px inset;
+}
+
+.checkbox1:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+.checkbox1 input:checked ~ .checkmark {
+    background-color: #3498db;
+    box-shadow: none;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox1 input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkbox1 .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+#warning {
+    position: fixed;
+    z-index: 1;
+    padding-top: 200px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+#warning_content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 30px 20px;
+    width: 340px;
+    text-align: center;
+    font-size: 20px;
+    height: 60px;
+}
+
+#close_warning {
+    color: #aaaaaa;
+    float: right;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+#close_warning:hover,
+#close_warning:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
 }

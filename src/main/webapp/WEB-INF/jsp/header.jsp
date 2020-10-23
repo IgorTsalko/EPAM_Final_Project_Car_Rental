@@ -32,9 +32,20 @@
     <fmt:message key="rules" var="rules_title"/>
     <fmt:message key="news" var="news_title"/>
 
+    <fmt:message key="warning.action_not_approved" var="action_not_approved"/>
+
     <c:set var="command" value="${pageContext.request.getParameter(\"command\")}"/>
+    <c:set var="message_security" value="${pageContext.request.getParameter(\"message_security\")}"/>
 </head>
 <body>
+<c:if test="${message_security eq 'unverified_action'}">
+<div id="warning">
+    <div id="warning_content">
+        <span id="close_warning" onclick="closeWarning()">&times;</span>
+        <p>${action_not_approved}</p>
+    </div>
+</div>
+</c:if>
 <!-- START HEADER -->
 <header class="boxShadow1">
     <div class="top">

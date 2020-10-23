@@ -33,11 +33,11 @@ public class UserDAOImpl implements UserDAO {
                     "FROM users u JOIN user_roles rol ON u.user_role=rol.user_role_id " +
                     "JOIN user_ratings rat ON u.user_rating=rat.user_rating_id WHERE u.user_id=?";
 
-    private static final String SELECT_ALL_USERS =
+    private static final String SELECT_USERS =
             "SELECT u.user_id, u.user_login, u.user_registration_date, rol.user_role, rat.user_rating, " +
                     "rat.user_discount FROM users u JOIN user_roles rol ON u.user_role=rol.user_role_id " +
                     "JOIN user_ratings rat ON u.user_rating=rat.user_rating_id " +
-                    "ORDER BY user_role_id DESC, u.user_id";
+                    "ORDER BY user_role_id DESC LIMIT ?, ?";
 
     private static final String INSERT_NEW_USER =
             "INSERT INTO users (user_email, user_phone, user_login, user_password, user_rating, user_role) " +
@@ -242,8 +242,9 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<User> getAllUsers() throws DAOException {
+    public List<User> getUsers(int offset, int linesAmount) throws DAOException {
         List<User> users;
+        int lastPageNumber = offset + linesAmount;
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -251,9 +252,11 @@ public class UserDAOImpl implements UserDAO {
 
         try {
             connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(SELECT_ALL_USERS);
+            preparedStatement = connection.prepareStatement(SELECT_USERS);
+            preparedStatement.setInt(1, offset);
+            preparedStatement.setInt(2, linesAmount);
             resultSet = preparedStatement.executeQuery();
-
+            
             users = new ArrayList<>();
 
             while (resultSet.next()) {

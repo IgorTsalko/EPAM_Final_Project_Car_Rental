@@ -12,9 +12,9 @@ public interface UserDAO {
     boolean registration(RegistrationData registrationData) throws DAOException;
 
     UserDetails getUserDetails(int userID) throws DAOException;
-    List<User> getAllUsers() throws DAOException;
+    List<User> getUsers(int offset, int linesAmount) throws DAOException;
     List<Order> getUserOrders(int userID) throws DAOException;
-    List<Order> getOrders(int offset, int linesAmount) throws DAOException;
+    List<Order> getOrders(int offset, int rowsAmount) throws DAOException;
     Passport getUserPassport(int userID) throws DAOException;
     List<Long> getBankcardNumbers(int userID) throws DAOException;
 

@@ -20,8 +20,7 @@ public class AddBankcardCommand implements Command {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM-yy");
 
-    private static final String ATTRIBUTE_USER = "user";
-
+    private static final String PARAMETER_USER_ID = "user_id";
     private static final String PARAMETER_BANKCARD_NUMBER = "bankcard_number";
     private static final String PARAMETER_BANKCARD_FIRSTNAME = "bankcard_firstname";
     private static final String PARAMETER_BANKCARD_LASTNAME = "bankcard_lastname";
@@ -34,56 +33,58 @@ public class AddBankcardCommand implements Command {
     private static final String INCORRECT_DATA = "incorrect_data";
     private static final String BANKCARD_EXISTS = "bankcard_exists";
 
-    private static final String GO_TO_MAIN_PAGE = "mainController?command=go_to_main_page";
     private static final String GO_TO_PERSONAL_PAGE_BANKCARDS = "mainController?command=go_to_personal_page_bankcards";
     private static final String GO_TO_PERSONAL_PAGE_ADD_BANKCARD = "mainController?command=go_to_personal_page_add_bankcard";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        User user = (User) req.getSession().getAttribute(ATTRIBUTE_USER);
         StringBuilder page = new StringBuilder();
 
-        if (user == null) {
-            resp.sendRedirect(GO_TO_MAIN_PAGE);
-        } else {
-            Bankcard bankcard = new Bankcard();
-            bankcard.setUserID(user.getId());
-            bankcard.setBankcardUserFirstname(req.getParameter(PARAMETER_BANKCARD_FIRSTNAME).toUpperCase());
-            bankcard.setBankcardUserLastname(req.getParameter(PARAMETER_BANKCARD_LASTNAME).toUpperCase());
-            bankcard.setBankcardCVV(req.getParameter(PARAMETER_BANKCARD_CVV));
-            try {
-                bankcard.setBankcardNumber(Long.parseLong(req.getParameter(PARAMETER_BANKCARD_NUMBER)));
-            } catch (NumberFormatException ignore) {}
+        int userID = 0;
+        try {
+            userID = Integer.parseInt(req.getParameter(PARAMETER_USER_ID));
+        } catch (NumberFormatException ignore) {/* NOPE */}
+        if (userID < 0) {
+            userID = 0;
+        }
 
-            String inputDateStr = req.getParameter(PARAMETER_BANKCARD_VALID_TRUE_MONTH)
-                    + "-" + req.getParameter(PARAMETER_BANKCARD_VALID_TRUE_YEAR);
-            try {
-                bankcard.setBankcardValidTrue(dateFormat.parse(inputDateStr));
-            } catch (ParseException ignore) {}
+        Bankcard bankcard = new Bankcard();
+        bankcard.setUserID(userID);
+        bankcard.setBankcardUserFirstname(req.getParameter(PARAMETER_BANKCARD_FIRSTNAME).toUpperCase());
+        bankcard.setBankcardUserLastname(req.getParameter(PARAMETER_BANKCARD_LASTNAME).toUpperCase());
+        bankcard.setBankcardCVV(req.getParameter(PARAMETER_BANKCARD_CVV));
+        try {
+            bankcard.setBankcardNumber(Long.parseLong(req.getParameter(PARAMETER_BANKCARD_NUMBER)));
+        } catch (NumberFormatException ignore) {}
 
-            if (UserValidator.BankCardValidation(bankcard)) {
-                ServiceProvider serviceProvider = ServiceProvider.getInstance();
-                UserService userService = serviceProvider.getUserService();
-                try {
-                    boolean bankcardAdded = userService.addBankcard(bankcard);
-                    if (!bankcardAdded) {
-                        page.append(GO_TO_PERSONAL_PAGE_ADD_BANKCARD)
-                                .append("&").append(MESSAGE_BANKCARD_ADDING).append("=").append(DATA_ADD_ERROR);
-                    } else {
-                        page.append(GO_TO_PERSONAL_PAGE_BANKCARDS);
-                    }
-                } catch (EntityAlreadyExistsServiceException e) {
-                    page.append(GO_TO_PERSONAL_PAGE_ADD_BANKCARD)
-                            .append("&").append(MESSAGE_BANKCARD_ADDING).append("=").append(BANKCARD_EXISTS);
-                } catch (ServiceException e) {
+        try {
+            bankcard.setBankcardValidTrue(
+                    dateFormat.parse(req.getParameter(PARAMETER_BANKCARD_VALID_TRUE_MONTH)
+                    + "-" + req.getParameter(PARAMETER_BANKCARD_VALID_TRUE_YEAR)));
+        } catch (ParseException ignore) {/* NOPE */}
+
+        if (UserValidator.BankCardValidation(bankcard)) {
+            ServiceProvider serviceProvider = ServiceProvider.getInstance();
+            UserService userService = serviceProvider.getUserService();
+            try {
+                boolean bankcardAdded = userService.addBankcard(bankcard);
+                if (!bankcardAdded) {
                     page.append(GO_TO_PERSONAL_PAGE_ADD_BANKCARD)
                             .append("&").append(MESSAGE_BANKCARD_ADDING).append("=").append(DATA_ADD_ERROR);
+                } else {
+                    page.append(GO_TO_PERSONAL_PAGE_BANKCARDS);
                 }
-            } else {
+            } catch (EntityAlreadyExistsServiceException e) {
                 page.append(GO_TO_PERSONAL_PAGE_ADD_BANKCARD)
-                        .append("&").append(MESSAGE_BANKCARD_ADDING).append("=").append(INCORRECT_DATA);
+                        .append("&").append(MESSAGE_BANKCARD_ADDING).append("=").append(BANKCARD_EXISTS);
+            } catch (ServiceException e) {
+                page.append(GO_TO_PERSONAL_PAGE_ADD_BANKCARD)
+                        .append("&").append(MESSAGE_BANKCARD_ADDING).append("=").append(DATA_ADD_ERROR);
             }
-            resp.sendRedirect(page.toString());
+        } else {
+            page.append(GO_TO_PERSONAL_PAGE_ADD_BANKCARD)
+                    .append("&").append(MESSAGE_BANKCARD_ADDING).append("=").append(INCORRECT_DATA);
         }
+        resp.sendRedirect(page.toString());
     }
 }

@@ -29,7 +29,7 @@
                     <input type="password" pattern="^[^\s]{6,18}$" name="password" placeholder="* ${form_password}" required>
                     <input type="tel" pattern="^[0-9\(\)-+\s]+$" name="phone" placeholder="* ${phone}" required>
                     <input type="email" pattern="^[\w.-_]+@[a-zA-Z_]+?\.[a-zA-Z]{2,6}$" name="email" placeholder="  ${email}">
-                    <button type="submit">${form_register}</button>
+                    <button id="registration_button" class="inactive" type="submit" disabled>${form_register}</button>
                 </form>
                 <c:choose>
                     <c:when test="${pageContext.request.getParameter(\"message_registration\") eq 'successful'}">
@@ -51,7 +51,11 @@
                 </c:choose>
             </div>
             <div class="info-registration-block">
-                <p>${reg_agreement} <a href="mainController?command=go_to_login_page">${reg_agreement_link}</a></p>
+                <label class="checkbox1">
+                    <input type="checkbox" id="politics" onclick="check('registration_button');" autocomplete="off">
+                    ${reg_agreement} <a href="mainController?command=go_to_login_page">${reg_agreement_link}</a>
+                    <span class="checkmark"></span>
+                </label>
             </div>
         </div>
 

@@ -3,9 +3,7 @@ package by.epamtc.tsalko.controller.command.impl.user.go_to;
 import by.epamtc.tsalko.bean.content.Rating;
 import by.epamtc.tsalko.bean.content.Role;
 import by.epamtc.tsalko.bean.user.Passport;
-import by.epamtc.tsalko.bean.user.User;
 import by.epamtc.tsalko.bean.user.UserDetails;
-import by.epamtc.tsalko.controller.UserVerifier;
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.ContentService;
 import by.epamtc.tsalko.service.ServiceProvider;
@@ -20,7 +18,6 @@ import java.util.List;
 
 public class GoToAllUserDataCommand implements Command {
 
-    private static final String ATTRIBUTE_USER = "user";
     private static final String PARAMETER_USER_ID = "user_id";
 
     private static final String USER_DETAILS = "user_details";
@@ -39,52 +36,49 @@ public class GoToAllUserDataCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = (User) req.getSession().getAttribute(ATTRIBUTE_USER);
-        int userID = 0;
+        ServiceProvider serviceProvider = ServiceProvider.getInstance();
+        UserService userService = serviceProvider.getUserService();
+        ContentService contentService = serviceProvider.getContentService();
 
+        int userID = 0;
         try {
             userID = Integer.parseInt(req.getParameter(PARAMETER_USER_ID));
         } catch (NumberFormatException ignore) {/* NOPE */}
-
-        if (!UserVerifier.isAdmin(user) || userID < 1) {
-            resp.sendRedirect(GO_TO_MAIN_PAGE);
-        } else {
-            ServiceProvider serviceProvider = ServiceProvider.getInstance();
-            UserService userService = serviceProvider.getUserService();
-            ContentService contentService = serviceProvider.getContentService();
-
-            UserDetails userDetails;
-            Passport userPassport;
-            List<Role> allRoles;
-            List<Rating> allRatings;
-            List<Long> bankcards;
-
-            try {
-                userDetails = userService.getUserDetails(userID);
-                allRoles = contentService.getAllRoles();
-                allRatings = contentService.getAllRatings();
-                req.setAttribute(USER_DETAILS, userDetails);
-                req.setAttribute(ALL_ROLES, allRoles);
-                req.setAttribute(ALL_RATINGS, allRatings);
-            } catch (ServiceException e) {
-                req.setAttribute(MESSAGE_DETAILS, ERROR_DATA_RETRIEVE);
-            }
-
-            try {
-                userPassport = userService.getUserPassport(userID);
-                req.setAttribute(USER_PASSPORT, userPassport);
-            } catch (ServiceException e) {
-                req.setAttribute(MESSAGE_PASSPORT, ERROR_DATA_RETRIEVE);
-            }
-
-            try {
-                bankcards = userService.getBankcardNumbers(userID);
-                req.setAttribute(BANKCARD_NUMBERS, bankcards);
-            } catch (ServiceException e) {
-                req.setAttribute(MESSAGE_BANKCARDS, ERROR_DATA_RETRIEVE);
-            }
-
-            req.getRequestDispatcher(USER_DATA_PAGE).forward(req, resp);
+        if (userID < 0) {
+            userID = 0;
         }
+
+        UserDetails userDetails;
+        Passport userPassport;
+        List<Role> allRoles;
+        List<Rating> allRatings;
+        List<Long> bankcards;
+
+        try {
+            userDetails = userService.getUserDetails(userID);
+            allRoles = contentService.getAllRoles();
+            allRatings = contentService.getAllRatings();
+            req.setAttribute(USER_DETAILS, userDetails);
+            req.setAttribute(ALL_ROLES, allRoles);
+            req.setAttribute(ALL_RATINGS, allRatings);
+        } catch (ServiceException e) {
+            req.setAttribute(MESSAGE_DETAILS, ERROR_DATA_RETRIEVE);
+        }
+
+        try {
+            userPassport = userService.getUserPassport(userID);
+            req.setAttribute(USER_PASSPORT, userPassport);
+        } catch (ServiceException e) {
+            req.setAttribute(MESSAGE_PASSPORT, ERROR_DATA_RETRIEVE);
+        }
+
+        try {
+            bankcards = userService.getBankcardNumbers(userID);
+            req.setAttribute(BANKCARD_NUMBERS, bankcards);
+        } catch (ServiceException e) {
+            req.setAttribute(MESSAGE_BANKCARDS, ERROR_DATA_RETRIEVE);
+        }
+
+        req.getRequestDispatcher(USER_DATA_PAGE).forward(req, resp);
     }
 }

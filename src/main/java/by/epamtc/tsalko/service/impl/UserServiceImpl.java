@@ -77,14 +77,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() throws ServiceException {
+    public List<User> getUsers(int offset, int linesAmount) throws ServiceException {
         List<User> allUsers;
 
         DAOProvider daoProvider = DAOProvider.getInstance();
         UserDAO userDAO = daoProvider.getUserDAO();
 
         try {
-            allUsers = userDAO.getAllUsers();
+            allUsers = userDAO.getUsers(offset, linesAmount);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }

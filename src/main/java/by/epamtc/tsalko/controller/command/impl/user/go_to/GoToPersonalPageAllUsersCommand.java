@@ -1,7 +1,6 @@
 package by.epamtc.tsalko.controller.command.impl.user.go_to;
 
 import by.epamtc.tsalko.bean.user.User;
-import by.epamtc.tsalko.controller.UserVerifier;
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
@@ -15,35 +14,50 @@ import java.util.List;
 
 public class GoToPersonalPageAllUsersCommand implements Command {
 
-    private static final String ATTRIBUTE_USER = "user";
+    private static final int ROWS_AMOUNT = 10;
 
-    private static final String ALL_USERS = "all_users";
+    private static final String USERS = "users";
+    private static final String PAGE = "page";
+    private static final String OFFSET = "offset";
+    private static final String FIRST_PAGE = "first_page";
+    private static final String LAST_PAGE = "last_page";
 
-    private static final String MESSAGE_ALL_USERS = "message_all_users";
+    private static final String MESSAGE_USERS = "message_users";
     private static final String ERROR_DATA_RETRIEVE = "data_retrieve_error";
 
-    private static final String GO_TO_MAIN_PAGE = "mainController?command=go_to_main_page";
     private static final String PERSONAL_PAGE = "/WEB-INF/jsp/personal_page/personalPage.jsp";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = (User) req.getSession().getAttribute(ATTRIBUTE_USER);
+        ServiceProvider serviceProvider = ServiceProvider.getInstance();
+        UserService userService = serviceProvider.getUserService();
 
-        if (!UserVerifier.isAdmin(user)) {
-            resp.sendRedirect(GO_TO_MAIN_PAGE);
-        } else {
-            ServiceProvider serviceProvider = ServiceProvider.getInstance();
-            UserService userService = serviceProvider.getUserService();
+        List<User> users;
 
-            List<User> allUsers;
-
-            try {
-                allUsers = userService.getAllUsers();
-                req.setAttribute(ALL_USERS, allUsers);
-            } catch (ServiceException e) {
-                req.setAttribute(MESSAGE_ALL_USERS, ERROR_DATA_RETRIEVE);
-            }
-            req.getRequestDispatcher(PERSONAL_PAGE).forward(req, resp);
+        int page = 1;
+        try {
+            page = Integer.parseInt(req.getParameter(PAGE));
+        } catch (NumberFormatException ignore) {/*NOPE*/}
+        if (page < 1) {
+            page = 1;
         }
+
+        try {
+            int offset = (page - 1) * ROWS_AMOUNT;
+            users = userService.getUsers(offset, ROWS_AMOUNT);
+
+            if (users.size() < ROWS_AMOUNT) {
+                req.setAttribute(LAST_PAGE, true);
+            }
+            if (page == 1) {
+                req.setAttribute(FIRST_PAGE, true);
+            }
+            req.setAttribute(OFFSET, offset);
+            req.setAttribute(PAGE, page);
+            req.setAttribute(USERS, users);
+        } catch (ServiceException e) {
+            req.setAttribute(MESSAGE_USERS, ERROR_DATA_RETRIEVE);
+        }
+        req.getRequestDispatcher(PERSONAL_PAGE).forward(req, resp);
     }
 }

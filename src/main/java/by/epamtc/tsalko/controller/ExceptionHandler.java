@@ -13,17 +13,13 @@ public class ExceptionHandler extends HttpServlet {
 
     private static final Logger logger = LogManager.getLogger(ExceptionHandler.class);
 
-    private static final String EXCEPTION_ATTRIBUTE = "exception";
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Throwable throwable = (Throwable) req.getAttribute("javax.servlet.error.exception");
 
         if (throwable != null) {
             logger.error("Occurred exception", throwable);
-            req.setAttribute(EXCEPTION_ATTRIBUTE, throwable);
         }
-        logger.error("Go to error page, code 500");
         req.getRequestDispatcher("/WEB-INF/jsp/500.jsp").forward(req, resp);
     }
 

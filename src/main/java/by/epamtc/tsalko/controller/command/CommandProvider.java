@@ -26,7 +26,7 @@ public class CommandProvider {
         commands.put(ParameterName.GO_TO_PERSONAL_PAGE_DETAILS, new GoToPersonalPageDetailsCommand());
         commands.put(ParameterName.GO_TO_PERSONAL_PAGE_PASSPORT, new GoToPersonalPagePassportCommand());
         commands.put(ParameterName.GO_TO_PERSONAL_PAGE_BANKCARDS, new GoToPersonalPageBankcardsCommand());
-        commands.put(ParameterName.GO_TO_PERSONAL_PAGE_ADD_BANKCARD, new GoToPersonalPageAddCardCommand());
+        commands.put(ParameterName.GO_TO_PERSONAL_PAGE_ADD_BANKCARD, new GoToPersonalPageAddBankcardCommand());
         commands.put(ParameterName.GO_TO_PERSONAL_PAGE_ALL_ORDERS, new GoToPersonalPageAllOrdersCommand());
         commands.put(ParameterName.GO_TO_PERSONAL_PAGE_ALL_USERS, new GoToPersonalPageAllUsersCommand());
         commands.put(ParameterName.GO_TO_ALL_USER_DATA, new GoToAllUserDataCommand());

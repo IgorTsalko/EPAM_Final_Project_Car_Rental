@@ -39,3 +39,22 @@ function disableEditing(formName, postButtonID, cancelButtonID) {
     document.getElementById(postButtonID).style.display = 'none';
     document.getElementById(cancelButtonID).style.display = 'none';
 }
+
+function check(registration_button) {
+    var button = document.getElementById(registration_button);
+    if (document.getElementById('politics').checked) {
+        button.disabled = '';
+        button.classList.remove('inactive');
+    } else {
+        button.disabled = 'disabled';
+        button.classList.add('inactive');
+    }
+}
+
+function confirmAction(message) {
+    return confirm(message);
+}
+
+function closeWarning() {
+    window.location.href = 'mainController?command=go_to_main_page';
+}

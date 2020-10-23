@@ -12,9 +12,9 @@ public interface UserService {
     boolean registration(RegistrationData registrationData) throws ServiceException;
 
     UserDetails getUserDetails(int userID) throws ServiceException;
-    List<User> getAllUsers() throws ServiceException;
+    List<User> getUsers(int offset, int rowsAmount) throws ServiceException;
     List<Order> getUserOrders(int userID) throws ServiceException;
-    List<Order> getOrders(int offset, int linesAmount) throws ServiceException;
+    List<Order> getOrders(int offset, int rowsAmount) throws ServiceException;
     Passport getUserPassport(int userID) throws ServiceException;
     List<Long> getBankcardNumbers(int userID) throws ServiceException;
 

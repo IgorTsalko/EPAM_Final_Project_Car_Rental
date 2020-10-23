@@ -64,14 +64,14 @@
                 <c:set var="lineNumber" value="${lineNumber + 1}"/>
             </c:forEach>
             </table>
-            <c:if test="${requestScope.message_orders ne 'last_page'}">
+            <c:if test="${empty requestScope.last_page}">
                 <div class="pages-back">
                     <a href="mainController?command=go_to_personal_page_all_orders&page=${requestScope.page + 1}">
                         назад &#9658;
                     </a>
                 </div>
             </c:if>
-            <c:if test="${requestScope.message_orders ne 'first_page'}">
+            <c:if test="${empty requestScope.first_page}">
                 <div class="pages-forward">
                     <a href="mainController?command=go_to_personal_page_all_orders&page=${requestScope.page - 1}">
                         &#9668; вперед

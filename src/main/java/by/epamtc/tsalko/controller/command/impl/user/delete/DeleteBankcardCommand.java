@@ -1,8 +1,6 @@
 package by.epamtc.tsalko.controller.command.impl.user.delete;
 
-import by.epamtc.tsalko.bean.user.User;
 import by.epamtc.tsalko.controller.UserValidator;
-import by.epamtc.tsalko.controller.UserVerifier;
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
@@ -15,9 +13,6 @@ import java.io.IOException;
 
 public class DeleteBankcardCommand implements Command {
 
-    private static final String ATTRIBUTE_USER = "user";
-
-    private static final String PARAMETER_SENDER_LOGIN = "sender_login";
     private static final String PARAMETER_USER_ID = "user_id";
     private static final String PARAMETER_BANKCARD_NUMBER = "bankcard_number";
     private static final String PARAMETER_PREVIOUS_COMMAND = "previous_command";
@@ -29,48 +24,43 @@ public class DeleteBankcardCommand implements Command {
     private static final String COMMAND_GO_TO_ALL_USER_DATA = "go_to_all_user_data";
     private static final String COMMAND = "command";
 
-    private static final String GO_TO_MAIN_PAGE = "mainController?command=go_to_main_page";
-
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        User user = (User) req.getSession().getAttribute(ATTRIBUTE_USER);
-        String senderLogin = req.getParameter(PARAMETER_SENDER_LOGIN);
         String previousCommand = req.getParameter(PARAMETER_PREVIOUS_COMMAND);
+        StringBuilder page = new StringBuilder()
+                .append(MAIN_CONTROLLER)
+                .append("?")
+                .append(COMMAND)
+                .append("=")
+                .append(previousCommand);
+
         int userID = 0;
         long bankcardNumber = 0;
-
         try {
             userID = Integer.parseInt(req.getParameter(PARAMETER_USER_ID));
             bankcardNumber = Long.parseLong(req.getParameter(PARAMETER_BANKCARD_NUMBER));
         } catch (NumberFormatException ignore) {/* NOPE */}
+        if (userID < 0) {
+            userID = 0;
+        }
 
-        StringBuilder page = new StringBuilder();
+        if (previousCommand.equals(COMMAND_GO_TO_ALL_USER_DATA)) {
+            page.append("&").append(PARAMETER_USER_ID).append("=").append(userID);
+        }
 
-        if (!(UserVerifier.isCustomer(user, senderLogin) && user.getId() == userID)
-                && !UserVerifier.isAdmin(user, senderLogin)
-                || previousCommand == null) {
-            resp.sendRedirect(GO_TO_MAIN_PAGE);
-        } else {
-            page.append(MAIN_CONTROLLER).append("?").append(COMMAND).append("=").append(previousCommand);
-
-            if (previousCommand.equals(COMMAND_GO_TO_ALL_USER_DATA)) {
-                page.append("&").append(PARAMETER_USER_ID).append("=").append(userID);
-            }
-
-            if (UserValidator.userBankCardDeleteValidation(userID, bankcardNumber)) {
-                ServiceProvider serviceProvider = ServiceProvider.getInstance();
-                UserService userService = serviceProvider.getUserService();
-                try {
-                    if (!userService.deleteBankcard(userID, bankcardNumber)) {
-                        page.append("&").append(MESSAGE_BANKCARD_DELETE).append("=").append(DATA_DELETE_ERROR);
-                    }
-                } catch (ServiceException e) {
+        if (UserValidator.userBankCardDeleteValidation(userID, bankcardNumber)) {
+            ServiceProvider serviceProvider = ServiceProvider.getInstance();
+            UserService userService = serviceProvider.getUserService();
+            try {
+                if (!userService.deleteBankcard(userID, bankcardNumber)) {
                     page.append("&").append(MESSAGE_BANKCARD_DELETE).append("=").append(DATA_DELETE_ERROR);
                 }
-            } else {
+            } catch (ServiceException e) {
                 page.append("&").append(MESSAGE_BANKCARD_DELETE).append("=").append(DATA_DELETE_ERROR);
             }
-            resp.sendRedirect(page.toString());
+        } else {
+            page.append("&").append(MESSAGE_BANKCARD_DELETE).append("=").append(DATA_DELETE_ERROR);
         }
+        resp.sendRedirect(page.toString());
     }
 }

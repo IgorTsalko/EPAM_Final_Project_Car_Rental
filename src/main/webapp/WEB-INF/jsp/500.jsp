@@ -3,7 +3,6 @@
 
 <fmt:message key="error_500_title" var="error_500_title"/>
 <fmt:message key="error_500_desc" var="error_500_desc"/>
-<fmt:message key="stack_trace_title" var="stack_trace_title"/>
 <fmt:message key="go_to_main_page" var="go_to_main_page"/>
 
 <%--START MAIN-CONTENT--%>
@@ -13,20 +12,8 @@
             <img src="img/page500.png" alt="500">
             <h2>${error_500_title}</h2>
             <p>${error_500_desc}</p>
-            <a href="${pageContext.request.contextPath}">
-                <p>${go_to_main_page}</p>
-            </a>
+            <a href="${pageContext.request.contextPath}"><p>${go_to_main_page}</p></a>
         </div>
-        <c:if test="${not empty pageContext.request.getAttribute(\"exception\")}">
-            <div id="stack-trace">
-                <h4>${stack_trace_title}</h4>
-                <p>Exception: ${requestScope.exception}</p>
-                <p>
-                    <c:forEach items="${requestScope.exception.stackTrace}" var="trace">
-                        ${trace}<br>
-                    </c:forEach>
-            </div>
-        </c:if>
     </div>
 </div>
 <%--END MAIN-CONTENT--%>
