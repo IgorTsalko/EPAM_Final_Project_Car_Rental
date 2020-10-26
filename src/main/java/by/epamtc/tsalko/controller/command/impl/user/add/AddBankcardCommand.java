@@ -1,12 +1,12 @@
 package by.epamtc.tsalko.controller.command.impl.user.add;
 
 import by.epamtc.tsalko.bean.user.Bankcard;
-import by.epamtc.tsalko.bean.user.User;
-import by.epamtc.tsalko.controller.UserValidator;
+import by.epamtc.tsalko.controller.TechValidator;
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.EntityAlreadyExistsServiceException;
+import by.epamtc.tsalko.service.exception.InvalidInputDataServiceException;
 import by.epamtc.tsalko.service.exception.ServiceException;
 
 import javax.servlet.ServletException;
@@ -39,23 +39,12 @@ public class AddBankcardCommand implements Command {
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         StringBuilder page = new StringBuilder();
-
-        int userID = 0;
-        try {
-            userID = Integer.parseInt(req.getParameter(PARAMETER_USER_ID));
-        } catch (NumberFormatException ignore) {/* NOPE */}
-        if (userID < 0) {
-            userID = 0;
-        }
-
         Bankcard bankcard = new Bankcard();
-        bankcard.setUserID(userID);
-        bankcard.setBankcardUserFirstname(req.getParameter(PARAMETER_BANKCARD_FIRSTNAME).toUpperCase());
-        bankcard.setBankcardUserLastname(req.getParameter(PARAMETER_BANKCARD_LASTNAME).toUpperCase());
-        bankcard.setBankcardCVV(req.getParameter(PARAMETER_BANKCARD_CVV));
+
         try {
+            bankcard.setUserID(Integer.parseInt(req.getParameter(PARAMETER_USER_ID)));
             bankcard.setBankcardNumber(Long.parseLong(req.getParameter(PARAMETER_BANKCARD_NUMBER)));
-        } catch (NumberFormatException ignore) {}
+        } catch (NumberFormatException ignore) {/* NOPE */}
 
         try {
             bankcard.setBankcardValidTrue(
@@ -63,7 +52,11 @@ public class AddBankcardCommand implements Command {
                     + "-" + req.getParameter(PARAMETER_BANKCARD_VALID_TRUE_YEAR)));
         } catch (ParseException ignore) {/* NOPE */}
 
-        if (UserValidator.BankCardValidation(bankcard)) {
+        bankcard.setBankcardUserFirstname(req.getParameter(PARAMETER_BANKCARD_FIRSTNAME).toUpperCase());
+        bankcard.setBankcardUserLastname(req.getParameter(PARAMETER_BANKCARD_LASTNAME).toUpperCase());
+        bankcard.setBankcardCVV(req.getParameter(PARAMETER_BANKCARD_CVV));
+
+        if (TechValidator.bankCardValidation(bankcard)) {
             ServiceProvider serviceProvider = ServiceProvider.getInstance();
             UserService userService = serviceProvider.getUserService();
             try {
@@ -74,6 +67,9 @@ public class AddBankcardCommand implements Command {
                 } else {
                     page.append(GO_TO_PERSONAL_PAGE_BANKCARDS);
                 }
+            } catch (InvalidInputDataServiceException e) {
+                page.append(GO_TO_PERSONAL_PAGE_ADD_BANKCARD)
+                        .append("&").append(MESSAGE_BANKCARD_ADDING).append("=").append(INCORRECT_DATA);
             } catch (EntityAlreadyExistsServiceException e) {
                 page.append(GO_TO_PERSONAL_PAGE_ADD_BANKCARD)
                         .append("&").append(MESSAGE_BANKCARD_ADDING).append("=").append(BANKCARD_EXISTS);

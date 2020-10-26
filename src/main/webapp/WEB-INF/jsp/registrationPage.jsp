@@ -16,6 +16,10 @@
 <fmt:message key="reg.agreement" var="reg_agreement"/>
 <fmt:message key="reg.agreement.link" var="reg_agreement_link"/>
 
+<c:if test="${not empty sessionScope.user}">
+    <c:redirect url="mainController?command=go_to_main_page"/>
+</c:if>
+
 <%--START MAIN-CONTENT--%>
 <div id="content">
     <div class="container main-content">
@@ -25,10 +29,14 @@
             <div class="registration-form">
                 <form action="mainController" method="post">
                     <input type="hidden" name="command" value="registration">
-                    <input type="text" pattern="^[a-zA-Z0-9_-]{3,25}$" name="login" placeholder="* ${form_login}" required>
-                    <input type="password" pattern="^[^\s]{6,18}$" name="password" placeholder="* ${form_password}" required>
-                    <input type="tel" pattern="^[0-9\(\)-+\s]+$" name="phone" placeholder="* ${phone}" required>
-                    <input type="email" pattern="^[\w.-_]+@[a-zA-Z_]+?\.[a-zA-Z]{2,6}$" name="email" placeholder="  ${email}">
+                    <input name="login" type="text" pattern="^[^\s$/()]+$" maxlength="25" minlength="3"
+                           placeholder="* ${form_login}" required>
+                    <input name="password" type="password" pattern="^[^\s]+$" maxlength="18" minlength="6"
+                           placeholder="* ${form_password}" required>
+                    <input name="phone" type="tel" pattern="^[0-9\s-+()]+$" maxlength="30" minlength="7"
+                           placeholder="* ${phone}" required>
+                    <input name="email" type="email" pattern="^[^\s]+@[^\s]+\.[^\s]+$" maxlength="30" minlength="3"
+                           placeholder="  ${email}">
                     <button id="registration_button" class="inactive" type="submit" disabled>${form_register}</button>
                 </form>
                 <c:choose>

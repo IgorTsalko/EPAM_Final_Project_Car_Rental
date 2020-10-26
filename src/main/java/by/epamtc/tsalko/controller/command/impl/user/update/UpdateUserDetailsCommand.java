@@ -1,10 +1,11 @@
 package by.epamtc.tsalko.controller.command.impl.user.update;
 
 import by.epamtc.tsalko.bean.user.UserDetails;
-import by.epamtc.tsalko.controller.UserValidator;
+import by.epamtc.tsalko.controller.TechValidator;
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
+import by.epamtc.tsalko.service.exception.InvalidInputDataServiceException;
 import by.epamtc.tsalko.service.exception.ServiceException;
 
 import javax.servlet.ServletException;
@@ -40,6 +41,8 @@ public class UpdateUserDetailsCommand implements Command {
                 .append("=")
                 .append(previousCommand);
 
+        UserDetails userDetails = new UserDetails();
+
         int userID = 0;
         try {
             userID = Integer.parseInt(req.getParameter(PARAMETER_USER_ID));
@@ -52,8 +55,6 @@ public class UpdateUserDetailsCommand implements Command {
             page.append("&").append(PARAMETER_USER_ID).append("=").append(userID);
         }
 
-        UserDetails userDetails = new UserDetails();
-
         try {
             userDetails.setUserRoleID(Integer.parseInt(req.getParameter(PARAMETER_USER_ROLE_ID)));
             userDetails.setUserRatingID(Integer.parseInt(req.getParameter(PARAMETER_USER_RATING_ID)));
@@ -63,12 +64,14 @@ public class UpdateUserDetailsCommand implements Command {
         userDetails.setUserPhone(req.getParameter(PARAMETER_USER_PHONE));
         userDetails.setUserEmail(req.getParameter(PARAMETER_USER_EMAIL));
 
-        if (UserValidator.userDetailsValidation(userDetails)) {
+        if (TechValidator.userDetailsValidation(userDetails)) {
             ServiceProvider serviceProvider = ServiceProvider.getInstance();
             UserService userService = serviceProvider.getUserService();
             try {
                 userService.updateUserDetails(userDetails);
                 page.append("&").append(MESSAGE_DETAILS_UPDATE).append("=").append(DATA_UPDATED);
+            } catch (InvalidInputDataServiceException e) {
+                page.append("&").append(MESSAGE_DETAILS_UPDATE).append("=").append(INCORRECT_DATA);
             } catch (ServiceException e) {
                 page.append("&").append(MESSAGE_DETAILS_UPDATE).append("=").append(DATA_UPDATE_ERROR);
             }

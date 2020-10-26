@@ -15,6 +15,9 @@ public class Role implements Serializable {
     }
 
     public void setRoleID(int roleID) {
+        if (roleID < 0) {
+            roleID = 0;
+        }
         this.roleID = roleID;
     }
 

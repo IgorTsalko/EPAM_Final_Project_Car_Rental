@@ -1,10 +1,11 @@
 package by.epamtc.tsalko.controller.command.impl.user.update;
 
 import by.epamtc.tsalko.bean.user.Passport;
-import by.epamtc.tsalko.controller.UserValidator;
+import by.epamtc.tsalko.controller.TechValidator;
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
+import by.epamtc.tsalko.service.exception.InvalidInputDataServiceException;
 import by.epamtc.tsalko.service.exception.ServiceException;
 
 import javax.servlet.ServletException;
@@ -49,6 +50,8 @@ public class UpdateUserPassportCommand implements Command {
                 .append("=")
                 .append(previousCommand);
 
+        Passport passport = new Passport();
+
         int userID = 0;
         try {
             userID = Integer.parseInt(req.getParameter(PARAMETER_USER_ID));
@@ -60,8 +63,6 @@ public class UpdateUserPassportCommand implements Command {
         if (previousCommand.equals(COMMAND_GO_TO_ALL_USER_DATA)) {
             page.append("&").append(PARAMETER_USER_ID).append("=").append(userID);
         }
-
-        Passport passport = new Passport();
 
         try {
             passport.setPassportDateOfIssue(
@@ -79,12 +80,14 @@ public class UpdateUserPassportCommand implements Command {
         passport.setPassportUserName(req.getParameter(PARAMETER_USER_PASSPORT_NAME));
         passport.setPassportUserThirdName(req.getParameter(PARAMETER_USER_PASSPORT_THIRDNAME));
 
-        if (UserValidator.userPassportValidation(passport)) {
+        if (TechValidator.passportValidation(passport)) {
             ServiceProvider serviceProvider = ServiceProvider.getInstance();
             UserService userService = serviceProvider.getUserService();
             try {
                 userService.updateUserPassport(passport);
                 page.append("&").append(MESSAGE_PASSPORT_UPDATE).append("=").append(DATA_UPDATED);
+            } catch (InvalidInputDataServiceException e) {
+                page.append("&").append(MESSAGE_PASSPORT_UPDATE).append("=").append(INCORRECT_DATA);
             } catch (ServiceException e) {
                 page.append("&").append(MESSAGE_PASSPORT_UPDATE).append("=").append(DATA_UPDATE_ERROR);
             }

@@ -2,7 +2,7 @@ package by.epamtc.tsalko.controller.command.impl;
 
 import by.epamtc.tsalko.bean.user.RegistrationData;
 import by.epamtc.tsalko.controller.command.Command;
-import by.epamtc.tsalko.controller.UserValidator;
+import by.epamtc.tsalko.controller.TechValidator;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.ServiceException;
@@ -43,7 +43,7 @@ public class RegistrationCommand implements Command {
         registrationData.setPhone(phone);
         registrationData.setEmail(email);
 
-        if (UserValidator.registrationValidation(registrationData)) {
+        if (TechValidator.registrationValidation(registrationData)) {
             ServiceProvider serviceProvider = ServiceProvider.getInstance();
             UserService userService = serviceProvider.getUserService();
 

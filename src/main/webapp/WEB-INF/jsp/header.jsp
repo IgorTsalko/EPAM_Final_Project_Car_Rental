@@ -27,7 +27,7 @@
     <fmt:message key="registration" var="registration"/>
 
     <fmt:message key="contacts" var="contacts_title"/>
-    <fmt:message key="catalog" var="catalog_title"/>
+    <fmt:message key="cars_title" var="cars_title"/>
     <fmt:message key="stocks" var="stocks_title"/>
     <fmt:message key="rules" var="rules_title"/>
     <fmt:message key="news" var="news_title"/>
@@ -89,8 +89,8 @@
                 <div class="header-menu rowing-right <c:if test="${command eq 'go_to_contact_page'}">selected-tab</c:if>">
                     <a href="mainController?command=go_to_contact_page">${contacts_title}</a>
                 </div>
-                <div class="header-menu rowing-right <c:if test="${command eq 'go_to_catalog'}">selected-tab</c:if>">
-                    <a href="mainController?command=go_to_catalog">${catalog_title}</a>
+                <div class="header-menu rowing-right <c:if test="${command eq 'go_to_our_cars'}">selected-tab</c:if>">
+                    <a href="mainController?command=go_to_our_cars">${cars_title}</a>
                 </div>
                 <div class="header-menu rowing-right <c:if test="${command eq 'go_to_stocks'}">selected-tab</c:if>">
                     <a href="mainController?command=go_to_stocks">${stocks_title}</a>

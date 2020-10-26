@@ -27,6 +27,9 @@ public class Order implements Serializable {
     }
 
     public void setUserID(int userID) {
+        if (userID < 0) {
+            userID = 0;
+        }
         this.userID = userID;
     }
 
@@ -43,6 +46,9 @@ public class Order implements Serializable {
     }
 
     public void setOrderId(int orderId) {
+        if (orderId < 0) {
+            orderId = 0;
+        }
         this.orderId = orderId;
     }
 
@@ -83,6 +89,9 @@ public class Order implements Serializable {
     }
 
     public void setCarID(int carID) {
+        if (carID < 0) {
+            carID = 0;
+        }
         this.carID = carID;
     }
 
@@ -123,6 +132,9 @@ public class Order implements Serializable {
     }
 
     public void setManagerID(int managerID) {
+        if (managerID < 0) {
+            managerID = 0;
+        }
         this.managerID = managerID;
     }
 

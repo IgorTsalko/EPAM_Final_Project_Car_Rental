@@ -9,6 +9,10 @@
 <fmt:message key="login_info" var="registration_info"/>
 <fmt:message key="login.registration_link" var="registration_link"/>
 
+<c:if test="${not empty sessionScope.user}">
+    <c:redirect url="mainController?command=go_to_main_page"/>
+</c:if>
+
 <%--START MAIN-CONTENT--%>
 <div id="content">
     <div class="container main-content">

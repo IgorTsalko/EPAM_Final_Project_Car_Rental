@@ -1,6 +1,6 @@
 package by.epamtc.tsalko.controller.command.impl.user.delete;
 
-import by.epamtc.tsalko.controller.UserValidator;
+import by.epamtc.tsalko.controller.TechValidator;
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
@@ -48,7 +48,7 @@ public class DeleteBankcardCommand implements Command {
             page.append("&").append(PARAMETER_USER_ID).append("=").append(userID);
         }
 
-        if (UserValidator.userBankCardDeleteValidation(userID, bankcardNumber)) {
+        if (TechValidator.userBankCardDeleteValidation(userID, bankcardNumber)) {
             ServiceProvider serviceProvider = ServiceProvider.getInstance();
             UserService userService = serviceProvider.getUserService();
             try {

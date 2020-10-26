@@ -23,6 +23,9 @@ public class UserDetails implements Serializable {
     }
 
     public void setUserID(int userID) {
+        if (userID < 0) {
+            userID = 0;
+        }
         this.userID = userID;
     }
 
@@ -47,6 +50,9 @@ public class UserDetails implements Serializable {
     }
 
     public void setUserRoleID(int userRoleID) {
+        if (userRoleID < 0) {
+            userRoleID = 0;
+        }
         this.userRoleID = userRoleID;
     }
 
@@ -63,6 +69,9 @@ public class UserDetails implements Serializable {
     }
 
     public void setUserRatingID(int userRatingID) {
+        if (userRatingID < 0) {
+            userRatingID = 0;
+        }
         this.userRatingID = userRatingID;
     }
 

@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface UserService {
 
-    User authorization(AuthorizationData authorizationData) throws ServiceException;
-    boolean registration(RegistrationData registrationData) throws ServiceException;
+    User authorization(AuthorizationData data) throws ServiceException;
+    boolean registration(RegistrationData data) throws ServiceException;
 
     UserDetails getUserDetails(int userID) throws ServiceException;
     List<User> getUsers(int offset, int rowsAmount) throws ServiceException;

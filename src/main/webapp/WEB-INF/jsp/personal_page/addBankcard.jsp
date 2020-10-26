@@ -40,24 +40,26 @@
                 <div>
                     <label>${bankcard_number_title}</label>
                 </div>
-                <input type="text" name="bankcard_number"
-                       placeholder="0000000000000000" maxlength="16" autofocus required>
+                <input type="text" name="bankcard_number" placeholder="0000000000000000"
+                       maxlength="16" minlength="16" pattern="^[\d]+$" autofocus required >
             </div>
             <div id="bankcard-valid-true">
                 <div>
                     <label>${bankcard_valid_true_title}</label>
                 </div>
-                <input type="text" name="bankcard_valid_true_month"
-                       placeholder="${bankcard_month_title}" maxlength="2" required>
-                <input type="text" name="bankcard_valid_true_year"
+                <input type="text" name="bankcard_valid_true_month" pattern="^[\d]+$"
+                       placeholder="${bankcard_month_title}" maxlength="2" max="12" min="1" required>
+                <input type="text" name="bankcard_valid_true_year" pattern="^[\d]+$"
                        placeholder="${bankcard_year_title}" maxlength="2" required>
             </div>
             <div id="bankcard-owner">
                 <div>
                     <label>${bankcard_owner_title}</label>
                 </div>
-                <input type="text" name="bankcard_firstname" placeholder="${name_title}" required>
-                <input type="text" name="bankcard_lastname" placeholder="${surname_title}" required>
+                <input type="text" name="bankcard_firstname" placeholder="${name_title}"
+                       pattern="^[a-zA-Z]+$" maxlength="50" minlength="3" required>
+                <input type="text" name="bankcard_lastname" placeholder="${surname_title}"
+                       pattern="^[a-zA-Z]+$" maxlength="50" minlength="3" required>
             </div>
         </div>
         <div id="back-side-bankcard">
@@ -66,7 +68,8 @@
                 <div>
                     <label>CVV</label>
                 </div>
-                <input type="text" name="bankcard_cvv" placeholder="000" maxlength="3" required>
+                <input type="text" name="bankcard_cvv" placeholder="000"
+                       maxlength="3" minlength="3" pattern="^[\d]+$" required>
             </div>
         </div>
     </form>

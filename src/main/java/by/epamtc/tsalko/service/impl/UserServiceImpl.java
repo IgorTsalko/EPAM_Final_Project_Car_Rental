@@ -7,8 +7,10 @@ import by.epamtc.tsalko.dao.UserDAO;
 import by.epamtc.tsalko.dao.exception.DAOException;
 import by.epamtc.tsalko.dao.exception.EntityAlreadyExistsDAOException;
 import by.epamtc.tsalko.dao.exception.EntityNotFoundDAOException;
+import by.epamtc.tsalko.service.UserValidator;
 import by.epamtc.tsalko.service.encrypt.Encoder;
 import by.epamtc.tsalko.service.UserService;
+import by.epamtc.tsalko.service.exception.InvalidInputDataServiceException;
 import by.epamtc.tsalko.service.exception.ServiceException;
 import by.epamtc.tsalko.service.exception.EntityAlreadyExistsServiceException;
 import by.epamtc.tsalko.service.exception.EntityNotFoundServiceException;
@@ -19,17 +21,17 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     @Override
-    public User authorization(AuthorizationData authorizationData) throws ServiceException {
+    public User authorization(AuthorizationData data) throws ServiceException {
         User user;
-        // здесь может быть логическая валидация (пока не придумал что еще можно проверить)
+
         DAOProvider daoProvider = DAOProvider.getInstance();
         UserDAO userDAO = daoProvider.getUserDAO();
 
         try {
-            String password = Encoder.encrypt(authorizationData.getPassword());
-            authorizationData.setPassword(password);
+            String password = Encoder.encrypt(data.getPassword());
+            data.setPassword(password);
 
-            user = userDAO.authorization(authorizationData);
+            user = userDAO.authorization(data);
         } catch (EntityNotFoundDAOException e) {
             throw new EntityNotFoundServiceException(e);
         } catch (DAOException | NoSuchAlgorithmException e) {
@@ -40,17 +42,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean registration(RegistrationData registrationData) throws ServiceException {
+    public boolean registration(RegistrationData data) throws ServiceException {
         boolean registration;
-        // здесь может быть логическая валидация (пока не придумал что еще можно проверить)
+
         DAOProvider daoProvider = DAOProvider.getInstance();
         UserDAO userDAO = daoProvider.getUserDAO();
 
         try {
-            String password = Encoder.encrypt(registrationData.getPassword());
-            registrationData.setPassword(password);
+            String password = Encoder.encrypt(data.getPassword());
+            data.setPassword(password);
 
-            registration = userDAO.registration(registrationData);
+            registration = userDAO.registration(data);
         } catch (EntityAlreadyExistsDAOException e) {
             throw new EntityAlreadyExistsServiceException(e);
         } catch (DAOException | NoSuchAlgorithmException e) {
@@ -158,6 +160,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserDetails(UserDetails userDetails) throws ServiceException {
+        if (!UserValidator.userDetailsValidation(userDetails)) {
+            throw new InvalidInputDataServiceException();
+        }
+
         DAOProvider daoProvider = DAOProvider.getInstance();
         UserDAO userDAO = daoProvider.getUserDAO();
 
@@ -170,6 +176,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserPassport(Passport passport) throws ServiceException {
+        if (!UserValidator.passportValidation(passport)) {
+            throw new InvalidInputDataServiceException();
+        }
+
         DAOProvider daoProvider = DAOProvider.getInstance();
         UserDAO userDAO = daoProvider.getUserDAO();
 
@@ -182,6 +192,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean addBankcard(Bankcard bankCard) throws ServiceException {
+        if (!UserValidator.bankCardValidation(bankCard)) {
+            throw new InvalidInputDataServiceException();
+        }
+
         boolean bankcardAdded;
 
         DAOProvider daoProvider = DAOProvider.getInstance();

@@ -40,6 +40,12 @@ public class GoToAllUserDataCommand implements Command {
         UserService userService = serviceProvider.getUserService();
         ContentService contentService = serviceProvider.getContentService();
 
+        UserDetails userDetails;
+        Passport userPassport;
+        List<Role> allRoles;
+        List<Rating> allRatings;
+        List<Long> bankcards;
+
         int userID = 0;
         try {
             userID = Integer.parseInt(req.getParameter(PARAMETER_USER_ID));
@@ -47,12 +53,6 @@ public class GoToAllUserDataCommand implements Command {
         if (userID < 0) {
             userID = 0;
         }
-
-        UserDetails userDetails;
-        Passport userPassport;
-        List<Role> allRoles;
-        List<Rating> allRatings;
-        List<Long> bankcards;
 
         try {
             userDetails = userService.getUserDetails(userID);

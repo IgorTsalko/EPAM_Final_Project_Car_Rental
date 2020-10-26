@@ -21,29 +21,23 @@ public class GoToPersonalPageBankcardsCommand implements Command {
     private static final String MESSAGE_BANKCARDS = "message_bankcards";
     private static final String ERROR_DATA_RETRIEVE = "data_retrieve_error";
 
-    private static final String GO_TO_MAIN_PAGE = "mainController?command=go_to_main_page";
     private static final String PERSONAL_PAGE = "/WEB-INF/jsp/personal_page/personalPage.jsp";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute(ATTRIBUTE_USER);
+        int userID = user.getId();
 
-        if (user == null) {
-            resp.sendRedirect(GO_TO_MAIN_PAGE);
-        } else {
-            ServiceProvider serviceProvider = ServiceProvider.getInstance();
-            UserService userService = serviceProvider.getUserService();
+        ServiceProvider serviceProvider = ServiceProvider.getInstance();
+        UserService userService = serviceProvider.getUserService();
 
-            List<Long> bankcardNumbers;
-            int userID = user.getId();
-
-            try {
-                bankcardNumbers = userService.getBankcardNumbers(userID);
-                req.setAttribute(BANKCARD_NUMBERS, bankcardNumbers);
-            } catch (ServiceException e) {
-                req.setAttribute(MESSAGE_BANKCARDS, ERROR_DATA_RETRIEVE);
-            }
-            req.getRequestDispatcher(PERSONAL_PAGE).forward(req, resp);
+        List<Long> bankcardNumbers;
+        try {
+            bankcardNumbers = userService.getBankcardNumbers(userID);
+            req.setAttribute(BANKCARD_NUMBERS, bankcardNumbers);
+        } catch (ServiceException e) {
+            req.setAttribute(MESSAGE_BANKCARDS, ERROR_DATA_RETRIEVE);
         }
+        req.getRequestDispatcher(PERSONAL_PAGE).forward(req, resp);
     }
 }

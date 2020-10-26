@@ -4,24 +4,24 @@ import by.epamtc.tsalko.bean.user.*;
 
 import java.util.Date;
 
-public class UserValidator {
+public class TechValidator {
 
     private static final String LOGIN_REGEXP = "^[^\\s$/()]{3,25}$";
     private static final String PASSWORD_REGEXP = "^[^\\s]{6,18}$";
 
-    private static final String EMAIL_REGEXP = "^[^\\s]+@[^\\s]+\\.[^\\s]+$";
-    private static final String PHONE_REGEXP = "^[0-9\\(\\)-+\\s]+$";
+    private static final String EMAIL_REGEXP = "^(?=.{3,30}$)[^\\s]+@[^\\s]+\\.[^\\s]+$";
+    private static final String PHONE_REGEXP = "^[0-9\\s-+()]{7,30}$";
 
-    private static final String PASSPORT_SERIES_REGEXP = "[a-zA-Zа-яА-Я]{2}";
-    private static final String PASSPORT_NUMBER_REGEXP = "[\\d]{7}";
+    private static final String PASSPORT_SERIES_REGEXP = "^[a-zA-Zа-яА-Я]{2}$";
+    private static final String PASSPORT_NUMBER_REGEXP = "^[\\d]{7}$";
     private static final String PASSPORT_ISSUED_BY_REGEXP = ".{1,255}";
     private static final String PASSPORT_USER_ADDRESS_REGEXP = ".{1,255}";
-    private static final String PASSPORT_USER_SURNAME_REGEXP = "[a-zA-Zа-яА-Я]{3,50}";
-    private static final String PASSPORT_USER_NAME_REGEXP = "[a-zA-Zа-яА-Я]{3,50}";
-    private static final String PASSPORT_USER_THIRDNAME_REGEXP = "[a-zA-Zа-яА-Я]{3,50}";
+    private static final String PASSPORT_USER_SURNAME_REGEXP = "^[a-zA-Zа-яА-Я]{3,50}$";
+    private static final String PASSPORT_USER_NAME_REGEXP = "^[a-zA-Zа-яА-Я]{3,50}$";
+    private static final String PASSPORT_USER_THIRDNAME_REGEXP = "^[a-zA-Zа-яА-Я]{3,50}$";
 
-    private static final String CARD_USER_FIRSTNAME_REGEXP = "[a-zA-Z]{3,50}";
-    private static final String CARD_USER_LASTNAME_REGEXP = "[a-zA-Z]{3,50}";
+    private static final String CARD_USER_FIRSTNAME_REGEXP = "^[a-zA-Z]{3,50}$";
+    private static final String CARD_USER_LASTNAME_REGEXP = "^[a-zA-Z]{3,50}$";
 
     public static boolean loginValidation(AuthorizationData data) {
         String login = data.getLogin();
@@ -57,7 +57,7 @@ public class UserValidator {
                 && ratingID >= 0;
     }
 
-    public static boolean userPassportValidation(Passport passport) {
+    public static boolean passportValidation(Passport passport) {
         int userID = passport.getUserID();
         String passportSeries = passport.getPassportSeries();
         String passportNumber = passport.getPassportNumber();
@@ -81,7 +81,7 @@ public class UserValidator {
                 && passportUserDateOfBirth != null;
     }
 
-    public static boolean BankCardValidation(Bankcard bankCard) {
+    public static boolean bankCardValidation(Bankcard bankCard) {
         int userID = bankCard.getUserID();
         long bankcardNumber = bankCard.getBankcardNumber();
         Date cardValidTrue = bankCard.getBankcardValidTrue();
@@ -98,6 +98,9 @@ public class UserValidator {
     }
 
     public static boolean userBankCardDeleteValidation(int userID, long bankCardNumber) {
-        return userID > 0 && bankCardNumber >= 1000_0000_0000_000L && bankCardNumber <= 9999_9999_9999_9999L;
+        return userID > 0 && bankCardNumber >= 1000_0000_0000_000L
+                && bankCardNumber <= 9999_9999_9999_9999L;
     }
+
+
 }

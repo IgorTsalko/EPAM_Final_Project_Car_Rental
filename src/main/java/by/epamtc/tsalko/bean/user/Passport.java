@@ -25,6 +25,9 @@ public class Passport implements Serializable {
     }
 
     public void setUserID(int userID) {
+        if (userID < 0) {
+            userID = 0;
+        }
         this.userID = userID;
     }
 
@@ -33,6 +36,9 @@ public class Passport implements Serializable {
     }
 
     public void setPassportID(int passportID) {
+        if (passportID < 0) {
+            passportID = 0;
+        }
         this.passportID = passportID;
     }
 

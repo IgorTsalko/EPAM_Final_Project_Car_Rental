@@ -94,38 +94,42 @@
         </div>
         <div class="user-data-fields rowing-left">
             <div class="data-field">
-                <input type="text" name="user_passport_surname"
+                <input type="text" name="user_passport_surname" pattern="^[a-zA-Zа-яА-Я]+$"
+                       maxlength="50" minlength="3"
                        value="${passport.passportUserSurname}" disabled="" required>
             </div>
             <div class="data-field">
-                <input type="text" name="user_passport_name"
+                <input type="text" name="user_passport_name" pattern="^[a-zA-Zа-яА-Я]+$"
+                       maxlength="50" minlength="3"
                        value="${passport.passportUserName}" disabled="" required>
             </div>
             <div class="data-field">
-                <input type="text" name="user_passport_thirdname"
+                <input type="text" name="user_passport_thirdname" pattern="^[a-zA-Zа-яА-Я]+$"
+                       maxlength="50" minlength="3"
                        value="${passport.passportUserThirdName}" disabled="" required>
             </div>
             <div class="data-field">
-                <input type="text" name="user_passport_date_of_birth"
+                <input type="date" name="user_passport_date_of_birth"
                        value="${passport.passportUserDateOfBirth}" disabled="" required>
             </div>
             <div class="data-field">
-                <input type="text" name="user_passport_address"
+                <input type="text" name="user_passport_address" maxlength="255"
                        value="${passport.passportUserAddress}" disabled="" required>
             </div>
             <div class="data-field">
-                <input style="width: 40px; text-align: center;" type="text" name="user_passport_series"
+                <input style="width: 40px; text-align: center;" type="text" name="user_passport_series" pattern="^[a-zA-Zа-яА-Я]+$"
+                       maxlength="2" minlength="2"
                        value="${passport.passportSeries}" disabled="" required>
                 <input style="width: 255px; padding-right: 0; margin-right: 0;"
-                       type="text" name="user_passport_number"
+                       type="text" name="user_passport_number" maxlength="7" minlength="7" pattern="^[\d]+$"
                        value="${passport.passportNumber}" disabled="" required>
             </div>
             <div class="data-field">
-                <input type="text" name="user_passport_issued_by"
+                <input type="text" name="user_passport_issued_by" maxlength="255"
                        value="${passport.passportIssuedBy}" disabled="" required>
             </div>
             <div class="data-field">
-                <input type="text" name="user_passport_date_of_issue"
+                <input type="date" name="user_passport_date_of_issue"
                        value="${passport.passportDateOfIssue}" disabled="" required>
             </div>
         </div>

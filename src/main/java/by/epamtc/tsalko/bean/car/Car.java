@@ -8,7 +8,6 @@ public class Car implements Serializable {
     private static final long serialVersionUID = 7665785395449624149L;
 
     private int carID;
-    private boolean available;
     private String brand;
     private String model;
     private int yearProduction;
@@ -16,7 +15,7 @@ public class Car implements Serializable {
     private String engineSize;
     private String fuelType;
     private int odometerValue;
-    private String pricePerDay;
+    private double pricePerDay;
     private String mainImageURI;
     private String comment;
 
@@ -25,15 +24,10 @@ public class Car implements Serializable {
     }
 
     public void setCarID(int carID) {
+        if (carID < 0) {
+            carID = 0;
+        }
         this.carID = carID;
-    }
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
     }
 
     public String getBrand() {
@@ -57,6 +51,9 @@ public class Car implements Serializable {
     }
 
     public void setYearProduction(int yearProduction) {
+        if (yearProduction < 0) {
+            yearProduction = 0;
+        }
         this.yearProduction = yearProduction;
     }
 
@@ -89,14 +86,20 @@ public class Car implements Serializable {
     }
 
     public void setOdometerValue(int odometerValue) {
+        if (odometerValue < 0) {
+            odometerValue = 0;
+        }
         this.odometerValue = odometerValue;
     }
 
-    public String getPricePerDay() {
+    public double getPricePerDay() {
         return pricePerDay;
     }
 
-    public void setPricePerDay(String pricePerDay) {
+    public void setPricePerDay(double pricePerDay) {
+        if (pricePerDay < 0) {
+            pricePerDay = 0;
+        }
         this.pricePerDay = pricePerDay;
     }
 
@@ -122,22 +125,21 @@ public class Car implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Car car = (Car) o;
         return carID == car.carID &&
-                available == car.available &&
                 yearProduction == car.yearProduction &&
                 odometerValue == car.odometerValue &&
+                Double.compare(car.pricePerDay, pricePerDay) == 0 &&
                 Objects.equals(brand, car.brand) &&
                 Objects.equals(model, car.model) &&
                 Objects.equals(transmission, car.transmission) &&
                 Objects.equals(engineSize, car.engineSize) &&
                 Objects.equals(fuelType, car.fuelType) &&
-                Objects.equals(pricePerDay, car.pricePerDay) &&
                 Objects.equals(mainImageURI, car.mainImageURI) &&
                 Objects.equals(comment, car.comment);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(carID, available, brand, model, yearProduction, transmission, engineSize,
+        return Objects.hash(carID, brand, model, yearProduction, transmission, engineSize,
                 fuelType, odometerValue, pricePerDay, mainImageURI, comment);
     }
 
@@ -145,7 +147,6 @@ public class Car implements Serializable {
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
                 "carID=" + carID +
-                ", available=" + available +
                 ", brand='" + brand + '\'' +
                 ", model='" + model + '\'' +
                 ", yearProduction=" + yearProduction +
@@ -153,7 +154,7 @@ public class Car implements Serializable {
                 ", engineSize='" + engineSize + '\'' +
                 ", fuelType='" + fuelType + '\'' +
                 ", odometerValue=" + odometerValue +
-                ", pricePerDay='" + pricePerDay + '\'' +
+                ", pricePerDay=" + pricePerDay +
                 ", mainImageURI='" + mainImageURI + '\'' +
                 ", comment='" + comment + '\'' +
                 '}';

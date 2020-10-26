@@ -3,7 +3,7 @@ package by.epamtc.tsalko.controller.command.impl;
 import by.epamtc.tsalko.bean.user.AuthorizationData;
 import by.epamtc.tsalko.bean.user.User;
 import by.epamtc.tsalko.controller.command.Command;
-import by.epamtc.tsalko.controller.UserValidator;
+import by.epamtc.tsalko.controller.TechValidator;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.ServiceException;
@@ -12,9 +12,11 @@ import by.epamtc.tsalko.service.exception.EntityNotFoundServiceException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class AuthorizationCommand implements Command {
+    private static final String LOGIN_REQUEST_PAGE = "login_request_Page";
 
     private static final String ATTRIBUTE_USER = "user";
 
@@ -40,14 +42,21 @@ public class AuthorizationCommand implements Command {
         authorizationData.setLogin(login);
         authorizationData.setPassword(password);
 
-        if (UserValidator.loginValidation(authorizationData)) {
+        if (TechValidator.loginValidation(authorizationData)) {
             ServiceProvider serviceProvider = ServiceProvider.getInstance();
             UserService userService = serviceProvider.getUserService();
 
             try {
                 User user = userService.authorization(authorizationData);
                 req.getSession().setAttribute(ATTRIBUTE_USER, user);
-                page = GO_TO_MAIN_PAGE;
+
+                String loginRequestPage =
+                        (String) req.getSession().getAttribute(LOGIN_REQUEST_PAGE);
+                if (loginRequestPage != null) {
+                    page = loginRequestPage;
+                } else {
+                    page = GO_TO_MAIN_PAGE;
+                }
             } catch (EntityNotFoundServiceException e) {
                 page = GO_TO_LOGIN_PAGE + MESSAGE_AUTHORIZATION + WRONG_DATA;
             } catch (ServiceException e) {

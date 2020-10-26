@@ -20,6 +20,9 @@ public class Bankcard implements Serializable {
     }
 
     public void setUserID(int userID) {
+        if (userID < 0) {
+            userID = 0;
+        }
         this.userID = userID;
     }
 
@@ -28,6 +31,9 @@ public class Bankcard implements Serializable {
     }
 
     public void setBankcardNumber(long bankcardNumber) {
+        if (bankcardNumber < 0) {
+            bankcardNumber = 0;
+        }
         this.bankcardNumber = bankcardNumber;
     }
 

@@ -100,10 +100,12 @@
                 </select>
             </div>
             <div class="data-field">
-                <input type="tel" name="user_phone" value="${user_details.userPhone}" disabled="" required>
+                <input type="tel" name="user_phone" pattern="^[0-9\s-+()]+$"
+                       maxlength="30" minlength="7" value="${user_details.userPhone}" disabled="" required>
             </div>
             <div class="data-field">
-                <input type="email" name="user_email" value="${user_details.userEmail}" disabled="">
+                <input type="email" name="user_email" pattern="^[^\s]+@[^\s]+\.[^\s]+$"
+                       maxlength="30" minlength="3" value="${user_details.userEmail}" disabled="">
             </div>
         </div>
     </c:otherwise>

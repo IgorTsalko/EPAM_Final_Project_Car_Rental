@@ -24,7 +24,7 @@ public enum ParameterName {
     GO_TO_LOGIN_PAGE,
     GO_TO_REGISTRATION_PAGE,
     GO_TO_CONTACT_PAGE,
-    GO_TO_CATALOG,
+    GO_TO_OUR_CARS,
     GO_TO_CAR_PAGE,
     GO_TO_NEWS,
     GO_TO_RULES,

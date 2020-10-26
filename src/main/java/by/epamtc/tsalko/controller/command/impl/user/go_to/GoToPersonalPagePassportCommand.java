@@ -21,32 +21,26 @@ public class GoToPersonalPagePassportCommand implements Command {
     private static final String MESSAGE_PASSPORT = "message_passport";
     private static final String ERROR_DATA_RETRIEVE = "data_retrieve_error";
 
-    private static final String GO_TO_MAIN_PAGE = "mainController?command=go_to_main_page";
     private static final String PERSONAL_PAGE = "/WEB-INF/jsp/personal_page/personalPage.jsp";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute(ATTRIBUTE_USER);
+        int userID = user.getId();
 
-        if (user == null) {
-            resp.sendRedirect(GO_TO_MAIN_PAGE);
-        } else {
-            ServiceProvider serviceProvider = ServiceProvider.getInstance();
-            UserService userService = serviceProvider.getUserService();
+        ServiceProvider serviceProvider = ServiceProvider.getInstance();
+        UserService userService = serviceProvider.getUserService();
 
-            Passport passport;
-            int userID = user.getId();
-
-            try {
-                passport = userService.getUserPassport(userID);
-                if (passport != null) {
-                    req.setAttribute(USER_PASSPORT, passport);
-                }
-            } catch (ServiceException e) {
-                req.setAttribute(MESSAGE_PASSPORT, ERROR_DATA_RETRIEVE);
+        Passport passport;
+        try {
+            passport = userService.getUserPassport(userID);
+            if (passport != null) {
+                req.setAttribute(USER_PASSPORT, passport);
             }
-
-            req.getRequestDispatcher(PERSONAL_PAGE).forward(req, resp);
+        } catch (ServiceException e) {
+            req.setAttribute(MESSAGE_PASSPORT, ERROR_DATA_RETRIEVE);
         }
+
+        req.getRequestDispatcher(PERSONAL_PAGE).forward(req, resp);
     }
 }

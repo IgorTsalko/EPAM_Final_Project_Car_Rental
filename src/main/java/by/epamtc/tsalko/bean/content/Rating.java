@@ -16,6 +16,9 @@ public class Rating implements Serializable {
     }
 
     public void setRatingID(int ratingID) {
+        if (ratingID < 0) {
+            ratingID = 0;
+        }
         this.ratingID = ratingID;
     }
 
@@ -32,6 +35,9 @@ public class Rating implements Serializable {
     }
 
     public void setDiscount(int discount) {
+        if (discount < 0) {
+            discount = 0;
+        }
         this.discount = discount;
     }
 

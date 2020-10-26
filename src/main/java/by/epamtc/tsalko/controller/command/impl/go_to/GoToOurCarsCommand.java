@@ -12,14 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-public class GoToCatalogCommand implements Command {
+public class GoToOurCarsCommand implements Command {
 
     private static final String ATTRIBUTE_CARS = "cars";
     private static final String ATTRIBUTE_MESSAGE = "message";
 
     private static final String ERROR_DATA_RETRIEVE = "data_retrieve_error";
 
-    private static final String CATALOG_PAGE = "/WEB-INF/jsp/catalog.jsp";
+    private static final String OUR_CARS_PAGE = "/WEB-INF/jsp/ourCarsPage.jsp";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,6 +35,6 @@ public class GoToCatalogCommand implements Command {
             req.setAttribute(ATTRIBUTE_MESSAGE, ERROR_DATA_RETRIEVE);
         }
 
-        req.getRequestDispatcher(CATALOG_PAGE).forward(req, resp);
+        req.getRequestDispatcher(OUR_CARS_PAGE).forward(req, resp);
     }
 }

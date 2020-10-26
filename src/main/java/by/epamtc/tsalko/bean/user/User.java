@@ -12,7 +12,7 @@ public class User implements Serializable {
     private String login;
     private String role;
     private String rating;
-    private int discount;
+    private double discount;
     private Date registrationDate;
 
     public int getId() {
@@ -20,6 +20,9 @@ public class User implements Serializable {
     }
 
     public void setId(int id) {
+        if (id < 0) {
+            id = 0;
+        }
         this.id = id;
     }
 
@@ -47,11 +50,14 @@ public class User implements Serializable {
         this.rating = rating;
     }
 
-    public int getDiscount() {
+    public double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(int discount) {
+    public void setDiscount(double discount) {
+        if (discount < 0) {
+            discount = 0;
+        }
         this.discount = discount;
     }
 

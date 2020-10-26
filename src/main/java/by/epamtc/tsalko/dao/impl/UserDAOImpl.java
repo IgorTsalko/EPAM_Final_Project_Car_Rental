@@ -48,11 +48,12 @@ public class UserDAOImpl implements UserDAO {
                     "user_bankcard_lastname, user_bankcard_cvv, user_id) VALUES (?, ?, ?, ?, ?, ?)";
 
     private static final String SELECT_ALL_ORDERS_BY_USER_ID =
-            "SELECT o.user_id, o.order_id, o.order_date, s.order_status, o.order_rental_start, " +
+            "SELECT o.user_id, u.user_login, o.order_id, o.order_date, s.order_status, o.order_rental_start, " +
                     "o.order_rental_end, o.order_car_id, c.car_brand, c.car_model, " +
                     "SUM(b.bill_sum) as bill_sum, o.manager_id, o.order_comment " +
                     "FROM user_orders o JOIN cars c ON o.order_car_id=c.car_id JOIN order_statuses s " +
                     "ON o.order_status=s.order_status_id JOIN bills b ON b.user_order_id=o.order_id " +
+                    "JOIN users u ON u.user_id=o.user_id " +
                     "WHERE o.user_id=? GROUP BY o.order_id ORDER BY s.order_status_id, o.order_date DESC";
 
     private static final String SELECT_ORDERS =
@@ -244,7 +245,6 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public List<User> getUsers(int offset, int linesAmount) throws DAOException {
         List<User> users;
-        int lastPageNumber = offset + linesAmount;
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -543,7 +543,7 @@ public class UserDAOImpl implements UserDAO {
         user.setLogin(resultSet.getString(COLUMN_USER_LOGIN));
         user.setRole(resultSet.getString(COLUMN_USER_ROLE));
         user.setRating(resultSet.getString(COLUMN_USER_RATING));
-        user.setDiscount(resultSet.getInt(COLUMN_USER_DISCOUNT));
+        user.setDiscount(resultSet.getDouble(COLUMN_USER_DISCOUNT));
         user.setRegistrationDate(resultSet.getTimestamp(COLUMN_USER_REGISTRATION_DATE));
 
         return user;

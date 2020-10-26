@@ -11,6 +11,7 @@
 <fmt:message key="order.message_start" var="message_start"/>
 <fmt:message key="order.message_end" var="message_end"/>
 <fmt:message key="currency" var="currency"/>
+<fmt:message key="our_cars_title" var="our_cars_title"/>
 
 <table>
     <tr>
@@ -30,7 +31,7 @@
             </table>
             <p class="message">${order_not_exists}</p>
             <p class="message">${message_start}
-                <a href="mainController?command=go_to_catalog"> ${catalog_title} </a>
+                <a href="mainController?command=go_to_our_cars"> ${our_cars_title} </a>
                     ${message_end}
             </p>
         </c:when>

@@ -13,6 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CarDAOImpl implements CarDAO {
@@ -23,18 +25,20 @@ public class CarDAOImpl implements CarDAO {
 
     private static final String SELECT_ALL_CARS =
             "SELECT c.car_id, car_brand, car_model, car_year_production, car_transmission, car_engine_size, " +
-                    "car_fuel_type, car_odometer_value, car_price_per_day, car_available, car_comment, car_image_uri " +
+                    "car_fuel_type, car_odometer_value, car_price_per_day, car_comment, car_image_uri " +
                     "FROM cars c JOIN car_images i ON i.car_id=c.car_id GROUP BY c.car_id";
+
+    private static final String SELECT_NUMBERS_OF_CARS = "SELECT COUNT(*) AS numbers_of_cars FROM cars";
 
     private static final String SELECT_CAR_BY_ID =
             "SELECT c.car_id, car_brand, car_model, car_year_production, car_transmission, car_engine_size, " +
-                    "car_fuel_type, car_odometer_value, car_price_per_day, car_available, car_comment," +
+                    "car_fuel_type, car_odometer_value, car_price_per_day, car_comment," +
                     "car_image_uri FROM cars c JOIN car_images i ON i.car_id=c.car_id WHERE c.car_id=?";
 
     private static final String SELECT_CAR_IMAGES_BY_ID = "SELECT car_image_uri FROM car_images WHERE car_id=?";
 
     private static final String COLUMN_CAR_ID = "car_id";
-    private static final String COLUMN_CAR_AVAILABLE = "car_available";
+    private static final String COLUMN_NUMBERS_OF_CARS = "numbers_of_cars";
     private static final String COLUMN_CAR_BRAND = "car_brand";
     private static final String COLUMN_CAR_MODEL = "car_model";
     private static final String COLUMN_CAR_YEAR_PRODUCTION = "car_year_production";
@@ -73,6 +77,52 @@ public class CarDAOImpl implements CarDAO {
         }
 
         return cars;
+    }
+
+    @Override
+    public List<Car> getRecommendedCars(int count, int mainCarID) throws DAOException {
+        List<Car> randomCars = new ArrayList<>();
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_NUMBERS_OF_CARS);
+            resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            int numberOfCars = resultSet.getInt(COLUMN_NUMBERS_OF_CARS);
+
+            Integer[] randomIDs = new Integer[numberOfCars - 1];
+            int id = 1;
+            for (int i = 0; i < randomIDs.length; i++) {
+                if (id == mainCarID) {
+                    id++;
+                }
+                randomIDs[i] = id++;
+            }
+            Collections.shuffle(Arrays.asList(randomIDs));
+
+            for (int i = 0; i < count; i++) {
+                preparedStatement = connection.prepareStatement(SELECT_CAR_BY_ID);
+                preparedStatement.setInt(1, randomIDs[i]);
+                resultSet = preparedStatement.executeQuery();
+                resultSet.next();
+                Car car = createCar(resultSet);
+                randomCars.add(car);
+            }
+
+        } catch (SQLException e) {
+            logger.error("Severe database error! Cannot retrieve all cars!", e);
+            throw new DAOException(e);
+        } finally {
+            if (connection != null) {
+                connectionPool.closeConnection(connection, preparedStatement, resultSet);
+            }
+        }
+
+        return randomCars;
     }
 
     @Override
@@ -142,7 +192,6 @@ public class CarDAOImpl implements CarDAO {
         int carID = resultSet.getInt(COLUMN_CAR_ID);
 
         car.setCarID(carID);
-        car.setAvailable(resultSet.getBoolean(COLUMN_CAR_AVAILABLE));
         car.setBrand(resultSet.getString(COLUMN_CAR_BRAND));
         car.setModel(resultSet.getString(COLUMN_CAR_MODEL));
         car.setYearProduction(resultSet.getInt(COLUMN_CAR_YEAR_PRODUCTION));
@@ -150,7 +199,7 @@ public class CarDAOImpl implements CarDAO {
         car.setEngineSize(resultSet.getString(COLUMN_CAR_ENGINE_SIZE));
         car.setFuelType(resultSet.getString(COLUMN_CAR_FUEL_TYPE));
         car.setOdometerValue(resultSet.getInt(COLUMN_CAR_ODOMETER_VALUE));
-        car.setPricePerDay(resultSet.getString(COLUMN_CAR_PRICE_PER_DAY));
+        car.setPricePerDay(resultSet.getDouble(COLUMN_CAR_PRICE_PER_DAY));
         car.setMainImageURI(resultSet.getString(COLUMN_CAR_IMAGE_URI));
         car.setComment(resultSet.getString(COLUMN_CAR_COMMENT));
 
