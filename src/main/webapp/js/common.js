@@ -3,18 +3,18 @@ function changeImage(imageSrc) {
 }
 
 function enableEditing(formName, postButtonID, cancelButtonID) {
-    var inputs = document.forms[formName].getElementsByTagName('input');
-    var editButtons = document.getElementsByName('edit-button');
+    let inputs = document.forms[formName].getElementsByTagName('input');
+    let editButtons = document.getElementsByName('edit-button');
     if (document.getElementById('user-menu-content') == null) {
-        var selects = document.forms[formName].getElementsByTagName('select');
-        for (var i = 0; i < selects.length; i++) {
+        let selects = document.forms[formName].getElementsByTagName('select');
+        for (let i = 0; i < selects.length; i++) {
             selects[i].removeAttribute('disabled');
         }
     }
-    for (var i = 0; i < inputs.length; i++) {
+    for (let i = 0; i < inputs.length; i++) {
         inputs[i].removeAttribute('disabled');
     }
-    for (var i = 0; i < editButtons.length; i++) {
+    for (let i = 0; i < editButtons.length; i++) {
         editButtons[i].style.display = 'none';
     }
     document.getElementById(postButtonID).style.display = null;
@@ -22,26 +22,26 @@ function enableEditing(formName, postButtonID, cancelButtonID) {
 }
 
 function disableEditing(formName, postButtonID, cancelButtonID) {
-    var inputs = document.forms[formName].getElementsByTagName('input');
-    var editButtons = document.getElementsByName('edit-button');
+    let inputs = document.forms[formName].getElementsByTagName('input');
+    let editButtons = document.getElementsByName('edit-button');
     if (document.getElementById('user-menu-content') == null) {
-        var selects = document.forms[formName].getElementsByTagName('select');
-        for (var i = 0; i < selects.length; i++) {
+        let selects = document.forms[formName].getElementsByTagName('select');
+        for (let i = 0; i < selects.length; i++) {
             selects[i].setAttribute('disabled', '');
         }
     }
-    for (var i = 0; i < inputs.length; i++) {
+    for (let i = 0; i < inputs.length; i++) {
         inputs[i].setAttribute('disabled', '');
     }
-    for (var i = 0; i < editButtons.length; i++) {
+    for (let i = 0; i < editButtons.length; i++) {
         editButtons[i].style.display = null;
     }
     document.getElementById(postButtonID).style.display = 'none';
     document.getElementById(cancelButtonID).style.display = 'none';
 }
 
-function check(registration_button) {
-    var button = document.getElementById(registration_button);
+function check(registrationButton) {
+    let button = document.getElementById(registrationButton);
     if (document.getElementById('politics').checked) {
         button.disabled = '';
         button.classList.remove('inactive');
@@ -57,4 +57,20 @@ function confirmAction(message) {
 
 function closeWarning() {
     window.location.href = 'mainController?command=go_to_main_page';
+}
+
+function calculatePrice() {
+    let pickUpDate = document.getElementById('pickUpDate').value;
+    let dropOffDate = document.getElementById('dropOffDate').value;
+    let pricePerDay = document.getElementById('discounted-price');
+    if (pricePerDay == null) {
+        pricePerDay = document.getElementById('common-price').textContent;
+    } else {
+        pricePerDay = pricePerDay.textContent;
+    }
+
+    let days = Math.floor((Date.parse(dropOffDate) - Date.parse(pickUpDate) ) / 86400000);
+    let totalPrice = days * pricePerDay;
+    let priceEl = document.getElementById('calculated-price');
+    priceEl.textContent = totalPrice.toFixed(2) + ' BYN / ' + days;
 }

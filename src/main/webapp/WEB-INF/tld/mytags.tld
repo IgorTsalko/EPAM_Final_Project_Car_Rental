@@ -37,4 +37,16 @@
         </attribute>
     </tag>
 
+    <tag>
+        <name>dateFormatTag</name>
+        <tag-class>by.epamtc.tsalko.view.tag.DateFormatTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>localDateTime</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <elexprvalue>true</elexprvalue>
+        </attribute>
+    </tag>
+
 </taglib>

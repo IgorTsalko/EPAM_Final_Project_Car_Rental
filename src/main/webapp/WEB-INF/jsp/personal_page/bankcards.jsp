@@ -6,7 +6,6 @@
 <fmt:message key="warning.delete" var="delete_warning"/>
 <fmt:message key="bankcard.message.not_exists" var="bankcard_message_not_exists"/>
 
-<c:set var="previous_command" value="${pageContext.request.getParameter(\"command\")}"/>
 <c:set var="param_user_id" value="${pageContext.request.getParameter(\"user_id\")}"/>
 
 <c:set var="message_bankcard_delete" value="${pageContext.request.getParameter(\"message_bankcard_delete\")}"/>
@@ -26,7 +25,6 @@
         <form action="mainController" method="post" onsubmit="return confirmAction('${delete_warning}')">
             <input type="hidden" name="command" value="delete_bankcard">
             <input type="hidden" name="sender_login" value="${sessionScope.user.login}">
-            <input type="hidden" name="previous_command" value="${previous_command}">
             <c:choose>
                 <c:when test="${not empty param_user_id}">
                     <input type="hidden" name="user_id" value="${param_user_id}">

@@ -12,11 +12,10 @@ import by.epamtc.tsalko.service.exception.EntityNotFoundServiceException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class AuthorizationCommand implements Command {
-    private static final String LOGIN_REQUEST_PAGE = "login_request_Page";
+    private static final String LOGIN_REQUEST_PAGE = "login_request_page";
 
     private static final String ATTRIBUTE_USER = "user";
 
@@ -50,11 +49,8 @@ public class AuthorizationCommand implements Command {
                 User user = userService.authorization(authorizationData);
                 req.getSession().setAttribute(ATTRIBUTE_USER, user);
 
-                String loginRequestPage =
-                        (String) req.getSession().getAttribute(LOGIN_REQUEST_PAGE);
-                if (loginRequestPage != null) {
-                    page = loginRequestPage;
-                } else {
+                page = (String) req.getSession().getAttribute(LOGIN_REQUEST_PAGE);
+                if (page == null) {
                     page = GO_TO_MAIN_PAGE;
                 }
             } catch (EntityNotFoundServiceException e) {

@@ -41,9 +41,9 @@ public class SecurityFilter implements Filter {
         userCommand.add(ParameterName.GO_TO_PERSONAL_PAGE_DETAILS);
         userCommand.add(ParameterName.GO_TO_PERSONAL_PAGE_ORDERS);
         userCommand.add(ParameterName.GO_TO_PERSONAL_PAGE_PASSPORT);
-        userCommand.add(ParameterName.GO_TO_PERSONAL_PAGE_ADD_BANKCARD);
+        userCommand.add(ParameterName.GO_TO_PERSONAL_PAGE_CREATE_BANKCARD);
 
-        crudCommand.add(ParameterName.ADD_BANKCARD);
+        crudCommand.add(ParameterName.CREATE_BANKCARD);
         crudCommand.add(ParameterName.DELETE_BANKCARD);
         crudCommand.add(ParameterName.UPDATE_USER_DETAILS);
         crudCommand.add(ParameterName.UPDATE_USER_PASSPORT);
@@ -61,10 +61,17 @@ public class SecurityFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
 
         String commandName = req.getParameter(PARAMETER_COMMAND);
-        if (commandName != null) {
+        ParameterName parameterName = null;
+        try {
+            if (commandName != null) {
+                parameterName = ParameterName.valueOf(commandName.toUpperCase());
+            }
+        } catch (IllegalArgumentException ignore) {/*NOPE*/}
+
+        if (parameterName != null) {
             HttpSession session = req.getSession();
             String previousRequest = (String) session.getAttribute(ATTRIBUTE_PREVIOUS_REQUEST);
-            ParameterName parameterName = ParameterName.valueOf(commandName.toUpperCase());
+
             User user = (User) session.getAttribute(ATTRIBUTE_USER);
 
             if ((userCommand.contains(parameterName)
@@ -73,7 +80,7 @@ public class SecurityFilter implements Filter {
                     || (crudCommand.contains(parameterName) && (user == null || !crudCommandVerification(user, req)))) {
 
                 logger.info("User: \"" + user
-                        + "\" tried to get private resources \"" + commandName + "\"");
+                        + "\" tried to get or change private resources \"" + commandName + "\"");
                 resp.sendRedirect(previousRequest
                         + "&" + MESSAGE_SECURITY + "=" + UNVERIFIED_ACTION);
             } else {
@@ -90,9 +97,6 @@ public class SecurityFilter implements Filter {
         try {
             userID = Integer.parseInt(req.getParameter(PARAMETER_USER_ID));
         } catch (NumberFormatException ignore) {/* NOPE */}
-        if (userID < 0) {
-            userID = 0;
-        }
 
         return ((user.getRole().equals(ROLE_CUSTOMER)
                 && user.getLogin().equals(senderLogin)

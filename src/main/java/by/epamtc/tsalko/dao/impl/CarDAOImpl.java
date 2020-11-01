@@ -68,7 +68,7 @@ public class CarDAOImpl implements CarDAO {
                 cars.add(car);
             }
         } catch (SQLException e) {
-            logger.error("Severe database error! Cannot retrieve all cars!", e);
+            logger.error("Severe database error! Could not retrieve all cars!", e);
             throw new DAOException(e);
         } finally {
             if (connection != null) {
@@ -114,7 +114,7 @@ public class CarDAOImpl implements CarDAO {
             }
 
         } catch (SQLException e) {
-            logger.error("Severe database error! Cannot retrieve all cars!", e);
+            logger.error("Severe database error! Could not retrieve all cars!", e);
             throw new DAOException(e);
         } finally {
             if (connection != null) {
@@ -145,7 +145,7 @@ public class CarDAOImpl implements CarDAO {
 
             car = createCar(resultSet);
         } catch (SQLException e) {
-            logger.error("Severe database error! Cannot retrieve car!", e);
+            logger.error("Severe database error! Could not retrieve car!", e);
             throw new DAOException(e);
         } finally {
             if (connection != null) {
@@ -176,7 +176,7 @@ public class CarDAOImpl implements CarDAO {
                 carImages.add(resultSet.getString(COLUMN_CAR_IMAGE_URI));
             }
         } catch (SQLException e) {
-            logger.error("Severe database error! Cannot retrieve car images!", e);
+            logger.error("Severe database error! Could not retrieve car images!", e);
             throw new DAOException(e);
         } finally {
             if (connection != null) {

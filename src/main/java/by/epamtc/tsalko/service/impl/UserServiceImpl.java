@@ -16,9 +16,13 @@ import by.epamtc.tsalko.service.exception.EntityAlreadyExistsServiceException;
 import by.epamtc.tsalko.service.exception.EntityNotFoundServiceException;
 
 import java.security.NoSuchAlgorithmException;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
+
+    private static final String MOCK_PASSWORD = "12345678";
+    private static final int MIN_EMAIL_LENGTH = 5;
 
     @Override
     public User authorization(AuthorizationData data) throws ServiceException {
@@ -42,24 +46,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean registration(RegistrationData data) throws ServiceException {
-        boolean registration;
-
+    public void registration(RegistrationData data) throws ServiceException {
         DAOProvider daoProvider = DAOProvider.getInstance();
         UserDAO userDAO = daoProvider.getUserDAO();
 
         try {
-            String password = Encoder.encrypt(data.getPassword());
-            data.setPassword(password);
+            String password = data.getPassword();
+            if (password == null) {
+                password = MOCK_PASSWORD;
+            }
+            data.setPassword(Encoder.encrypt(password));
 
-            registration = userDAO.registration(data);
+            String email = data.getEmail();
+            if (email != null && email.length() < MIN_EMAIL_LENGTH) {
+                data.setEmail(null);
+            }
+
+            userDAO.registration(data);
         } catch (EntityAlreadyExistsDAOException e) {
             throw new EntityAlreadyExistsServiceException(e);
         } catch (DAOException | NoSuchAlgorithmException e) {
             throw new ServiceException(e);
         }
-
-        return registration;
     }
 
     @Override
@@ -191,40 +199,58 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean addBankcard(Bankcard bankCard) throws ServiceException {
+    public void createBankcard(Bankcard bankCard) throws ServiceException {
         if (!UserValidator.bankCardValidation(bankCard)) {
             throw new InvalidInputDataServiceException();
         }
-
-        boolean bankcardAdded;
 
         DAOProvider daoProvider = DAOProvider.getInstance();
         UserDAO userDAO = daoProvider.getUserDAO();
 
         try {
-            bankcardAdded = userDAO.addBankcard(bankCard);
+            userDAO.createBankcard(bankCard);
         } catch (EntityAlreadyExistsDAOException e) {
             throw new EntityAlreadyExistsServiceException(e);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
-
-        return bankcardAdded;
     }
 
     @Override
-    public boolean deleteBankcard(int userID, long cardNumber) throws ServiceException {
-        boolean bankcardDeleted;
+    public void addOrder(Order order) throws ServiceException {
+        if (!UserValidator.orderValidation(order)) {
+            throw new InvalidInputDataServiceException();
+        }
+
+        long amountOfDays = ChronoUnit.DAYS.between(order.getPickUpDate(), order.getDropOffDate());
+        double pricePerDay = order.getPricePerDay();
+        double billSum = amountOfDays * pricePerDay;
+
+        double discount = order.getDiscount();
+        if (discount > 0) {
+            billSum = (pricePerDay * (1 - discount / 100)) * amountOfDays;
+        }
+        order.setBillSum(billSum);
 
         DAOProvider daoProvider = DAOProvider.getInstance();
         UserDAO userDAO = daoProvider.getUserDAO();
 
         try {
-            bankcardDeleted = userDAO.deleteBankcard(userID, cardNumber);
+            userDAO.addOrder(order);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
+    }
 
-        return bankcardDeleted;
+    @Override
+    public void deleteBankcard(int userID, long cardNumber) throws ServiceException {
+        DAOProvider daoProvider = DAOProvider.getInstance();
+        UserDAO userDAO = daoProvider.getUserDAO();
+
+        try {
+            userDAO.deleteBankcard(userID, cardNumber);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
     }
 }

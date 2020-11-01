@@ -1,7 +1,7 @@
 package by.epamtc.tsalko.bean.user;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class UserDetails implements Serializable {
@@ -16,7 +16,7 @@ public class UserDetails implements Serializable {
     private int userRatingID;
     private String userPhone;
     private String userEmail;
-    private Date userRegistrationDate;
+    private LocalDateTime userRegistrationDate;
 
     public int getUserID() {
         return userID;
@@ -91,11 +91,11 @@ public class UserDetails implements Serializable {
         this.userEmail = userEmail;
     }
 
-    public Date getUserRegistrationDate() {
+    public LocalDateTime getUserRegistrationDate() {
         return userRegistrationDate;
     }
 
-    public void setUserRegistrationDate(Date userRegistrationDate) {
+    public void setUserRegistrationDate(LocalDateTime userRegistrationDate) {
         this.userRegistrationDate = userRegistrationDate;
     }
 

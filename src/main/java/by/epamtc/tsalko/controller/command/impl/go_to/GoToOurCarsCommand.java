@@ -19,7 +19,7 @@ public class GoToOurCarsCommand implements Command {
 
     private static final String ERROR_DATA_RETRIEVE = "data_retrieve_error";
 
-    private static final String OUR_CARS_PAGE = "/WEB-INF/jsp/ourCarsPage.jsp";
+    private static final String OUR_CARS_PAGE = "/WEB-INF/jsp/car/ourCarsPage.jsp";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

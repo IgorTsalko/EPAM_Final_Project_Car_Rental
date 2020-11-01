@@ -19,7 +19,6 @@
 <fmt:message key="data.updated" var="data_updated"/>
 
 <c:set var="passport" value="${requestScope.user_passport}"/>
-<c:set var="previous_command" value="${pageContext.request.getParameter(\"command\")}"/>
 <c:set var="param_user_id" value="${pageContext.request.getParameter(\"user_id\")}"/>
 <c:set var="message_passport_update" value="${pageContext.request.getParameter(\"message_passport_update\")}"/>
 
@@ -57,7 +56,6 @@
         </div>
         <input type="hidden" name="command" value="update_user_passport">
         <input type="hidden" name="sender_login" value="${sessionScope.user.login}">
-        <input type="hidden" name="previous_command" value="${previous_command}">
         <c:choose>
             <c:when test="${not empty param_user_id}">
                 <input type="hidden" name="user_id" value="${param_user_id}">

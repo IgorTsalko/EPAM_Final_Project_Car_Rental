@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+<%@ taglib uri="http://localhost:8080/CarRentalFinalProjectJWD/mytag" prefix="mytag"%>
 
 <%@include file="../header.jsp"%>
+<title>${sessionScope.user.login}</title>
 
 <fmt:message key="user.role" var="role"/>
 <fmt:message key="user.rating" var="rating"/>
@@ -35,9 +37,10 @@
                     <p>${sessionScope.user.login.charAt(0)}</p>
                 </div>
                 <h3>${hello} ${sessionScope.user.login}</h3>
-                <p id="registration-date">${registration_date}: <fmt:formatDate pattern="yyyy-MM-dd / HH:mm"
-                                                         value="${sessionScope.user.registrationDate}"/></p>
-                <p>${role}: ${sessionScope.user.role} • ${rating}: ${sessionScope.user.rating} • ${discount}: ${sessionScope.user.discount}%</p>
+                <p id="registration-date">${registration_date}: <mytag:dateFormatTag localDateTime="${sessionScope.user.registrationDate}"/></p>
+                <p>${role}: ${sessionScope.user.role} • ${rating}: ${sessionScope.user.rating} • ${discount} <fmt:formatNumber type="number"
+                                                                                                                               maxFractionDigits="0"
+                                                                                                                               value="${sessionScope.user.discount}"/>%</p>
 
                 <div class="user-data">
                     <div id="user-menu" class="clear">
@@ -60,7 +63,7 @@
                         </div>
                         <div class="user-menu-tab rowing-left
                             <c:if test="${command eq 'go_to_personal_page_bankcards'}">selected-tab</c:if>
-                            <c:if test="${command eq 'go_to_personal_page_add_bankcard'}">selected-tab</c:if>">
+                            <c:if test="${command eq 'go_to_personal_page_create_bankcard'}">selected-tab</c:if>">
                             <a href="mainController?command=go_to_personal_page_bankcards">${bankcards_title}</a>
                         </div>
                     </div>
@@ -77,12 +80,12 @@
                             </c:when>
                             <c:when test="${command eq 'go_to_personal_page_bankcards'}">
                                 <p class="link-add-bankcard">
-                                    <a href="mainController?command=go_to_personal_page_add_bankcard">&#10010; ${bankcard_adding_title}</a>
+                                    <a href="mainController?command=go_to_personal_page_create_bankcard">&#10010; ${bankcard_adding_title}</a>
                                 </p>
                                 <%@include file="bankcards.jsp"%>
                             </c:when>
-                            <c:when test="${command eq 'go_to_personal_page_add_bankcard'}">
-                                <%@include file="addBankcard.jsp"%>
+                            <c:when test="${command eq 'go_to_personal_page_create_bankcard'}">
+                                <%@include file="createBankcard.jsp"%>
                             </c:when>
                             <c:when test="${command eq 'go_to_personal_page_all_orders'}">
                                 <%@include file="allOrders.jsp"%>

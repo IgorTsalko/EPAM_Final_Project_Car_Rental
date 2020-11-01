@@ -1,8 +1,9 @@
 package by.epamtc.tsalko.controller;
 
+import by.epamtc.tsalko.bean.Order;
 import by.epamtc.tsalko.bean.user.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class TechValidator {
 
@@ -61,13 +62,13 @@ public class TechValidator {
         int userID = passport.getUserID();
         String passportSeries = passport.getPassportSeries();
         String passportNumber = passport.getPassportNumber();
-        Date passportDateOfIssue = passport.getPassportDateOfIssue();
+        LocalDate passportDateOfIssue = passport.getPassportDateOfIssue();
         String passportIssuedBy = passport.getPassportIssuedBy();
         String passportUserAddress = passport.getPassportUserAddress();
         String passportUserSurname = passport.getPassportUserSurname();
         String passportUserName = passport.getPassportUserName();
         String passportUserThirdName = passport.getPassportUserThirdName();
-        Date passportUserDateOfBirth = passport.getPassportUserDateOfBirth();
+        LocalDate passportUserDateOfBirth = passport.getPassportUserDateOfBirth();
 
         return userID > 0
                 && passportSeries != null && passportSeries.matches(PASSPORT_SERIES_REGEXP)
@@ -84,7 +85,7 @@ public class TechValidator {
     public static boolean bankCardValidation(Bankcard bankCard) {
         int userID = bankCard.getUserID();
         long bankcardNumber = bankCard.getBankcardNumber();
-        Date cardValidTrue = bankCard.getBankcardValidTrue();
+        LocalDate cardValidTrue = bankCard.getBankcardValidTrue();
         String cardUserFirstname = bankCard.getBankcardUserFirstname();
         String cardUserLastname = bankCard.getBankcardUserLastname();
         String authorizationCode = bankCard.getBankcardCVV();
@@ -103,4 +104,19 @@ public class TechValidator {
     }
 
 
+    public static boolean orderValidation(Order order) {
+        int userID = order.getUserID();
+        double discount = order.getDiscount();
+        LocalDate pickUpDate = order.getPickUpDate();
+        LocalDate dropOffDate = order.getDropOffDate();
+        int carID = order.getCarID();
+        double pricePerDay = order.getPricePerDay();
+
+        return userID > 0
+                && discount >= 0 && discount < 100
+                && pickUpDate != null
+                && dropOffDate != null
+                && carID > 0
+                && pricePerDay > 0;
+    }
 }

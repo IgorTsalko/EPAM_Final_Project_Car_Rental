@@ -48,11 +48,8 @@ public class RegistrationCommand implements Command {
             UserService userService = serviceProvider.getUserService();
 
             try {
-                if (userService.registration(registrationData)) {
-                    page += MESSAGE_REGISTRATION + SUCCESSFUL;
-                } else {
-                    page += MESSAGE_REGISTRATION + ERROR;
-                }
+                userService.registration(registrationData);
+                page += MESSAGE_REGISTRATION + SUCCESSFUL;
             } catch (EntityAlreadyExistsServiceException e) {
                 page += MESSAGE_REGISTRATION + USER_EXISTS;
             } catch (ServiceException e) {

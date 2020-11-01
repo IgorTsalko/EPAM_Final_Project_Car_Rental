@@ -1,20 +1,24 @@
 package by.epamtc.tsalko.service;
 
+import by.epamtc.tsalko.bean.Order;
 import by.epamtc.tsalko.bean.user.Bankcard;
 import by.epamtc.tsalko.bean.user.Passport;
 import by.epamtc.tsalko.bean.user.UserDetails;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class UserValidator {
 
     private static final String START_VISA = "4";
     private static final String START_MASTERCARD = "5";
 
-    private static final int MIN_USER_ROLE_ID = 1;
+    private static final int MIN_USER_ROLE_ID = 0;
     private static final int MAX_USER_ROLE_ID = 2;
-    private static final int MIN_USER_RATING_ID = 1;
+    private static final int MIN_USER_RATING_ID = 0;
     private static final int MAX_USER_RATING_ID = 4;
+
+    private static final int MIN_USER_AGE = 16;
+    private static final int MAX_PASSPORT_YEARS = 10;
 
     public static boolean userDetailsValidation(UserDetails userDetails) {
         int roleID = userDetails.getUserRoleID();
@@ -25,21 +29,31 @@ public class UserValidator {
     }
 
     public static boolean passportValidation(Passport passport) {
-        Date passportDateOfIssue = passport.getPassportDateOfIssue();
-        Date passportUserDateOfBirth = passport.getPassportUserDateOfBirth();
+        LocalDate passportDateOfIssue = passport.getPassportDateOfIssue();
+        LocalDate passportUserDateOfBirth = passport.getPassportUserDateOfBirth();
 
-        Date now = new Date();
+        LocalDate now = LocalDate.now();
 
-        return passportDateOfIssue.compareTo(now) < 0 && passportUserDateOfBirth.compareTo(now) < 0;
+        return now.isAfter(passportDateOfIssue)
+                && now.minusYears(MIN_USER_AGE).isAfter(passportUserDateOfBirth)
+                && now.minusYears(MAX_PASSPORT_YEARS).isBefore(passportDateOfIssue);
     }
 
     public static boolean bankCardValidation(Bankcard bankCard) {
         String bankcardNumber = String.valueOf(bankCard.getBankcardNumber());
-        Date cardValidTrue = bankCard.getBankcardValidTrue();
-
-        Date now = new Date();
+        LocalDate cardValidTrue = bankCard.getBankcardValidTrue();
 
         return (bankcardNumber.startsWith(START_VISA) || bankcardNumber.startsWith(START_MASTERCARD))
-                && cardValidTrue.compareTo(now) > 0;
+                && LocalDate.now().isBefore(cardValidTrue);
+    }
+
+    public static boolean orderValidation(Order order) {
+        LocalDate pickUpDate = order.getPickUpDate();
+        LocalDate dropOffDate = order.getDropOffDate();
+
+        LocalDate now = LocalDate.now();
+
+        return (now.isEqual(pickUpDate) || now.isBefore(pickUpDate))
+                && pickUpDate.isBefore(dropOffDate);
     }
 }

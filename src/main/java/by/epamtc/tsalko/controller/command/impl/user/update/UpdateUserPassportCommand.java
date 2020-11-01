@@ -12,14 +12,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 public class UpdateUserPassportCommand implements Command {
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final String ATTRIBUTE_PREVIOUS_REQUEST = "previous_request";
 
-    private static final String PARAMETER_PREVIOUS_COMMAND = "previous_command";
     private static final String PARAMETER_USER_ID = "user_id";
     private static final String PARAMETER_USER_PASSPORT_SERIES = "user_passport_series";
     private static final String PARAMETER_USER_PASSPORT_NUMBER = "user_passport_number";
@@ -36,63 +35,39 @@ public class UpdateUserPassportCommand implements Command {
     private static final String INCORRECT_DATA = "incorrect_data";
     private static final String DATA_UPDATED = "data_updated";
 
-    private static final String MAIN_CONTROLLER = "mainController";
-    private static final String COMMAND_GO_TO_ALL_USER_DATA = "go_to_all_user_data";
-    private static final String COMMAND = "command";
-
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String previousCommand = req.getParameter(PARAMETER_PREVIOUS_COMMAND);
-        StringBuilder page = new StringBuilder()
-                .append(MAIN_CONTROLLER)
-                .append("?")
-                .append(COMMAND)
-                .append("=")
-                .append(previousCommand);
-
-        Passport passport = new Passport();
-
-        int userID = 0;
-        try {
-            userID = Integer.parseInt(req.getParameter(PARAMETER_USER_ID));
-        } catch (NumberFormatException ignore) {/* NOPE */}
-        if (userID < 0) {
-            userID = 0;
-        }
-
-        if (previousCommand.equals(COMMAND_GO_TO_ALL_USER_DATA)) {
-            page.append("&").append(PARAMETER_USER_ID).append("=").append(userID);
-        }
+        StringBuilder page = new StringBuilder((String) req.getSession().getAttribute(ATTRIBUTE_PREVIOUS_REQUEST));
 
         try {
+            Passport passport = new Passport();
+
+            passport.setUserID(Integer.parseInt(req.getParameter(PARAMETER_USER_ID)));
             passport.setPassportDateOfIssue(
-                    dateFormat.parse(req.getParameter(PARAMETER_USER_PASSPORT_DATE_OF_ISSUE)));
+                    LocalDate.parse(req.getParameter(PARAMETER_USER_PASSPORT_DATE_OF_ISSUE)));
             passport.setPassportUserDateOfBirth(
-                    dateFormat.parse(req.getParameter(PARAMETER_USER_PASSPORT_DATE_OF_BIRTH)));
-        } catch (ParseException ignore) {/* NOPE */}
+                    LocalDate.parse(req.getParameter(PARAMETER_USER_PASSPORT_DATE_OF_BIRTH)));
+            passport.setPassportSeries(req.getParameter(PARAMETER_USER_PASSPORT_SERIES));
+            passport.setPassportNumber(req.getParameter(PARAMETER_USER_PASSPORT_NUMBER));
+            passport.setPassportIssuedBy(req.getParameter(PARAMETER_USER_PASSPORT_ISSUED_BY));
+            passport.setPassportUserAddress(req.getParameter(PARAMETER_USER_PASSPORT_ADDRESS));
+            passport.setPassportUserSurname(req.getParameter(PARAMETER_USER_PASSPORT_SURNAME));
+            passport.setPassportUserName(req.getParameter(PARAMETER_USER_PASSPORT_NAME));
+            passport.setPassportUserThirdName(req.getParameter(PARAMETER_USER_PASSPORT_THIRDNAME));
 
-        passport.setUserID(userID);
-        passport.setPassportSeries(req.getParameter(PARAMETER_USER_PASSPORT_SERIES));
-        passport.setPassportNumber(req.getParameter(PARAMETER_USER_PASSPORT_NUMBER));
-        passport.setPassportIssuedBy(req.getParameter(PARAMETER_USER_PASSPORT_ISSUED_BY));
-        passport.setPassportUserAddress(req.getParameter(PARAMETER_USER_PASSPORT_ADDRESS));
-        passport.setPassportUserSurname(req.getParameter(PARAMETER_USER_PASSPORT_SURNAME));
-        passport.setPassportUserName(req.getParameter(PARAMETER_USER_PASSPORT_NAME));
-        passport.setPassportUserThirdName(req.getParameter(PARAMETER_USER_PASSPORT_THIRDNAME));
+            if (TechValidator.passportValidation(passport)) {
+                ServiceProvider serviceProvider = ServiceProvider.getInstance();
+                UserService userService = serviceProvider.getUserService();
 
-        if (TechValidator.passportValidation(passport)) {
-            ServiceProvider serviceProvider = ServiceProvider.getInstance();
-            UserService userService = serviceProvider.getUserService();
-            try {
                 userService.updateUserPassport(passport);
                 page.append("&").append(MESSAGE_PASSPORT_UPDATE).append("=").append(DATA_UPDATED);
-            } catch (InvalidInputDataServiceException e) {
+            } else {
                 page.append("&").append(MESSAGE_PASSPORT_UPDATE).append("=").append(INCORRECT_DATA);
-            } catch (ServiceException e) {
-                page.append("&").append(MESSAGE_PASSPORT_UPDATE).append("=").append(DATA_UPDATE_ERROR);
             }
-        } else {
+        } catch (DateTimeParseException | NumberFormatException | InvalidInputDataServiceException e) {
             page.append("&").append(MESSAGE_PASSPORT_UPDATE).append("=").append(INCORRECT_DATA);
+        } catch (ServiceException e) {
+            page.append("&").append(MESSAGE_PASSPORT_UPDATE).append("=").append(DATA_UPDATE_ERROR);
         }
         resp.sendRedirect(page.toString());
     }

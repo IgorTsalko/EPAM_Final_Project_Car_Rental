@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://localhost:8080/CarRentalFinalProjectJWD/mytag" prefix="mytag"%>
-<%@include file="header.jsp"%>
+
+<%@include file="../header.jsp"%>
 
 <fmt:message key="data.retrieve_error" var="data_retrieve_error"/>
 <fmt:message key="our_cars_title" var="our_cars_title"/>
@@ -11,6 +12,7 @@
 <fmt:message key="price_per_day" var="price_per_day"/>
 <fmt:message key="phone" var="phone"/>
 <fmt:message key="to_rent" var="to_rent"/>
+<title>${our_cars_title}</title>
 
 <%--START MAIN-CONTENT--%>
 <div id="content">
@@ -82,4 +84,4 @@
 </div>
 <%--END MAIN-CONTENT--%>
 
-<%@include file="footer.jsp"%>
+<%@include file="../footer.jsp"%>

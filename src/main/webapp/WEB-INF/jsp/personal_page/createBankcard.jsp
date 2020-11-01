@@ -32,7 +32,7 @@
 </c:choose>
 <div class="clear">
     <form id="adding-bankcard" action="mainController" method="post">
-        <input type="hidden" name="command" value="add_bankcard">
+        <input type="hidden" name="command" value="create_bankcard">
         <input type="hidden" name="sender_login" value="${sessionScope.user.login}">
         <input type="hidden" name="user_id" value="${sessionScope.user.id}">
         <div id="front-side-bankcard">

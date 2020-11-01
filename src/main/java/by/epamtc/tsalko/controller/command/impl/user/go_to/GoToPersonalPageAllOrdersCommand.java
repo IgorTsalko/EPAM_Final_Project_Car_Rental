@@ -29,22 +29,20 @@ public class GoToPersonalPageAllOrdersCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ServiceProvider serviceProvider = ServiceProvider.getInstance();
-        UserService userService = serviceProvider.getUserService();
-
-        List<Order> orders;
-
-        int page = 1;
         try {
-            page = Integer.parseInt(req.getParameter(PAGE));
-        } catch (NumberFormatException ignore) {/*NOPE*/}
-        if (page < 1) {
-            page = 1;
-        }
+            ServiceProvider serviceProvider = ServiceProvider.getInstance();
+            UserService userService = serviceProvider.getUserService();
 
-        try {
+            int page = 1;
+            try {
+                page = Integer.parseInt(req.getParameter(PAGE));
+            } catch (NumberFormatException ignore) {/*NOPE*/}
+            if (page < 1) {
+                page = 1;
+            }
+
             int offset = (page - 1) * ROWS_AMOUNT;
-            orders = userService.getOrders(offset, ROWS_AMOUNT);
+            List<Order> orders = userService.getOrders(offset, ROWS_AMOUNT);
 
             if (orders.size() < ROWS_AMOUNT) {
                 req.setAttribute(LAST_PAGE, true);
@@ -52,12 +50,17 @@ public class GoToPersonalPageAllOrdersCommand implements Command {
             if (page == 1) {
                 req.setAttribute(FIRST_PAGE, true);
             }
+
             req.setAttribute(OFFSET, offset);
             req.setAttribute(PAGE, page);
             req.setAttribute(ORDERS, orders);
+
+            req.getRequestDispatcher(PERSONAL_PAGE).forward(req, resp);
+        } catch (NumberFormatException e) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
         } catch (ServiceException e) {
             req.setAttribute(MESSAGE_ORDERS, ERROR_DATA_RETRIEVE);
+            req.getRequestDispatcher(PERSONAL_PAGE).forward(req, resp);
         }
-        req.getRequestDispatcher(PERSONAL_PAGE).forward(req, resp);
     }
 }

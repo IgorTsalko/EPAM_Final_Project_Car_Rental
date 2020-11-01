@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <%@include file="header.jsp"%>
+<title>${log_in}</title>
 
 <fmt:message key="login" var="form_login"/>
 <fmt:message key="password" var="form_password"/>
@@ -22,7 +24,7 @@
             <div class="login-form">
                 <form action="mainController" method="post">
                     <input type="hidden" name="command" value="authorization">
-                    <input type="text" pattern="^[a-zA-Z0-9_-]{3,25}$" name="login" placeholder="${form_login}" required>
+                    <input type="text" pattern="^[a-zA-Z0-9_-+]{3,25}$" name="login" placeholder="${form_login}" required>
                     <input type="password" pattern="^[^\s]{6,18}$" name="password" placeholder="${form_password}" required>
                     <button type="submit">${log_in}</button>
                 </form>

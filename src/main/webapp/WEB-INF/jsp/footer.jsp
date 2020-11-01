@@ -47,15 +47,21 @@
                     </div>
 
                     <div class="payment-systems rowing-right">
-                        <a href="someLink"><img alt="" src="img/paymentSystems.png"></a>
+                        <div id="visa-footer">
+                            <img alt="visa" src="img/visa-footer.png">
+                        </div>
+                        <div id="mastercard-footer">
+                            <img alt="mastercard" src="img/mastercard-footer.png">
+                        </div>
                     </div>
                 </div>
-
+                <hr>
                 <div id="footer-add" class="clear">
                     <div id="social-media" class="rowing-left">
-                        <a href="http://facebook.com/" target="_blank"><img alt="" src="img/icon-footer-facebook.png"></a>
-                        <a href="http://youtube.com/" target="_blank"><img alt="" src="img/icon-footer-youtube.png"></a>
-                        <a href="http://twitter.com/" target="_blank"><img alt="" src="img/icon-footer-twitter.png"></a>
+                        <a href="https://www.facebook.com/profile.php?id=100000387628677" target="_blank"><img alt="" src="img/facebook.png"></a>
+                        <a href="http://youtube.com/" target="_blank"><img alt="" src="img/youtube.png"></a>
+                        <a href="http://twitter.com/" target="_blank"><img alt="" src="img/twitter.png"></a>
+                        <a href="https://www.linkedin.com/in/itsalko/" target="_blank"><img alt="" src="img/linkedin.png"></a>
                     </div>
                     <div id="copyright" class="rowing-right">
                         <p>${copyright}: Tsalko Igor +375(33)357-76-60</p>

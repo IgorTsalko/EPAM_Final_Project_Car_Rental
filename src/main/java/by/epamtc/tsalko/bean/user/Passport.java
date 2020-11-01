@@ -1,7 +1,7 @@
 package by.epamtc.tsalko.bean.user;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Passport implements Serializable {
@@ -12,13 +12,13 @@ public class Passport implements Serializable {
     private int passportID;
     private String passportSeries;
     private String passportNumber;
-    private Date passportDateOfIssue;
+    private LocalDate passportDateOfIssue;
     private String passportIssuedBy;
     private String passportUserAddress;
     private String passportUserSurname;
     private String passportUserName;
     private String passportUserThirdName;
-    private Date passportUserDateOfBirth;
+    private LocalDate passportUserDateOfBirth;
 
     public int getUserID() {
         return userID;
@@ -58,11 +58,11 @@ public class Passport implements Serializable {
         this.passportNumber = passportNumber;
     }
 
-    public Date getPassportDateOfIssue() {
+    public LocalDate getPassportDateOfIssue() {
         return passportDateOfIssue;
     }
 
-    public void setPassportDateOfIssue(Date passportDateOfIssue) {
+    public void setPassportDateOfIssue(LocalDate passportDateOfIssue) {
         this.passportDateOfIssue = passportDateOfIssue;
     }
 
@@ -106,11 +106,11 @@ public class Passport implements Serializable {
         this.passportUserThirdName = passportUserThirdName;
     }
 
-    public Date getPassportUserDateOfBirth() {
+    public LocalDate getPassportUserDateOfBirth() {
         return passportUserDateOfBirth;
     }
 
-    public void setPassportUserDateOfBirth(Date passportUserDateOfBirth) {
+    public void setPassportUserDateOfBirth(LocalDate passportUserDateOfBirth) {
         this.passportUserDateOfBirth = passportUserDateOfBirth;
     }
 

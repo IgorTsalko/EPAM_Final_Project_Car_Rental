@@ -20,44 +20,33 @@ public class GoToCarPageCommand implements Command {
     private static final String ATTRIBUTE_CAR = "car";
     private static final String ATTRIBUTE_CAR_IMAGES = "car_images";
     private static final String ATTRIBUTE_RECOMMENDED_CARS = "recommended_cars";
-    private static final String ATTRIBUTE_MESSAGE = "message";
 
     private static final String PARAMETER_CAR_ID = "car_id";
 
+    private static final String MESSAGE_CAR_PAGE = "message_car_page";
     private static final String ERROR_DATA_RETRIEVE = "data_retrieve_error";
-
-    private static final String CAR_PAGE = "/WEB-INF/jsp/carPage.jsp";
+    private static final String CAR_PAGE = "/WEB-INF/jsp/car/carPage.jsp";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         CarService carService = serviceProvider.getCarService();
 
-        Car car;
-        List<String> carImages;
-        List<Car> randomCars;
-
-        int carID = 0;
         try {
-            carID = Integer.parseInt(req.getParameter(PARAMETER_CAR_ID));
-        } catch (NumberFormatException ignore) { /*NOPE*/ }
-        if (carID < 0) {
-            carID = 0;
-        }
+            int carID = Integer.parseInt(req.getParameter(PARAMETER_CAR_ID));
 
-        try {
-            car = carService.getCarByID(carID);
-            carImages = carService.getAllCarImagesByID(carID);
-            randomCars = carService.getRecommendedCars(NUMBER_OF_RECOMMENDED_CARS, carID);
+            Car car = carService.getCarByID(carID);
+            List<String> carImages = carService.getAllCarImagesByID(carID);
+            List<Car> randomCars = carService.getRecommendedCars(NUMBER_OF_RECOMMENDED_CARS, carID);
 
             req.setAttribute(ATTRIBUTE_CAR, car);
             req.setAttribute(ATTRIBUTE_CAR_IMAGES, carImages);
             req.setAttribute(ATTRIBUTE_RECOMMENDED_CARS, randomCars);
             req.getRequestDispatcher(CAR_PAGE).forward(req, resp);
-        } catch (EntityNotFoundServiceException e) {
+        } catch (EntityNotFoundServiceException | NumberFormatException e) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
         } catch (ServiceException e) {
-            req.setAttribute(ATTRIBUTE_MESSAGE, ERROR_DATA_RETRIEVE);
+            req.setAttribute(MESSAGE_CAR_PAGE, ERROR_DATA_RETRIEVE);
             req.getRequestDispatcher(CAR_PAGE).forward(req, resp);
         }
     }

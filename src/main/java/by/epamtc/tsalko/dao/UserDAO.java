@@ -9,7 +9,7 @@ import java.util.List;
 public interface UserDAO {
 
     User authorization(AuthorizationData authorizationData) throws DAOException;
-    boolean registration(RegistrationData registrationData) throws DAOException;
+    void registration(RegistrationData registrationData) throws DAOException;
 
     UserDetails getUserDetails(int userID) throws DAOException;
     List<User> getUsers(int offset, int linesAmount) throws DAOException;
@@ -21,7 +21,8 @@ public interface UserDAO {
     void updateUserDetails(UserDetails userDetails) throws DAOException;
     void updateUserPassport(Passport passport) throws DAOException;
 
-    boolean addBankcard(Bankcard bankcard) throws DAOException;
+    void createBankcard(Bankcard bankcard) throws DAOException;
+    void addOrder(Order order) throws DAOException;
 
-    boolean deleteBankcard(int userID, long cardNumber) throws DAOException;
+    void deleteBankcard(int userID, long cardNumber) throws DAOException;
 }

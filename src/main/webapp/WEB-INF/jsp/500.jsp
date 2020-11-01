@@ -1,9 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <%@include file="header.jsp"%>
 
 <fmt:message key="error_500_title" var="error_500_title"/>
 <fmt:message key="error_500_desc" var="error_500_desc"/>
 <fmt:message key="go_to_main_page" var="go_to_main_page"/>
+<title>${error_500_title}</title>
 
 <%--START MAIN-CONTENT--%>
 <div id="content">

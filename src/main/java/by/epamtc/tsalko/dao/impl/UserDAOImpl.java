@@ -40,29 +40,35 @@ public class UserDAOImpl implements UserDAO {
                     "ORDER BY user_role_id DESC LIMIT ?, ?";
 
     private static final String INSERT_NEW_USER =
-            "INSERT INTO users (user_email, user_phone, user_login, user_password, user_rating, user_role) " +
-                    "VALUES (?, ?, ?, ?, 1, 1)";
+            "INSERT INTO users (user_email, user_phone, user_login, user_password) " +
+                    "VALUES (?, ?, ?, ?)";
     
     private static final String INSERT_BANKCARD =
             "INSERT INTO user_bankcards (user_bankcard_number, user_bankcard_valid_true, user_bankcard_firstname, " +
                     "user_bankcard_lastname, user_bankcard_cvv, user_id) VALUES (?, ?, ?, ?, ?, ?)";
 
+    private static final String INSERT_ORDER =
+            "INSERT INTO user_orders (order_pick_up_date, order_drop_off_date, order_car_id, user_id) " +
+                    "VALUES (?, ?, ?, ?)";
+
+    private static final String INSERT_BILL = "INSERT INTO bills (bill_sum, user_order_id) VALUES (?, ?)";
+
     private static final String SELECT_ALL_ORDERS_BY_USER_ID =
-            "SELECT o.user_id, u.user_login, o.order_id, o.order_date, s.order_status, o.order_rental_start, " +
-                    "o.order_rental_end, o.order_car_id, c.car_brand, c.car_model, " +
-                    "SUM(b.bill_sum) as bill_sum, o.manager_id, o.order_comment " +
-                    "FROM user_orders o JOIN cars c ON o.order_car_id=c.car_id JOIN order_statuses s " +
-                    "ON o.order_status=s.order_status_id JOIN bills b ON b.user_order_id=o.order_id " +
-                    "JOIN users u ON u.user_id=o.user_id " +
-                    "WHERE o.user_id=? GROUP BY o.order_id ORDER BY s.order_status_id, o.order_date DESC";
+            "SELECT u.user_login, u.user_id, o.order_id, o.order_date, o.order_pick_up_date, " +
+                    "o.order_drop_off_date, o.order_is_paid, s.order_status, SUM(b.bill_sum) as bill_sum, " +
+                    "c.car_id, c.car_brand, c.car_model, o.order_comment " +
+                    "FROM user_orders o JOIN users u ON o.user_id=u.user_id " +
+                    "JOIN order_statuses s ON o.order_status=s.order_status_id " +
+                    "JOIN cars c ON o.order_car_id=c.car_id JOIN bills b ON b.user_order_id=o.order_id " +
+                    "WHERE u.user_id=? GROUP BY o.order_id ORDER BY s.order_status_id, o.order_date DESC";
 
     private static final String SELECT_ORDERS =
-            "SELECT o.user_id, u.user_login, o.order_id, o.order_date, s.order_status, o.order_rental_start, " +
-                    "o.order_rental_end, o.order_car_id, c.car_brand, c.car_model, " +
-                    "SUM(b.bill_sum) as bill_sum, o.manager_id, o.order_comment " +
-                    "FROM user_orders o JOIN cars c ON o.order_car_id=c.car_id JOIN order_statuses s " +
-                    "ON o.order_status=s.order_status_id JOIN bills b ON b.user_order_id=o.order_id " +
-                    "JOIN users u ON u.user_id=o.user_id " +
+            "SELECT u.user_login, u.user_id, o.order_id, o.order_date, o.order_pick_up_date, " +
+                    "o.order_drop_off_date, o.order_is_paid, s.order_status, SUM(b.bill_sum) as bill_sum, " +
+                    "c.car_id, c.car_brand, c.car_model, o.order_comment " +
+                    "FROM user_orders o JOIN users u ON o.user_id=u.user_id " +
+                    "JOIN order_statuses s ON o.order_status=s.order_status_id " +
+                    "JOIN cars c ON o.order_car_id=c.car_id JOIN bills b ON b.user_order_id=o.order_id " +
                     "GROUP BY o.order_id ORDER BY s.order_status_id, o.order_date DESC LIMIT ?, ?";
 
     private static final String SELECT_USER_PASSPORT_BY_USER_ID =
@@ -100,9 +106,9 @@ public class UserDAOImpl implements UserDAO {
     private static final String COLUMN_ORDER_ID = "order_id";
     private static final String COLUMN_ORDER_DATE = "order_date";
     private static final String COLUMN_ORDER_STATUS = "order_status";
-    private static final String COLUMN_ORDER_RENTAL_START = "order_rental_start";
-    private static final String COLUMN_ORDER_RENTAL_END = "order_rental_end";
-    private static final String COLUMN_ORDER_CAR_ID = "order_car_id";
+    private static final String COLUMN_ORDER_PICK_UP_DATE = "order_pick_up_date";
+    private static final String COLUMN_ORDER_DROP_OFF_DATE = "order_drop_off_date";
+    private static final String COLUMN_ORDER_IS_PAID = "order_is_paid";
     private static final String COLUMN_COMMENT = "order_comment";
 
     private static final String COLUMN_BILL_SUM = "bill_sum";
@@ -120,11 +126,9 @@ public class UserDAOImpl implements UserDAO {
 
     private static final String COLUMN_BANKCARD_NUMBER = "user_bankcard_number";
 
+    private static final String COLUMN_CAR_ID = "car_id";
     private static final String COLUMN_CAR_BRAND = "car_brand";
     private static final String COLUMN_CAR_MODEL = "car_model";
-
-    private static final String COLUMN_MANAGER_ID = "manager_id";
-
 
     /** Executes SQL query and return object User if it exists or throws exception.
      * Never return null
@@ -154,8 +158,8 @@ public class UserDAOImpl implements UserDAO {
 
             user = createUser(resultSet);
         } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Cannot authorize", e);
-            throw new DAOException(e);
+            logger.error("Severe database error! Could not authorize.", e);
+            throw new DAOException("Could not authorize.", e);
         } finally {
             if (connection != null) {
                 connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -172,9 +176,7 @@ public class UserDAOImpl implements UserDAO {
      * @throws EntityAlreadyExistsDAOException if User already exists
      */
     @Override
-    public boolean registration(RegistrationData registrationData) throws DAOException {
-        boolean registration = false;
-
+    public void registration(RegistrationData registrationData) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -182,27 +184,22 @@ public class UserDAOImpl implements UserDAO {
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(INSERT_NEW_USER);
 
-            preparedStatement.setString(1, (registrationData.getEmail().length() > 1)
-                    ?registrationData.getEmail() : null);
+            preparedStatement.setString(1, registrationData.getEmail());
             preparedStatement.setString(2, registrationData.getPhone());
             preparedStatement.setString(3, registrationData.getLogin());
             preparedStatement.setString(4, registrationData.getPassword());
 
-            if (preparedStatement.executeUpdate() == 1) {
-                registration = true;
-            }
-
+            preparedStatement.executeUpdate();
         } catch (SQLIntegrityConstraintViolationException e) {
             throw new EntityAlreadyExistsDAOException(e);
         } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Cannot register", e);
+            logger.error("Severe database error! Could not register.", e);
+            throw new DAOException("Could not register.", e);
         } finally {
             if (connectionPool != null) {
                 connectionPool.closeConnection(connection, preparedStatement);
             }
         }
-
-        return registration;
     }
 
     @Override
@@ -228,11 +225,12 @@ public class UserDAOImpl implements UserDAO {
                 userDetails.setUserRatingName(resultSet.getString(COLUMN_USER_RATING));
                 userDetails.setUserPhone(resultSet.getString(COLUMN_USER_PHONE));
                 userDetails.setUserEmail(resultSet.getString(COLUMN_USER_EMAIL));
-                userDetails.setUserRegistrationDate(resultSet.getTimestamp(COLUMN_USER_REGISTRATION_DATE));
+                userDetails.setUserRegistrationDate(
+                        resultSet.getTimestamp(COLUMN_USER_REGISTRATION_DATE).toLocalDateTime());
             }
         } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Cannot retrieve user details", e);
-            throw new DAOException(e);
+            logger.error("Severe database error! Could not retrieve user details.", e);
+            throw new DAOException("Could not retrieve user details.", e);
         } finally {
             if (connection != null) {
                 connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -264,8 +262,8 @@ public class UserDAOImpl implements UserDAO {
                 users.add(user);
             }
         } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Cannot retrieve all user orders!", e);
-            throw new DAOException(e);
+            logger.error("Severe database error! Could not retrieve all user orders.", e);
+            throw new DAOException("Could not retrieve all user orders.", e);
         } finally {
             if (connection != null) {
                 connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -294,8 +292,8 @@ public class UserDAOImpl implements UserDAO {
                 userOrders.add(order);
             }
         } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Cannot retrieve user orders!", e);
-            throw new DAOException(e);
+            logger.error("Severe database error! Could not retrieve user orders.", e);
+            throw new DAOException("Could not retrieve user orders.", e);
         } finally {
             if (connection != null) {
                 connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -325,8 +323,8 @@ public class UserDAOImpl implements UserDAO {
                 allOrders.add(order);
             }
         } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Cannot retrieve all user orders!", e);
-            throw new DAOException(e);
+            logger.error("Severe database error! Could not retrieve all user orders.", e);
+            throw new DAOException("Could not retrieve all user orders.", e);
         } finally {
             if (connection != null) {
                 connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -358,18 +356,20 @@ public class UserDAOImpl implements UserDAO {
             passport.setPassportID(resultSet.getInt(COLUMN_PASSPORT_ID));
             passport.setPassportSeries(resultSet.getString(COLUMN_PASSPORT_SERIES));
             passport.setPassportNumber(resultSet.getString(COLUMN_PASSPORT_NUMBER));
-            passport.setPassportDateOfIssue(resultSet.getDate(COLUMN_PASSPORT_DATE_OF_ISSUE));
+            passport.setPassportDateOfIssue(
+                    resultSet.getDate(COLUMN_PASSPORT_DATE_OF_ISSUE).toLocalDate());
             passport.setPassportIssuedBy(resultSet.getString(COLUMN_PASSPORT_ISSUED_BY));
             passport.setPassportUserAddress(resultSet.getString(COLUMN_PASSPORT_USER_ADDRESS));
             passport.setPassportUserSurname(resultSet.getString(COLUMN_PASSPORT_USER_SURNAME));
             passport.setPassportUserName(resultSet.getString(COLUMN_PASSPORT_USER_NAME));
             passport.setPassportUserThirdName(resultSet.getString(COLUMN_PASSPORT_USER_THIRDNAME));
-            passport.setPassportUserDateOfBirth(resultSet.getDate(COLUMN_PASSPORT_USER_DATE_OF_BIRTH));
+            passport.setPassportUserDateOfBirth(
+                    resultSet.getDate(COLUMN_PASSPORT_USER_DATE_OF_BIRTH).toLocalDate());
 
             return passport;
         } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Cannot retrieve user passport!", e);
-            throw new DAOException(e);
+            logger.error("Severe database error! Could not retrieve user passport.", e);
+            throw new DAOException("Could not retrieve user passport.", e);
         }  finally {
             if (connection != null) {
                 connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -396,8 +396,8 @@ public class UserDAOImpl implements UserDAO {
                 userCardAccounts.add(cardAccount);
             }
         } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Cannot retrieve user cards!", e);
-            throw new DAOException(e);
+            logger.error("Severe database error! Could not retrieve user cards.", e);
+            throw new DAOException("Could not retrieve user cards.", e);
         } finally {
             if (connection != null) {
                 connectionPool.closeConnection(connection, preparedStatement, resultSet);
@@ -409,7 +409,6 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void updateUserDetails(UserDetails userDetails) throws DAOException {
-
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -432,8 +431,8 @@ public class UserDAOImpl implements UserDAO {
 
             preparedStatement.executeUpdate();
         } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Cannot update user details!", e);
-            throw new DAOException(e);
+            logger.error("Severe database error! Could not update user details.", e);
+            throw new DAOException("Could not update user details.", e);
         } finally {
             if (connection != null) {
                 connectionPool.closeConnection(connection, preparedStatement);
@@ -443,7 +442,6 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void updateUserPassport(Passport passport) throws DAOException {
-
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -453,20 +451,20 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setString(1, passport.getPassportSeries());
             preparedStatement.setString(2, passport.getPassportNumber());
             preparedStatement.setDate(3,
-                    new java.sql.Date(passport.getPassportDateOfIssue().getTime()));
+                    java.sql.Date.valueOf(passport.getPassportDateOfIssue()));
             preparedStatement.setString(4, passport.getPassportIssuedBy());
             preparedStatement.setString(5, passport.getPassportUserAddress());
             preparedStatement.setString(6, passport.getPassportUserSurname());
             preparedStatement.setString(7, passport.getPassportUserName());
             preparedStatement.setString(8, passport.getPassportUserThirdName());
             preparedStatement.setDate(9,
-                    new java.sql.Date(passport.getPassportUserDateOfBirth().getTime()));
+                    java.sql.Date.valueOf(passport.getPassportUserDateOfBirth()));
             preparedStatement.setInt(10, passport.getUserID());
 
             preparedStatement.executeUpdate();
         } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Cannot update user passport!", e);
-            throw new DAOException(e);
+            logger.error("Severe database error! Could not update user passport.", e);
+            throw new DAOException("Could not update user passport.", e);
         } finally {
             if (connection != null) {
                 connectionPool.closeConnection(connection, preparedStatement);
@@ -475,9 +473,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public boolean addBankcard(Bankcard bankCard) throws DAOException {
-        boolean bankcardAdded = false;
-
+    public void createBankcard(Bankcard bankCard) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -486,33 +482,75 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement = connection.prepareStatement(INSERT_BANKCARD);
             preparedStatement.setLong(1, bankCard.getBankcardNumber());
             preparedStatement.setDate(2,
-                    new java.sql.Date(bankCard.getBankcardValidTrue().getTime()));
+                    java.sql.Date.valueOf(bankCard.getBankcardValidTrue()));
             preparedStatement.setString(3, bankCard.getBankcardUserFirstname());
             preparedStatement.setString(4, bankCard.getBankcardUserLastname());
             preparedStatement.setString(5, bankCard.getBankcardCVV());
             preparedStatement.setInt(6, bankCard.getUserID());
 
-            if (preparedStatement.executeUpdate() == 1) {
-                bankcardAdded = true;
-            }
-
+            preparedStatement.executeUpdate();
         } catch (SQLIntegrityConstraintViolationException e) {
             throw new EntityAlreadyExistsDAOException(e);
         } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Cannot add card", e);
+            logger.error("Severe database error! Could not add card.", e);
+            throw new DAOException("Could not add card.", e);
         } finally {
             if (connectionPool != null) {
                 connectionPool.closeConnection(connection, preparedStatement);
             }
         }
-
-        return bankcardAdded;
     }
 
     @Override
-    public boolean deleteBankcard(int userID, long cardNumber) throws DAOException {
-        boolean bankcardDeleted = false;
+    public void addOrder(Order order) throws DAOException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
+        try {
+            connection = connectionPool.takeConnection();
+            connection.setAutoCommit(false);
+
+            preparedStatement =
+                    connection.prepareStatement(INSERT_ORDER, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setDate(1,
+                    java.sql.Date.valueOf(order.getPickUpDate()));
+            preparedStatement.setDate(2,
+                    java.sql.Date.valueOf(order.getDropOffDate()));
+            preparedStatement.setInt(3, order.getCarID());
+            preparedStatement.setInt(4, order.getUserID());
+            preparedStatement.executeUpdate();
+
+            int generatedKey = 0;
+            ResultSet rs = preparedStatement.getGeneratedKeys();
+            if (rs.next()) {
+                generatedKey = rs.getInt(1);
+            }
+
+            preparedStatement = connection.prepareStatement(INSERT_BILL);
+            preparedStatement.setDouble(1, order.getBillSum());
+            preparedStatement.setInt(2, generatedKey);
+            preparedStatement.executeUpdate();
+
+            connection.commit();
+        } catch (ConnectionPoolError | SQLException e) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException ex) {
+                logger.error("Severe database error! Could not make rollback", ex);
+            }
+            logger.error("Severe database error! Could not add order.", e);
+            throw new DAOException("Could not add order.", e);
+        } finally {
+            if (connectionPool != null) {
+                connectionPool.closeConnection(connection, preparedStatement);
+            }
+        }
+    }
+
+    @Override
+    public void deleteBankcard(int userID, long cardNumber) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -522,19 +560,15 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setInt(1, userID);
             preparedStatement.setLong(2, cardNumber);
 
-            if (preparedStatement.executeUpdate() == 1) {
-                bankcardDeleted = true;
-            }
-
+            preparedStatement.executeUpdate();
         } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Cannot delete bankcard", e);
+            logger.error("Severe database error! Could not delete bankcard.", e);
+            throw new DAOException("Could not delete bankcard.", e);
         } finally {
             if (connectionPool != null) {
                 connectionPool.closeConnection(connection, preparedStatement);
             }
         }
-
-        return bankcardDeleted;
     }
 
     private User createUser(ResultSet resultSet) throws SQLException {
@@ -544,7 +578,8 @@ public class UserDAOImpl implements UserDAO {
         user.setRole(resultSet.getString(COLUMN_USER_ROLE));
         user.setRating(resultSet.getString(COLUMN_USER_RATING));
         user.setDiscount(resultSet.getDouble(COLUMN_USER_DISCOUNT));
-        user.setRegistrationDate(resultSet.getTimestamp(COLUMN_USER_REGISTRATION_DATE));
+        user.setRegistrationDate(
+                resultSet.getTimestamp(COLUMN_USER_REGISTRATION_DATE).toLocalDateTime());
 
         return user;
     }
@@ -554,16 +589,16 @@ public class UserDAOImpl implements UserDAO {
         order.setUserID(resultSet.getInt(COLUMN_USER_ID));
         order.setUserLogin(resultSet.getString(COLUMN_USER_LOGIN));
         order.setOrderId(resultSet.getInt(COLUMN_ORDER_ID));
-        order.setOrderDate(resultSet.getDate(COLUMN_ORDER_DATE));
+        order.setOrderDate(resultSet.getTimestamp(COLUMN_ORDER_DATE).toLocalDateTime());
         order.setOrderStatus(resultSet.getString(COLUMN_ORDER_STATUS));
-        order.setRentalStart(resultSet.getDate(COLUMN_ORDER_RENTAL_START));
-        order.setRentalEnd(resultSet.getDate(COLUMN_ORDER_RENTAL_END));
-        order.setCarID(resultSet.getInt(COLUMN_ORDER_CAR_ID));
+        order.setPickUpDate(resultSet.getDate(COLUMN_ORDER_PICK_UP_DATE).toLocalDate());
+        order.setDropOffDate(resultSet.getDate(COLUMN_ORDER_DROP_OFF_DATE).toLocalDate());
+        order.setCarID(resultSet.getInt(COLUMN_CAR_ID));
         order.setCarBrand(resultSet.getString(COLUMN_CAR_BRAND));
         order.setCarModel(resultSet.getString(COLUMN_CAR_MODEL));
-        order.setBillSum(resultSet.getString(COLUMN_BILL_SUM));
+        order.setBillSum(resultSet.getDouble(COLUMN_BILL_SUM));
+        order.setPaid(resultSet.getBoolean(COLUMN_ORDER_IS_PAID));
         order.setComment(resultSet.getString(COLUMN_COMMENT));
-        order.setManagerID(resultSet.getInt(COLUMN_MANAGER_ID));
 
         return order;
     }

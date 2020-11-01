@@ -6,11 +6,10 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Car_rental Igor Tsalko</title>
     <link href="img/favicon.png" rel="icon">
     <link rel="stylesheet" media="all" type="text/css" href="css/core.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <script type="text/javascript" async="" src="js/common.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
 
     <c:if test="${not empty sessionScope.local}">
         <fmt:setLocale value="${sessionScope.local}"/>
@@ -25,6 +24,7 @@
     <fmt:message key="log_in" var="log_in"/>
     <fmt:message key="log_out" var="log_out"/>
     <fmt:message key="registration" var="registration"/>
+    <fmt:message key="work_schedule" var="work_schedule"/>
 
     <fmt:message key="contacts" var="contacts_title"/>
     <fmt:message key="cars_title" var="cars_title"/>
@@ -54,7 +54,7 @@
                 <p><strong>+375(33)357-76-60</strong></p>
             </div>
             <div class="header-contacts rowing-left">
-                <p>с 9:00 до 21:00</p>
+                <p>${work_schedule}</p>
             </div>
             <div class="user-info">
                 <c:if test="${sessionScope.user != null}">
@@ -69,19 +69,15 @@
 
                 <div id="localization">
                     <form action="mainController?command=app_localization" method="post">
-                        <input type="hidden" name="local" value="ru"/>
-                        <button type="submit">${button_ru}</button>
-                    </form>
-                    <form action="mainController?command=app_localization" method="post">
-                        <input type="hidden" name="local" value="en"/>
-                        <button type="submit">${button_en}</button>
+                        <button type="submit" name="local" value="ru">${button_ru}</button>
+                        <button type="submit" name="local" value="en">${button_en}</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
     <div class="container">
-        <div class="menu clear">
+        <div class="menu">
             <a class="logo rowing-left" href="${pageContext.request.contextPath}">
                 <img src="img/logo.png" alt="Logo">
             </a>

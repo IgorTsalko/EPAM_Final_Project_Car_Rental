@@ -53,7 +53,7 @@ public class ContentDAOImpl implements ContentDAO {
                 allRoles.add(role);
             }
         } catch (SQLException e) {
-            logger.error("Severe database error! Cannot retrieve all roles!", e);
+            logger.error("Severe database error! Could not retrieve all roles!", e);
             throw new DAOException(e);
         } finally {
             if (connection != null) {
@@ -87,7 +87,7 @@ public class ContentDAOImpl implements ContentDAO {
                 allRatings.add(rating);
             }
         } catch (SQLException e) {
-            logger.error("Severe database error! Cannot retrieve all ratings!", e);
+            logger.error("Severe database error! Could not retrieve all ratings!", e);
             throw new DAOException(e);
         } finally {
             if (connection != null) {

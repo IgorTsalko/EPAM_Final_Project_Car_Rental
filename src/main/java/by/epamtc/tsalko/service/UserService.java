@@ -9,7 +9,7 @@ import java.util.List;
 public interface UserService {
 
     User authorization(AuthorizationData data) throws ServiceException;
-    boolean registration(RegistrationData data) throws ServiceException;
+    void registration(RegistrationData data) throws ServiceException;
 
     UserDetails getUserDetails(int userID) throws ServiceException;
     List<User> getUsers(int offset, int rowsAmount) throws ServiceException;
@@ -21,7 +21,8 @@ public interface UserService {
     void updateUserDetails(UserDetails userDetails) throws ServiceException;
     void updateUserPassport(Passport passport) throws ServiceException;
 
-    boolean addBankcard(Bankcard bankCard) throws ServiceException;
+    void createBankcard(Bankcard bankCard) throws ServiceException;
+    void addOrder(Order order) throws ServiceException;
 
-    boolean deleteBankcard(int userID, long cardNumber) throws ServiceException;
+    void deleteBankcard(int userID, long cardNumber) throws ServiceException;
 }

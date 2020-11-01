@@ -1,7 +1,7 @@
 package by.epamtc.tsalko.bean.user;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Bankcard implements Serializable {
@@ -10,7 +10,7 @@ public class Bankcard implements Serializable {
 
     private int userID;
     private long bankcardNumber;
-    private Date bankcardValidTrue;
+    private LocalDate bankcardValidTrue;
     private String bankcardUserFirstname;
     private String bankcardUserLastname;
     private String bankcardCVV;
@@ -37,11 +37,11 @@ public class Bankcard implements Serializable {
         this.bankcardNumber = bankcardNumber;
     }
 
-    public Date getBankcardValidTrue() {
+    public LocalDate getBankcardValidTrue() {
         return bankcardValidTrue;
     }
 
-    public void setBankcardValidTrue(Date bankcardValidTrue) {
+    public void setBankcardValidTrue(LocalDate bankcardValidTrue) {
         this.bankcardValidTrue = bankcardValidTrue;
     }
 
@@ -84,8 +84,8 @@ public class Bankcard implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userID, bankcardNumber, bankcardValidTrue, bankcardUserFirstname, bankcardUserLastname,
-                bankcardCVV);
+        return Objects.hash(userID, bankcardNumber, bankcardValidTrue, bankcardUserFirstname,
+                bankcardUserLastname, bankcardCVV);
     }
 
     @Override

@@ -69,10 +69,10 @@ public final class ConnectionPool {
                 connectionQueue.add(pooledConnection);
             }
         } catch (SQLException e) {
-            logger.error("Cannot init pool data", e);
+            logger.error("Could not init pool data", e);
             throw new ConnectionPoolError(e);
         } catch (ClassNotFoundException e) {
-            logger.error("Cannot find database driver class", e);
+            logger.error("Could not find database driver class", e);
             throw new ConnectionPoolError(e);
         }
     }
@@ -135,9 +135,9 @@ public final class ConnectionPool {
             try {
                 ((PooledConnection) connectionQueue.take()).realClose();
             } catch (SQLException e) {
-                logger.error("Cannot close connection", e);
+                logger.error("Could not close connection", e);
             } catch (InterruptedException e) {
-                logger.error("Cannot take connection", e);
+                logger.error("Could not take connection", e);
             }
         }
     }

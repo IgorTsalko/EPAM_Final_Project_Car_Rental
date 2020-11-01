@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <%@include file="header.jsp"%>
+<title>${registration}</title>
 
 <fmt:message key="email" var="email"/>
 <fmt:message key="phone" var="phone"/>
