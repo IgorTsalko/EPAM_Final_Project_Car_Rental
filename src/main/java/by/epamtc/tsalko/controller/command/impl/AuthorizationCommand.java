@@ -25,7 +25,7 @@ public class AuthorizationCommand implements Command {
     private static final String MESSAGE_AUTHORIZATION = "&message_authorization=";
     private static final String WRONG_DATA = "wrong_data";
     private static final String ERROR = "error";
-    private static final String INCORRECT_DATA = "data.incorrect_data";
+    private static final String INCORRECT_DATA = "incorrect_data";
 
     private static final String GO_TO_LOGIN_PAGE = "mainController?command=go_to_login_page";
     private static final String GO_TO_MAIN_PAGE = "mainController?command=go_to_main_page";

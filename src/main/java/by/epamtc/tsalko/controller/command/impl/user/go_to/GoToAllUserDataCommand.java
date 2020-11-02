@@ -31,7 +31,6 @@ public class GoToAllUserDataCommand implements Command {
     private static final String MESSAGE_BANKCARDS = "message_bankcards";
     private static final String ERROR_DATA_RETRIEVE = "data_retrieve_error";
 
-    private static final String GO_TO_MAIN_PAGE = "mainController?command=go_to_main_page";
     private static final String USER_DATA_PAGE = "/WEB-INF/jsp/personal_page/userData.jsp";
 
     @Override
@@ -50,9 +49,6 @@ public class GoToAllUserDataCommand implements Command {
         try {
             userID = Integer.parseInt(req.getParameter(PARAMETER_USER_ID));
         } catch (NumberFormatException ignore) {/* NOPE */}
-        if (userID < 0) {
-            userID = 0;
-        }
 
         try {
             userDetails = userService.getUserDetails(userID);

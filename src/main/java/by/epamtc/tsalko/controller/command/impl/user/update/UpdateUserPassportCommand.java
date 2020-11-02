@@ -30,7 +30,7 @@ public class UpdateUserPassportCommand implements Command {
     private static final String PARAMETER_USER_PASSPORT_NAME = "user_passport_name";
     private static final String PARAMETER_USER_PASSPORT_THIRDNAME = "user_passport_thirdname";
 
-    private static final String MESSAGE_PASSPORT_UPDATE = "message_passport_update";
+    private static final String MESSAGE_PASSPORT_UPDATE = "&message_passport_update=";
     private static final String DATA_UPDATE_ERROR = "data_update_error";
     private static final String INCORRECT_DATA = "incorrect_data";
     private static final String DATA_UPDATED = "data_updated";
@@ -60,14 +60,14 @@ public class UpdateUserPassportCommand implements Command {
                 UserService userService = serviceProvider.getUserService();
 
                 userService.updateUserPassport(passport);
-                page.append("&").append(MESSAGE_PASSPORT_UPDATE).append("=").append(DATA_UPDATED);
+                page.append(MESSAGE_PASSPORT_UPDATE).append(DATA_UPDATED);
             } else {
-                page.append("&").append(MESSAGE_PASSPORT_UPDATE).append("=").append(INCORRECT_DATA);
+                page.append(MESSAGE_PASSPORT_UPDATE).append(INCORRECT_DATA);
             }
         } catch (DateTimeParseException | NumberFormatException | InvalidInputDataServiceException e) {
-            page.append("&").append(MESSAGE_PASSPORT_UPDATE).append("=").append(INCORRECT_DATA);
+            page.append(MESSAGE_PASSPORT_UPDATE).append(INCORRECT_DATA);
         } catch (ServiceException e) {
-            page.append("&").append(MESSAGE_PASSPORT_UPDATE).append("=").append(DATA_UPDATE_ERROR);
+            page.append(MESSAGE_PASSPORT_UPDATE).append(DATA_UPDATE_ERROR);
         }
         resp.sendRedirect(page.toString());
     }

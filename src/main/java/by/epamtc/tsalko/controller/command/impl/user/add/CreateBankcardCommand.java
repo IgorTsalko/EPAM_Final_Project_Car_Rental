@@ -27,7 +27,7 @@ public class CreateBankcardCommand implements Command {
     private static final String PARAMETER_BANKCARD_VALID_TRUE_YEAR = "bankcard_valid_true_year";
     private static final String PARAMETER_BANKCARD_CVV = "bankcard_cvv";
 
-    private static final String MESSAGE_BANKCARD_ADDING = "message_bankcard_adding";
+    private static final String MESSAGE_BANKCARD_ADDING = "&message_bankcard_adding=";
     private static final String DATA_ADD_ERROR = "data_add_error";
     private static final String INCORRECT_DATA = "incorrect_data";
     private static final String BANKCARD_EXISTS = "bankcard_exists";
@@ -60,17 +60,17 @@ public class CreateBankcardCommand implements Command {
                 page.append(GO_TO_PERSONAL_PAGE_BANKCARDS);
             } else {
                 page.append(GO_TO_PERSONAL_PAGE_CREATE_BANKCARD)
-                        .append("&").append(MESSAGE_BANKCARD_ADDING).append("=").append(INCORRECT_DATA);
+                        .append(MESSAGE_BANKCARD_ADDING).append(INCORRECT_DATA);
             }
         } catch (NumberFormatException | DateTimeParseException | InvalidInputDataServiceException e) {
             page.append(GO_TO_PERSONAL_PAGE_CREATE_BANKCARD)
-                    .append("&").append(MESSAGE_BANKCARD_ADDING).append("=").append(INCORRECT_DATA);
+                    .append(MESSAGE_BANKCARD_ADDING).append(INCORRECT_DATA);
         } catch (EntityAlreadyExistsServiceException e) {
             page.append(GO_TO_PERSONAL_PAGE_CREATE_BANKCARD)
-                    .append("&").append(MESSAGE_BANKCARD_ADDING).append("=").append(BANKCARD_EXISTS);
+                    .append(MESSAGE_BANKCARD_ADDING).append(BANKCARD_EXISTS);
         } catch (ServiceException e) {
             page.append(GO_TO_PERSONAL_PAGE_CREATE_BANKCARD)
-                    .append("&").append(MESSAGE_BANKCARD_ADDING).append("=").append(DATA_ADD_ERROR);
+                    .append(MESSAGE_BANKCARD_ADDING).append(DATA_ADD_ERROR);
         }
 
         resp.sendRedirect(page.toString());

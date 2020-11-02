@@ -32,7 +32,7 @@ public class CreateOrderCommand implements Command {
     private static final String PARAMETER_CAR_PRICE_PER_DAY = "car_price_per_day";
     private static final String PARAMETER_PHONE = "phone";
 
-    private static final String MESSAGE_CREATE_ORDER = "message_create_order";
+    private static final String MESSAGE_CREATE_ORDER = "&message_create_order=";
     private static final String CREATE_ORDER_ERROR = "create_order_error";
     private static final String CREATE_ORDER_SUCCESSFULLY = "create_order_successfully";
     private static final String INCORRECT_DATA = "incorrect_data";
@@ -86,14 +86,14 @@ public class CreateOrderCommand implements Command {
 
             if (TechValidator.orderValidation(order)) {
                 userService.addOrder(order);
-                page.append("&").append(MESSAGE_CREATE_ORDER).append("=").append(CREATE_ORDER_SUCCESSFULLY);
+                page.append(MESSAGE_CREATE_ORDER).append(CREATE_ORDER_SUCCESSFULLY);
             } else {
-                page.append("&").append(MESSAGE_CREATE_ORDER).append("=").append(INCORRECT_DATA);
+                page.append(MESSAGE_CREATE_ORDER).append(INCORRECT_DATA);
             }
         } catch (InvalidInputDataServiceException e) {
-            page.append("&").append(MESSAGE_CREATE_ORDER).append("=").append(INCORRECT_DATA);
+            page.append(MESSAGE_CREATE_ORDER).append(INCORRECT_DATA);
         } catch (DateTimeParseException | NumberFormatException | ServiceException e) {
-            page.append("&").append(MESSAGE_CREATE_ORDER).append("=").append(CREATE_ORDER_ERROR);
+            page.append(MESSAGE_CREATE_ORDER).append(CREATE_ORDER_ERROR);
         }
 
         resp.sendRedirect(page.toString());

@@ -16,7 +16,7 @@ public class MainController extends HttpServlet {
     private static final String PARAMETER_COMMAND = "command";
     private static final String PARAMETER_LOCAL = "local";
 
-    private static final String MAIN_CONTROLLER = "mainController";
+    private static final String MAIN_CONTROLLER = "mainController?";
     private static final String PREVIOUS_REQUEST = "previous_request";
 
     private static final String MESSAGE_REG_EXP = "&message.+?=.+?(?=(&|$))";
@@ -59,7 +59,7 @@ public class MainController extends HttpServlet {
         }
         
         if (queryString != null) {
-            String previousRequest = MAIN_CONTROLLER + "?" + queryString;
+            String previousRequest = MAIN_CONTROLLER + queryString;
             session.setAttribute(PREVIOUS_REQUEST, previousRequest);
         }
     }

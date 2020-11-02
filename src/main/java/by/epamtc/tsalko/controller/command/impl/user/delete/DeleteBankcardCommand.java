@@ -18,7 +18,7 @@ public class DeleteBankcardCommand implements Command {
     private static final String PARAMETER_USER_ID = "user_id";
     private static final String PARAMETER_BANKCARD_NUMBER = "bankcard_number";
 
-    private static final String MESSAGE_BANKCARD_DELETE = "message_bankcard_delete";
+    private static final String MESSAGE_BANKCARD_DELETE = "&message_bankcard_delete=";
     private static final String DATA_DELETE_ERROR = "data_delete_error";
 
     @Override
@@ -34,10 +34,10 @@ public class DeleteBankcardCommand implements Command {
 
                 userService.deleteBankcard(userID, bankcardNumber);
             } else {
-                page.append("&").append(MESSAGE_BANKCARD_DELETE).append("=").append(DATA_DELETE_ERROR);
+                page.append(MESSAGE_BANKCARD_DELETE).append(DATA_DELETE_ERROR);
             }
         }  catch (NumberFormatException | ServiceException e) {
-            page.append("&").append(MESSAGE_BANKCARD_DELETE).append("=").append(DATA_DELETE_ERROR);
+            page.append(MESSAGE_BANKCARD_DELETE).append(DATA_DELETE_ERROR);
         }
         resp.sendRedirect(page.toString());
     }

@@ -23,7 +23,7 @@ public class UpdateUserDetailsCommand implements Command {
     private static final String PARAMETER_USER_PHONE = "user_phone";
     private static final String PARAMETER_USER_EMAIL = "user_email";
 
-    private static final String MESSAGE_DETAILS_UPDATE = "message_details_update";
+    private static final String MESSAGE_DETAILS_UPDATE = "&message_details_update=";
     private static final String DATA_UPDATE_ERROR = "data_update_error";
     private static final String INCORRECT_DATA = "incorrect_data";
     private static final String DATA_UPDATED = "data_updated";
@@ -47,14 +47,14 @@ public class UpdateUserDetailsCommand implements Command {
                 UserService userService = serviceProvider.getUserService();
 
                 userService.updateUserDetails(userDetails);
-                page.append("&").append(MESSAGE_DETAILS_UPDATE).append("=").append(DATA_UPDATED);
+                page.append(MESSAGE_DETAILS_UPDATE).append(DATA_UPDATED);
             } else {
-                page.append("&").append(MESSAGE_DETAILS_UPDATE).append("=").append(INCORRECT_DATA);
+                page.append(MESSAGE_DETAILS_UPDATE).append(INCORRECT_DATA);
             }
         } catch (NumberFormatException | InvalidInputDataServiceException e) {
-            page.append("&").append(MESSAGE_DETAILS_UPDATE).append("=").append(INCORRECT_DATA);
+            page.append(MESSAGE_DETAILS_UPDATE).append(INCORRECT_DATA);
         } catch (ServiceException e) {
-            page.append("&").append(MESSAGE_DETAILS_UPDATE).append("=").append(DATA_UPDATE_ERROR);
+            page.append(MESSAGE_DETAILS_UPDATE).append(DATA_UPDATE_ERROR);
         }
 
         resp.sendRedirect(page.toString());

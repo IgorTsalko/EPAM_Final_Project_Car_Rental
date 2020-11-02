@@ -24,7 +24,7 @@ public class RegistrationCommand implements Command {
     private static final String SUCCESSFUL = "successful";
     private static final String USER_EXISTS = "user_exists";
     private static final String ERROR = "error";
-    private static final String INCORRECT_DATA = "data.incorrect_data";
+    private static final String INCORRECT_DATA = "incorrect_data";
 
     private static final String GO_TO_REGISTRATION_PAGE = "mainController?command=go_to_registration_page";
 
