@@ -18,7 +18,6 @@ public class GoToCarPageCommand implements Command {
     private static final int NUMBER_OF_RECOMMENDED_CARS = 3;
 
     private static final String ATTRIBUTE_CAR = "car";
-    private static final String ATTRIBUTE_CAR_IMAGES = "car_images";
     private static final String ATTRIBUTE_RECOMMENDED_CARS = "recommended_cars";
 
     private static final String PARAMETER_CAR_ID = "car_id";
@@ -36,11 +35,10 @@ public class GoToCarPageCommand implements Command {
             int carID = Integer.parseInt(req.getParameter(PARAMETER_CAR_ID));
 
             Car car = carService.getCarByID(carID);
-            List<String> carImages = carService.getAllCarImagesByID(carID);
+            car.setCarImages(carService.getAllCarImagesByID(carID));
             List<Car> randomCars = carService.getRecommendedCars(NUMBER_OF_RECOMMENDED_CARS, carID);
 
             req.setAttribute(ATTRIBUTE_CAR, car);
-            req.setAttribute(ATTRIBUTE_CAR_IMAGES, carImages);
             req.setAttribute(ATTRIBUTE_RECOMMENDED_CARS, randomCars);
             req.getRequestDispatcher(CAR_PAGE).forward(req, resp);
         } catch (EntityNotFoundServiceException | NumberFormatException e) {

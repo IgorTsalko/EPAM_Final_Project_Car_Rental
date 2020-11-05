@@ -1,4 +1,4 @@
-package by.epamtc.tsalko.controller.command.impl.user.add;
+package by.epamtc.tsalko.controller.command.impl.user.create;
 
 import by.epamtc.tsalko.bean.user.Bankcard;
 import by.epamtc.tsalko.controller.TechValidator;
@@ -55,7 +55,7 @@ public class CreateBankcardCommand implements Command {
             ServiceProvider serviceProvider = ServiceProvider.getInstance();
             UserService userService = serviceProvider.getUserService();
 
-            if (TechValidator.bankCardValidation(bankcard)) {
+            if (TechValidator.bankcardValidation(bankcard)) {
                 userService.createBankcard(bankcard);
                 page.append(GO_TO_PERSONAL_PAGE_BANKCARDS);
             } else {

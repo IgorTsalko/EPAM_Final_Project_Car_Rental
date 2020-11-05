@@ -1,6 +1,7 @@
 package by.epamtc.tsalko.dao.impl;
 
 import by.epamtc.tsalko.bean.*;
+import by.epamtc.tsalko.bean.car.Car;
 import by.epamtc.tsalko.bean.user.*;
 import by.epamtc.tsalko.dao.UserDAO;
 import by.epamtc.tsalko.dao.connection.ConnectionPool;
@@ -12,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -512,11 +514,19 @@ public class UserDAOImpl implements UserDAO {
 
             preparedStatement =
                     connection.prepareStatement(INSERT_ORDER, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setDate(1,
-                    java.sql.Date.valueOf(order.getPickUpDate()));
-            preparedStatement.setDate(2,
-                    java.sql.Date.valueOf(order.getDropOffDate()));
-            preparedStatement.setInt(3, order.getCarID());
+            LocalDate pickUpDate = order.getPickUpDate();
+            LocalDate dropOffDate = order.getDropOffDate();
+            if (pickUpDate != null && dropOffDate != null) {
+                preparedStatement.setDate(1,
+                        java.sql.Date.valueOf(order.getPickUpDate()));
+                preparedStatement.setDate(2,
+                        java.sql.Date.valueOf(order.getDropOffDate()));
+            } else {
+                preparedStatement.setDate(1, null);
+                preparedStatement.setDate(2, null);
+            }
+
+            preparedStatement.setInt(3, order.getCar().getCarID());
             preparedStatement.setInt(4, order.getUserID());
             preparedStatement.executeUpdate();
 
@@ -586,19 +596,27 @@ public class UserDAOImpl implements UserDAO {
 
     private Order createOrder(ResultSet resultSet) throws SQLException {
         Order order = new Order();
+        Car car = new Car();
+
         order.setUserID(resultSet.getInt(COLUMN_USER_ID));
         order.setUserLogin(resultSet.getString(COLUMN_USER_LOGIN));
         order.setOrderId(resultSet.getInt(COLUMN_ORDER_ID));
         order.setOrderDate(resultSet.getTimestamp(COLUMN_ORDER_DATE).toLocalDateTime());
         order.setOrderStatus(resultSet.getString(COLUMN_ORDER_STATUS));
-        order.setPickUpDate(resultSet.getDate(COLUMN_ORDER_PICK_UP_DATE).toLocalDate());
-        order.setDropOffDate(resultSet.getDate(COLUMN_ORDER_DROP_OFF_DATE).toLocalDate());
-        order.setCarID(resultSet.getInt(COLUMN_CAR_ID));
-        order.setCarBrand(resultSet.getString(COLUMN_CAR_BRAND));
-        order.setCarModel(resultSet.getString(COLUMN_CAR_MODEL));
+
+        order.setPickUpDate(resultSet.getDate(COLUMN_ORDER_PICK_UP_DATE) != null
+                ? resultSet.getDate(COLUMN_ORDER_PICK_UP_DATE).toLocalDate() : null);
+        order.setDropOffDate(resultSet.getDate(COLUMN_ORDER_DROP_OFF_DATE) != null
+                ? resultSet.getDate(COLUMN_ORDER_DROP_OFF_DATE).toLocalDate() : null);
+
         order.setBillSum(resultSet.getDouble(COLUMN_BILL_SUM));
         order.setPaid(resultSet.getBoolean(COLUMN_ORDER_IS_PAID));
         order.setComment(resultSet.getString(COLUMN_COMMENT));
+
+        car.setCarID(resultSet.getInt(COLUMN_CAR_ID));
+        car.setBrand(resultSet.getString(COLUMN_CAR_BRAND));
+        car.setModel(resultSet.getString(COLUMN_CAR_MODEL));
+        order.setCar(car);
 
         return order;
     }

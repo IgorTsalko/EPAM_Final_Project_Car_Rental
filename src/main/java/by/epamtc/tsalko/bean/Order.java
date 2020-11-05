@@ -1,5 +1,7 @@
 package by.epamtc.tsalko.bean;
 
+import by.epamtc.tsalko.bean.car.Car;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,14 +18,12 @@ public class Order implements Serializable {
     private String orderStatus;
     private LocalDate pickUpDate;
     private LocalDate dropOffDate;
-    private int carID;
-    private String carBrand;
-    private String carModel;
-    private double pricePerDay;
     private double billSum;
     private boolean paid;
     private double discount;
     private String comment;
+
+    private Car car;
 
     public int getUserID() {
         return userID;
@@ -85,42 +85,6 @@ public class Order implements Serializable {
         this.dropOffDate = dropOffDate;
     }
 
-    public int getCarID() {
-        return carID;
-    }
-
-    public void setCarID(int carID) {
-        if (carID >= 0) {
-            this.carID = carID;
-        }
-    }
-
-    public String getCarBrand() {
-        return carBrand;
-    }
-
-    public void setCarBrand(String carBrand) {
-        this.carBrand = carBrand;
-    }
-
-    public String getCarModel() {
-        return carModel;
-    }
-
-    public void setCarModel(String carModel) {
-        this.carModel = carModel;
-    }
-
-    public double getPricePerDay() {
-        return pricePerDay;
-    }
-
-    public void setPricePerDay(double pricePerDay) {
-        if (pricePerDay >= 0) {
-            this.pricePerDay = pricePerDay;
-        }
-    }
-
     public double getBillSum() {
         return billSum;
     }
@@ -157,6 +121,14 @@ public class Order implements Serializable {
         this.comment = comment;
     }
 
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -164,7 +136,6 @@ public class Order implements Serializable {
         Order order = (Order) o;
         return userID == order.userID &&
                 orderId == order.orderId &&
-                carID == order.carID &&
                 Double.compare(order.billSum, billSum) == 0 &&
                 paid == order.paid &&
                 Double.compare(order.discount, discount) == 0 &&
@@ -173,15 +144,14 @@ public class Order implements Serializable {
                 Objects.equals(orderStatus, order.orderStatus) &&
                 Objects.equals(pickUpDate, order.pickUpDate) &&
                 Objects.equals(dropOffDate, order.dropOffDate) &&
-                Objects.equals(carBrand, order.carBrand) &&
-                Objects.equals(carModel, order.carModel) &&
-                Objects.equals(comment, order.comment);
+                Objects.equals(comment, order.comment) &&
+                Objects.equals(car, order.car);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(userID, userLogin, orderId, orderDate, orderStatus, pickUpDate,
-                dropOffDate, carID, carBrand, carModel, billSum, paid, discount, comment);
+                dropOffDate, billSum, paid, discount, comment, car);
     }
 
     @Override
@@ -194,13 +164,11 @@ public class Order implements Serializable {
                 ", orderStatus='" + orderStatus + '\'' +
                 ", pickUpDate=" + pickUpDate +
                 ", dropOffDate=" + dropOffDate +
-                ", carID=" + carID +
-                ", carBrand='" + carBrand + '\'' +
-                ", carModel='" + carModel + '\'' +
-                ", billSum='" + billSum + '\'' +
+                ", billSum=" + billSum +
                 ", paid=" + paid +
                 ", discount=" + discount +
                 ", comment='" + comment + '\'' +
+                ", car=" + car +
                 '}';
     }
 }

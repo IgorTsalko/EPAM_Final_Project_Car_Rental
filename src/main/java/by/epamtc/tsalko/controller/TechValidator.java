@@ -82,7 +82,7 @@ public class TechValidator {
                 && passportUserDateOfBirth != null;
     }
 
-    public static boolean bankCardValidation(Bankcard bankCard) {
+    public static boolean bankcardValidation(Bankcard bankCard) {
         int userID = bankCard.getUserID();
         long bankcardNumber = bankCard.getBankcardNumber();
         LocalDate cardValidTrue = bankCard.getBankcardValidTrue();
@@ -98,24 +98,24 @@ public class TechValidator {
                 && authorizationCode != null && authorizationCode.length() == 3;
     }
 
-    public static boolean userBankCardDeleteValidation(int userID, long bankCardNumber) {
-        return userID > 0 && bankCardNumber >= 1000_0000_0000_000L
-                && bankCardNumber <= 9999_9999_9999_9999L;
+    public static boolean bankcardNumberValidation(long bankcardNumber) {
+        return bankcardNumber >= 1000_0000_0000_000L && bankcardNumber <= 9999_9999_9999_9999L;
+    }
+
+    public static boolean userBankCardDeleteValidation(int userID, long bankcardNumber) {
+        return userID > 0 && bankcardNumber >= 1000_0000_0000_000L
+                && bankcardNumber <= 9999_9999_9999_9999L;
     }
 
 
     public static boolean orderValidation(Order order) {
         int userID = order.getUserID();
         double discount = order.getDiscount();
-        LocalDate pickUpDate = order.getPickUpDate();
-        LocalDate dropOffDate = order.getDropOffDate();
-        int carID = order.getCarID();
-        double pricePerDay = order.getPricePerDay();
+        int carID = order.getCar().getCarID();
+        double pricePerDay = order.getCar().getPricePerDay();
 
         return userID > 0
                 && discount >= 0 && discount < 100
-                && pickUpDate != null
-                && dropOffDate != null
                 && carID > 0
                 && pricePerDay > 0;
     }

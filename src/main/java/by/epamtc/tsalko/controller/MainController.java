@@ -20,7 +20,6 @@ public class MainController extends HttpServlet {
     private static final String PREVIOUS_REQUEST = "previous_request";
 
     private static final String MESSAGE_REG_EXP = "&message.+?=.+?(?=(&|$))";
-    private static final String QUERY_WITH_MESSAGE_REG_EXP = "^.+&message.+?=.+?(?=(&|&.+$|$))";
 
     private final CommandProvider commandProvider = new CommandProvider();
 
@@ -36,31 +35,22 @@ public class MainController extends HttpServlet {
             session.setAttribute(PARAMETER_LOCAL, Locale.getDefault());
         }
 
-        String queryString = req.getQueryString();
-        String previousReq = (String) session.getAttribute(PREVIOUS_REQUEST);
-        if (queryString != null
-                && previousReq != null
-                && queryString.matches(QUERY_WITH_MESSAGE_REG_EXP)
-                && previousReq.endsWith(queryString)) {
-
-            resp.sendRedirect(previousReq.replaceAll(MESSAGE_REG_EXP, ""));
-        } else {
-            String commandName = req.getParameter(PARAMETER_COMMAND);
-            Command command = null;
-            if (commandName != null) {
-                command = commandProvider.getCommand(commandName.toUpperCase());
-            }
-
-            if (command != null) {
-                command.execute(req, resp);
-            } else {
-                resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-            }
+        String commandName = req.getParameter(PARAMETER_COMMAND);
+        Command command = null;
+        if (commandName != null) {
+            command = commandProvider.getCommand(commandName.toUpperCase());
         }
-        
+
+        if (command != null) {
+            command.execute(req, resp);
+        } else {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
+
+        String queryString = req.getQueryString();
         if (queryString != null) {
             String previousRequest = MAIN_CONTROLLER + queryString;
-            session.setAttribute(PREVIOUS_REQUEST, previousRequest);
+            session.setAttribute(PREVIOUS_REQUEST, previousRequest.replaceAll(MESSAGE_REG_EXP, ""));
         }
     }
 

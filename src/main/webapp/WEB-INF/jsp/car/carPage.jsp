@@ -9,6 +9,7 @@
 <fmt:message key="data.successfully" var="successfully"/>
 
 <fmt:message key="car.nearest_available_date" var="nearest_available_date"/>
+<fmt:message key="car.related_offers" var="related_offers"/>
 <fmt:message key="car.transmission" var="transmission_title"/>
 <fmt:message key="car.engine_size" var="engine_size"/>
 <fmt:message key="car.engine_size_unit" var="engine_size_unit"/>
@@ -36,11 +37,11 @@
             <div id="car-content" class="clear">
                 <div id="car-images" class="rowing-left">
                     <div id="main-car-image">
-                        <img id="main_car_img" src="${requestScope.car_images[0]}">
+                        <img id="main_car_img" src="${requestScope.car.carImages[0]}">
                     </div>
-                    <c:forEach items="${requestScope.car_images}" var="car_image">
-                        <a href="javascript:changeImage('${car_image}')">
-                            <img class="small-car-img" src="${car_image}">
+                    <c:forEach items="${requestScope.car.carImages}" var="carImage">
+                        <a href="javascript:changeImage('${carImage}')">
+                            <img class="small-car-img" src="${carImage}">
                         </a>
                     </c:forEach>
                 </div>
@@ -94,53 +95,23 @@
                         </div>
                     </div>
 
-                    <div id="total-price"><p>итого <span id="calculated-price"></span> дней</p></div>
-
                     <div class="rent-car">
-                        <form action="mainController" method="post">
-                            <input type="hidden" name="command" value="create_order">
-                            <input type="hidden" name="car_id"
-                                   value="${pageContext.request.getParameter('car_id')}">
-                            <input type="hidden" name="car_price_per_day"
-                                   value="${requestScope.car.pricePerDay}">
-                            <div class="rowing-left">
-                                <p>${pick_up_date}</p>
-                                <input id="pickUpDate" type="date" name="pick_up_date" required
-                                       value="<%=java.time.LocalDate.now()%>" onchange="calculatePrice()">
-                            </div>
-                            <div class="rowing-right">
-                                <p>${drop_off_date}</p>
-                                <input id="dropOffDate" type="date" name="drop_off_date" required
-                                       value="<%=java.time.LocalDate.now().plusDays(3)%>"
-                                       onchange="calculatePrice()">
-                            </div>
-                            <c:if test="${empty sessionScope.user}">
-                                <input id="phone" type="tel" name="phone" placeholder="${phone}" required>
-                            </c:if>
+                        <form action="mainController">
+                            <input type="hidden" name="command" value="go_to_create_order">
+                            <input type="hidden" name="car_id" value="${requestScope.car.carID}">
                             <button type="submit">${to_rent}</button>
                         </form>
                         <p id="available-date">${nearest_available_date}: 2020-10-16</p>
-                        <c:choose>
-                            <c:when test="${message_create_order eq 'create_order_successfully'}">
-                                <p class="data-updated">${successfully}</p>
-                            </c:when>
-                            <c:when test="${message_create_order eq 'incorrect_data'}">
-                                <p class="data-error">${incorrect_data}</p>
-                            </c:when>
-                            <c:when test="${message_create_order eq 'create_order_error'}">
-                                <p class="data-error">${create_error}</p>
-                            </c:when>
-                        </c:choose>
                     </div>
                 </div>
             </div>
             <div id="recommended-cars" class="clear">
-                <h2>Так же вас может заинтересовать</h2>
+                <h2>${related_offers}</h2>
                 <c:forEach items="${requestScope.recommended_cars}" var="recommended_car">
                     <div class="recommended-car rowing-left">
                         <a href="mainController?command=go_to_car_page&car_id=${recommended_car.carID}">
                             <h2>${recommended_car.brand} ${recommended_car.model} ${recommended_car.yearProduction}</h2>
-                            <img src="${recommended_car.mainImageURI}">
+                            <img src="${recommended_car.carImages[0]}">
                         </a>
                         <div class="car-price">
                             <div class="price-content">

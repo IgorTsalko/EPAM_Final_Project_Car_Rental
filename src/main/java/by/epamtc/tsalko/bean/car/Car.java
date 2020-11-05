@@ -1,6 +1,7 @@
 package by.epamtc.tsalko.bean.car;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 public class Car implements Serializable {
@@ -16,8 +17,9 @@ public class Car implements Serializable {
     private String fuelType;
     private int odometerValue;
     private double pricePerDay;
-    private String mainImageURI;
     private String comment;
+
+    private List<String> carImages;
 
     public int getCarID() {
         return carID;
@@ -103,20 +105,20 @@ public class Car implements Serializable {
         this.pricePerDay = pricePerDay;
     }
 
-    public String getMainImageURI() {
-        return mainImageURI;
-    }
-
-    public void setMainImageURI(String mainImageURI) {
-        this.mainImageURI = mainImageURI;
-    }
-
     public String getComment() {
         return comment;
     }
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public List<String> getCarImages() {
+        return carImages;
+    }
+
+    public void setCarImages(List<String> carImages) {
+        this.carImages = carImages;
     }
 
     @Override
@@ -133,14 +135,14 @@ public class Car implements Serializable {
                 Objects.equals(transmission, car.transmission) &&
                 Objects.equals(engineSize, car.engineSize) &&
                 Objects.equals(fuelType, car.fuelType) &&
-                Objects.equals(mainImageURI, car.mainImageURI) &&
-                Objects.equals(comment, car.comment);
+                Objects.equals(comment, car.comment) &&
+                Objects.equals(carImages, car.carImages);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(carID, brand, model, yearProduction, transmission, engineSize,
-                fuelType, odometerValue, pricePerDay, mainImageURI, comment);
+                fuelType, odometerValue, pricePerDay, comment, carImages);
     }
 
     @Override
@@ -155,8 +157,8 @@ public class Car implements Serializable {
                 ", fuelType='" + fuelType + '\'' +
                 ", odometerValue=" + odometerValue +
                 ", pricePerDay=" + pricePerDay +
-                ", mainImageURI='" + mainImageURI + '\'' +
                 ", comment='" + comment + '\'' +
+                ", carImages=" + carImages +
                 '}';
     }
 }

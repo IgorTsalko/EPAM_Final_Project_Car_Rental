@@ -45,7 +45,7 @@
                     <td><fmt:message key="order.status.${order.orderStatus}"/></td>
                     <td>${order.pickUpDate}</td>
                     <td>${order.dropOffDate}</td>
-                    <td>${order.carBrand} ${order.carModel}</td>
+                    <td>${order.car.brand} ${order.car.model}</td>
                     <td>
                         <fmt:formatNumber minFractionDigits="2" value="${order.billSum}"/> ${currency}
                     </td>

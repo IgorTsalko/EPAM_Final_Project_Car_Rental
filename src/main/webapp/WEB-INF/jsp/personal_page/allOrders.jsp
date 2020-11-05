@@ -58,7 +58,7 @@
                     </td>
                     <td>${order.pickUpDate}</td>
                     <td>${order.dropOffDate}</td>
-                    <td>${order.carBrand} ${order.carModel}</td>
+                    <td>${order.car.brand} ${order.car.model}</td>
                     <td style="width: 80px; text-align: center;">
                         <fmt:formatNumber minFractionDigits="2" value="${order.billSum}"/> ${currency}
                     </td>

@@ -59,18 +59,6 @@ function closeWarning() {
     window.location.href = 'mainController?command=go_to_main_page';
 }
 
-function calculatePrice() {
-    let pickUpDate = document.getElementById('pickUpDate').value;
-    let dropOffDate = document.getElementById('dropOffDate').value;
-    let pricePerDay = document.getElementById('discounted-price');
-    if (pricePerDay == null) {
-        pricePerDay = document.getElementById('common-price').textContent;
-    } else {
-        pricePerDay = pricePerDay.textContent;
-    }
-
-    let days = Math.floor((Date.parse(dropOffDate) - Date.parse(pickUpDate) ) / 86400000);
-    let totalPrice = days * pricePerDay;
-    let priceEl = document.getElementById('calculated-price');
-    priceEl.textContent = totalPrice.toFixed(2) + ' BYN / ' + days;
+function closeModal(modalID) {
+    document.getElementById(modalID).style.display = "none";
 }

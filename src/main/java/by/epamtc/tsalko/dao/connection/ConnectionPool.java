@@ -92,6 +92,7 @@ public final class ConnectionPool {
     public void closeConnection(Connection con, Statement st, ResultSet rs) {
         try {
             if (con != null) {
+                con.setAutoCommit(true);
                 con.close();
             }
         } catch (SQLException e) {
@@ -116,6 +117,7 @@ public final class ConnectionPool {
     public void closeConnection(Connection con, Statement st) {
         try {
             if (con != null) {
+                con.setAutoCommit(true);
                 con.close();
             }
         } catch (SQLException e) {

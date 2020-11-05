@@ -33,7 +33,8 @@ public class CarDAOImpl implements CarDAO {
     private static final String SELECT_CAR_BY_ID =
             "SELECT c.car_id, car_brand, car_model, car_year_production, car_transmission, car_engine_size, " +
                     "car_fuel_type, car_odometer_value, car_price_per_day, car_comment," +
-                    "car_image_uri FROM cars c JOIN car_images i ON i.car_id=c.car_id WHERE c.car_id=?";
+                    "car_image_uri FROM cars c JOIN car_images i ON i.car_id=c.car_id " +
+                    "WHERE c.car_id=? LIMIT 1";
 
     private static final String SELECT_CAR_IMAGES_BY_ID = "SELECT car_image_uri FROM car_images WHERE car_id=?";
 
@@ -189,9 +190,9 @@ public class CarDAOImpl implements CarDAO {
 
     private Car createCar(ResultSet resultSet) throws SQLException {
         Car car = new Car();
-        int carID = resultSet.getInt(COLUMN_CAR_ID);
+        List<String> carImages = new ArrayList<>();
 
-        car.setCarID(carID);
+        car.setCarID(resultSet.getInt(COLUMN_CAR_ID));
         car.setBrand(resultSet.getString(COLUMN_CAR_BRAND));
         car.setModel(resultSet.getString(COLUMN_CAR_MODEL));
         car.setYearProduction(resultSet.getInt(COLUMN_CAR_YEAR_PRODUCTION));
@@ -200,8 +201,10 @@ public class CarDAOImpl implements CarDAO {
         car.setFuelType(resultSet.getString(COLUMN_CAR_FUEL_TYPE));
         car.setOdometerValue(resultSet.getInt(COLUMN_CAR_ODOMETER_VALUE));
         car.setPricePerDay(resultSet.getDouble(COLUMN_CAR_PRICE_PER_DAY));
-        car.setMainImageURI(resultSet.getString(COLUMN_CAR_IMAGE_URI));
         car.setComment(resultSet.getString(COLUMN_CAR_COMMENT));
+
+        carImages.add(resultSet.getString(COLUMN_CAR_IMAGE_URI));
+        car.setCarImages(carImages);
 
         return car;
     }

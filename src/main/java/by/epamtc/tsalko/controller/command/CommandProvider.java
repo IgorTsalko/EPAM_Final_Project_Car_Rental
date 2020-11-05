@@ -3,8 +3,8 @@ package by.epamtc.tsalko.controller.command;
 import by.epamtc.tsalko.controller.command.impl.*;
 import by.epamtc.tsalko.controller.command.impl.AuthorizationCommand;
 import by.epamtc.tsalko.controller.command.impl.go_to.*;
-import by.epamtc.tsalko.controller.command.impl.user.add.CreateOrderCommand;
-import by.epamtc.tsalko.controller.command.impl.user.add.CreateBankcardCommand;
+import by.epamtc.tsalko.controller.command.impl.CreateOrderCommand;
+import by.epamtc.tsalko.controller.command.impl.user.create.CreateBankcardCommand;
 import by.epamtc.tsalko.controller.command.impl.user.delete.DeleteBankcardCommand;
 import by.epamtc.tsalko.controller.command.impl.user.go_to.*;
 import by.epamtc.tsalko.controller.command.impl.user.update.UpdateUserDetailsCommand;
@@ -31,6 +31,7 @@ public class CommandProvider {
         commands.put(ParameterName.GO_TO_PERSONAL_PAGE_ALL_ORDERS, new GoToPersonalPageAllOrdersCommand());
         commands.put(ParameterName.GO_TO_PERSONAL_PAGE_ALL_USERS, new GoToPersonalPageAllUsersCommand());
         commands.put(ParameterName.GO_TO_ALL_USER_DATA, new GoToAllUserDataCommand());
+        commands.put(ParameterName.GO_TO_CREATE_ORDER, new GoToCreateOrderCommand());
         commands.put(ParameterName.UPDATE_USER_DETAILS, new UpdateUserDetailsCommand());
         commands.put(ParameterName.UPDATE_USER_PASSPORT, new UpdateUserPassportCommand());
         commands.put(ParameterName.CREATE_BANKCARD, new CreateBankcardCommand());

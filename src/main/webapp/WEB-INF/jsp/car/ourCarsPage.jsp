@@ -4,6 +4,8 @@
 <%@include file="../header.jsp"%>
 
 <fmt:message key="data.retrieve_error" var="data_retrieve_error"/>
+
+<fmt:message key="car.nearest_available_date" var="nearest_available_date"/>
 <fmt:message key="our_cars_title" var="our_cars_title"/>
 <fmt:message key="car.transmission" var="transmission_title"/>
 <fmt:message key="car.engine_size" var="engine_size"/>
@@ -29,7 +31,7 @@
                     <div class="car clear link">
                         <a href="mainController?command=go_to_car_page&car_id=${car.carID}">
                             <div class="car-image rowing-left">
-                                <img src="${car.mainImageURI}" alt="carImage">
+                                <img src="${car.carImages[0]}" alt="carImage">
                             </div>
                             <div class="car-desc rowing-left">
                                 <p class="car-title">${car.brand} ${car.model} ${car.yearProduction}</p>
@@ -40,39 +42,40 @@
                             </div>
                         </a>
                         <div class="quick-order rowing-right">
-                            <form action="mainController" method="post">
+                            <div class="quick-order-content">
                                 <div class="car-price">
                                     <div class="price-content">
                                         <div class="price-block">
                                             <c:choose>
                                                 <c:when test="${sessionScope.user.discount gt 0}">
-                                                    <span class="old-price">
-                                                        <fmt:formatNumber minFractionDigits="2"
-                                                                          value="${car.pricePerDay}"/>
-                                                    </span>
+                                                <span class="old-price">
+                                                    <fmt:formatNumber minFractionDigits="2"
+                                                                      value="${car.pricePerDay}"/>
+                                                </span>
                                                     <span class="price new-price">
-                                                        <mytag:discountTag carPrice="${car.pricePerDay}"
-                                                                           discount="${sessionScope.user.discount}"/>
-                                                    </span>
+                                                    <mytag:discountTag carPrice="${car.pricePerDay}"
+                                                                       discount="${sessionScope.user.discount}"/>
+                                                </span>
                                                     <span>${price_per_day}</span>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <span class="price">
-                                                        <fmt:formatNumber minFractionDigits="2"
-                                                                          value="${car.pricePerDay}"/>
-                                                    </span>
+                                                <span class="price">
+                                                    <fmt:formatNumber minFractionDigits="2"
+                                                                      value="${car.pricePerDay}"/>
+                                                </span>
                                                     <span>${price_per_day}</span>
                                                 </c:otherwise>
                                             </c:choose>
                                         </div>
                                     </div>
                                 </div>
-                                <c:if test="${empty sessionScope.user}">
-                                    <input type="tel" placeholder="${phone}">
-                                </c:if>
-                                <input type="hidden" name="command" value="quick_order&car_id=${car.carID}">
-                                <button type="submit">${to_rent}</button>
-                            </form>
+                                <form action="mainController">
+                                    <input type="hidden" name="command" value="go_to_create_order">
+                                    <input type="hidden" name="car_id" value="${car.carID}">
+                                    <button type="submit">${to_rent}</button>
+                                </form>
+                                <p id="available-date">${nearest_available_date}: <%=java.time.LocalDate.now()%></p>
+                            </div>
                         </div>
                     </div>
                 </c:forEach>

@@ -16,6 +16,7 @@ import by.epamtc.tsalko.service.exception.EntityAlreadyExistsServiceException;
 import by.epamtc.tsalko.service.exception.EntityNotFoundServiceException;
 
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -222,15 +223,20 @@ public class UserServiceImpl implements UserService {
             throw new InvalidInputDataServiceException();
         }
 
-        long amountOfDays = ChronoUnit.DAYS.between(order.getPickUpDate(), order.getDropOffDate());
-        double pricePerDay = order.getPricePerDay();
-        double billSum = amountOfDays * pricePerDay;
+        LocalDate pickUpDate = order.getPickUpDate();
+        LocalDate dropOffDate = order.getDropOffDate();
 
-        double discount = order.getDiscount();
-        if (discount > 0) {
-            billSum = (pricePerDay * (1 - discount / 100)) * amountOfDays;
+        if (pickUpDate != null && dropOffDate != null) {
+            long amountOfDays = ChronoUnit.DAYS.between(pickUpDate, dropOffDate);
+            double pricePerDay = order.getCar().getPricePerDay();
+            double billSum = amountOfDays * pricePerDay;
+
+            double discount = order.getDiscount();
+            if (discount > 0) {
+                billSum = (pricePerDay * (1 - discount / 100)) * amountOfDays;
+            }
+            order.setBillSum(billSum);
         }
-        order.setBillSum(billSum);
 
         DAOProvider daoProvider = DAOProvider.getInstance();
         UserDAO userDAO = daoProvider.getUserDAO();
