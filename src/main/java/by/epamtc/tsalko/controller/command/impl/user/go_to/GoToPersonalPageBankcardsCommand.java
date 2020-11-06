@@ -1,9 +1,10 @@
 package by.epamtc.tsalko.controller.command.impl.user.go_to;
 
+import by.epamtc.tsalko.bean.Bankcard;
 import by.epamtc.tsalko.bean.user.User;
 import by.epamtc.tsalko.controller.command.Command;
+import by.epamtc.tsalko.service.BankcardService;
 import by.epamtc.tsalko.service.ServiceProvider;
-import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.ServiceException;
 
 import javax.servlet.ServletException;
@@ -16,7 +17,7 @@ public class GoToPersonalPageBankcardsCommand implements Command {
 
     private static final String ATTRIBUTE_USER = "user";
 
-    private static final String BANKCARD_NUMBERS = "bankcard_numbers";
+    private static final String BANKCARDS = "bankcards";
 
     private static final String MESSAGE_BANKCARDS = "message_bankcards";
     private static final String ERROR_DATA_RETRIEVE = "data_retrieve_error";
@@ -29,12 +30,12 @@ public class GoToPersonalPageBankcardsCommand implements Command {
         int userID = user.getId();
 
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
-        UserService userService = serviceProvider.getUserService();
+        BankcardService bankcardService = serviceProvider.getBankcardService();
 
-        List<Long> bankcardNumbers;
+        List<Bankcard> bankcards;
         try {
-            bankcardNumbers = userService.getBankcardNumbers(userID);
-            req.setAttribute(BANKCARD_NUMBERS, bankcardNumbers);
+            bankcards = bankcardService.getUserBankcards(userID);
+            req.setAttribute(BANKCARDS, bankcards);
         } catch (ServiceException e) {
             req.setAttribute(MESSAGE_BANKCARDS, ERROR_DATA_RETRIEVE);
         }

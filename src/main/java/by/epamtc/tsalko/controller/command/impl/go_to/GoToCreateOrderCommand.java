@@ -1,10 +1,12 @@
 package by.epamtc.tsalko.controller.command.impl.go_to;
 
+import by.epamtc.tsalko.bean.Bankcard;
 import by.epamtc.tsalko.bean.car.Car;
 import by.epamtc.tsalko.bean.user.Passport;
 import by.epamtc.tsalko.bean.user.User;
 import by.epamtc.tsalko.bean.user.UserDetails;
 import by.epamtc.tsalko.controller.command.Command;
+import by.epamtc.tsalko.service.BankcardService;
 import by.epamtc.tsalko.service.CarService;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
@@ -26,7 +28,7 @@ public class GoToCreateOrderCommand implements Command {
     private static final String PARAMETER_CAR_ID = "car_id";
     private static final String USER_DETAILS = "user_details";
 
-    private static final String BANKCARD_NUMBERS = "bankcard_numbers";
+    private static final String BANKCARDS = "bankcards";
 
     private static final String MESSAGE_CREATE_ORDER = "message_create_order";
     private static final String ERROR_DATA_RETRIEVE = "data_retrieve_error";
@@ -34,32 +36,41 @@ public class GoToCreateOrderCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        User user = (User) req.getSession().getAttribute(ATTRIBUTE_USER);
+
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         UserService userService = serviceProvider.getUserService();
+        BankcardService bankcardService = serviceProvider.getBankcardService();
         CarService carService = serviceProvider.getCarService();
 
         try {
-            int userID = ((User) req.getSession().getAttribute(ATTRIBUTE_USER)).getId();
             int carID = Integer.parseInt(req.getParameter(PARAMETER_CAR_ID));
-
             Car car = carService.getCarByID(carID);
-            UserDetails userDetails = userService.getUserDetails(userID);
-            List<Long> bankcardNumbers = userService.getBankcardNumbers(userID);
-            Passport passport = userService.getUserPassport(userID);
-
-            if (passport != null) {
-                req.setAttribute(USER_PASSPORT, passport);
-            }
             req.setAttribute(ATTRIBUTE_CAR, car);
-            req.setAttribute(USER_DETAILS, userDetails);
-            req.setAttribute(BANKCARD_NUMBERS, bankcardNumbers);
+
+            if (user != null) {
+                int userID = user.getId();
+
+                try {
+                    UserDetails userDetails = userService.getUserDetails(userID);
+                    List<Bankcard> bankcards = bankcardService.getUserBankcards(userID);
+                    Passport passport = userService.getUserPassport(userID);
+
+                    req.setAttribute(USER_DETAILS, userDetails);
+                    req.setAttribute(BANKCARDS, bankcards);
+                    req.setAttribute(USER_PASSPORT, passport);
+                } catch (ServiceException e) {
+                    //todo
+                }
+            }
 
             req.getRequestDispatcher(CREATE_ORDER_PAGE).forward(req, resp);
-        } catch (EntityNotFoundServiceException | NumberFormatException e) {
+        } catch (NumberFormatException e) {
+            //todo
+        } catch (EntityNotFoundServiceException e) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
         } catch (ServiceException e) {
-            req.setAttribute(MESSAGE_CREATE_ORDER, ERROR_DATA_RETRIEVE);
-            req.getRequestDispatcher(CREATE_ORDER_PAGE).forward(req, resp);
+            //todo
         }
     }
 }

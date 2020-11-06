@@ -1,6 +1,4 @@
 package by.epamtc.tsalko.service.impl;
-
-import by.epamtc.tsalko.bean.*;
 import by.epamtc.tsalko.bean.user.*;
 import by.epamtc.tsalko.dao.DAOProvider;
 import by.epamtc.tsalko.dao.UserDAO;
@@ -16,13 +14,10 @@ import by.epamtc.tsalko.service.exception.EntityAlreadyExistsServiceException;
 import by.epamtc.tsalko.service.exception.EntityNotFoundServiceException;
 
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
 
-    private static final String MOCK_PASSWORD = "12345678";
     private static final int MIN_EMAIL_LENGTH = 5;
 
     @Override
@@ -52,11 +47,7 @@ public class UserServiceImpl implements UserService {
         UserDAO userDAO = daoProvider.getUserDAO();
 
         try {
-            String password = data.getPassword();
-            if (password == null) {
-                password = MOCK_PASSWORD;
-            }
-            data.setPassword(Encoder.encrypt(password));
+            data.setPassword(Encoder.encrypt(data.getPassword()));
 
             String email = data.getEmail();
             if (email != null && email.length() < MIN_EMAIL_LENGTH) {
@@ -104,38 +95,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Order> getUserOrders(int userID) throws ServiceException {
-        List<Order> userOrders;
-
-        DAOProvider daoProvider = DAOProvider.getInstance();
-        UserDAO userDAO = daoProvider.getUserDAO();
-
-        try {
-            userOrders = userDAO.getUserOrders(userID);
-        } catch (DAOException e) {
-            throw new ServiceException(e);
-        }
-
-        return userOrders;
-    }
-
-    @Override
-    public List<Order> getOrders(int offset, int linesAmount) throws ServiceException {
-        List<Order> allOrders;
-
-        DAOProvider daoProvider = DAOProvider.getInstance();
-        UserDAO userDAO = daoProvider.getUserDAO();
-
-        try {
-            allOrders = userDAO.getOrders(offset, linesAmount);
-        } catch (DAOException e) {
-            throw new ServiceException(e);
-        }
-
-        return allOrders;
-    }
-
-    @Override
     public Passport getUserPassport(int userID) throws ServiceException {
         Passport passport;
 
@@ -149,22 +108,6 @@ public class UserServiceImpl implements UserService {
         }
 
         return passport;
-    }
-
-    @Override
-    public List<Long> getBankcardNumbers(int userID) throws ServiceException {
-        List<Long> bankcards;
-
-        DAOProvider daoProvider = DAOProvider.getInstance();
-        UserDAO userDAO = daoProvider.getUserDAO();
-
-        try {
-            bankcards = userDAO.getBankcardNumbers(userID);
-        } catch (DAOException e) {
-            throw new ServiceException(e);
-        }
-
-        return bankcards;
     }
 
     @Override
@@ -194,67 +137,6 @@ public class UserServiceImpl implements UserService {
 
         try {
             userDAO.updateUserPassport(passport);
-        } catch (DAOException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public void createBankcard(Bankcard bankCard) throws ServiceException {
-        if (!UserValidator.bankCardValidation(bankCard)) {
-            throw new InvalidInputDataServiceException();
-        }
-
-        DAOProvider daoProvider = DAOProvider.getInstance();
-        UserDAO userDAO = daoProvider.getUserDAO();
-
-        try {
-            userDAO.createBankcard(bankCard);
-        } catch (EntityAlreadyExistsDAOException e) {
-            throw new EntityAlreadyExistsServiceException(e);
-        } catch (DAOException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public void addOrder(Order order) throws ServiceException {
-        if (!UserValidator.orderValidation(order)) {
-            throw new InvalidInputDataServiceException();
-        }
-
-        LocalDate pickUpDate = order.getPickUpDate();
-        LocalDate dropOffDate = order.getDropOffDate();
-
-        if (pickUpDate != null && dropOffDate != null) {
-            long amountOfDays = ChronoUnit.DAYS.between(pickUpDate, dropOffDate);
-            double pricePerDay = order.getCar().getPricePerDay();
-            double billSum = amountOfDays * pricePerDay;
-
-            double discount = order.getDiscount();
-            if (discount > 0) {
-                billSum = (pricePerDay * (1 - discount / 100)) * amountOfDays;
-            }
-            order.setBillSum(billSum);
-        }
-
-        DAOProvider daoProvider = DAOProvider.getInstance();
-        UserDAO userDAO = daoProvider.getUserDAO();
-
-        try {
-            userDAO.addOrder(order);
-        } catch (DAOException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public void deleteBankcard(int userID, long cardNumber) throws ServiceException {
-        DAOProvider daoProvider = DAOProvider.getInstance();
-        UserDAO userDAO = daoProvider.getUserDAO();
-
-        try {
-            userDAO.deleteBankcard(userID, cardNumber);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }

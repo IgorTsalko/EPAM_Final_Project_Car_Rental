@@ -1,10 +1,12 @@
 package by.epamtc.tsalko.controller.command.impl.user.go_to;
 
+import by.epamtc.tsalko.bean.Bankcard;
 import by.epamtc.tsalko.bean.content.Rating;
 import by.epamtc.tsalko.bean.content.Role;
 import by.epamtc.tsalko.bean.user.Passport;
 import by.epamtc.tsalko.bean.user.UserDetails;
 import by.epamtc.tsalko.controller.command.Command;
+import by.epamtc.tsalko.service.BankcardService;
 import by.epamtc.tsalko.service.ContentService;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
@@ -37,13 +39,14 @@ public class GoToAllUserDataCommand implements Command {
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         UserService userService = serviceProvider.getUserService();
+        BankcardService bankcardService = serviceProvider.getBankcardService();
         ContentService contentService = serviceProvider.getContentService();
 
         UserDetails userDetails;
         Passport userPassport;
         List<Role> allRoles;
         List<Rating> allRatings;
-        List<Long> bankcards;
+        List<Bankcard> bankcards;
 
         int userID = 0;
         try {
@@ -69,7 +72,7 @@ public class GoToAllUserDataCommand implements Command {
         }
 
         try {
-            bankcards = userService.getBankcardNumbers(userID);
+            bankcards = bankcardService.getUserBankcards(userID);
             req.setAttribute(BANKCARD_NUMBERS, bankcards);
         } catch (ServiceException e) {
             req.setAttribute(MESSAGE_BANKCARDS, ERROR_DATA_RETRIEVE);

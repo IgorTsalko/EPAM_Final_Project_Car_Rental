@@ -1,7 +1,5 @@
 package by.epamtc.tsalko.dao.impl;
 
-import by.epamtc.tsalko.bean.*;
-import by.epamtc.tsalko.bean.car.Car;
 import by.epamtc.tsalko.bean.user.*;
 import by.epamtc.tsalko.dao.UserDAO;
 import by.epamtc.tsalko.dao.connection.ConnectionPool;
@@ -13,7 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,43 +41,12 @@ public class UserDAOImpl implements UserDAO {
     private static final String INSERT_NEW_USER =
             "INSERT INTO users (user_email, user_phone, user_login, user_password) " +
                     "VALUES (?, ?, ?, ?)";
-    
-    private static final String INSERT_BANKCARD =
-            "INSERT INTO user_bankcards (user_bankcard_number, user_bankcard_valid_true, user_bankcard_firstname, " +
-                    "user_bankcard_lastname, user_bankcard_cvv, user_id) VALUES (?, ?, ?, ?, ?, ?)";
-
-    private static final String INSERT_ORDER =
-            "INSERT INTO user_orders (order_pick_up_date, order_drop_off_date, order_car_id, user_id) " +
-                    "VALUES (?, ?, ?, ?)";
-
-    private static final String INSERT_BILL = "INSERT INTO bills (bill_sum, user_order_id) VALUES (?, ?)";
-
-    private static final String SELECT_ALL_ORDERS_BY_USER_ID =
-            "SELECT u.user_login, u.user_id, o.order_id, o.order_date, o.order_pick_up_date, " +
-                    "o.order_drop_off_date, o.order_is_paid, s.order_status, SUM(b.bill_sum) as bill_sum, " +
-                    "c.car_id, c.car_brand, c.car_model, o.order_comment " +
-                    "FROM user_orders o JOIN users u ON o.user_id=u.user_id " +
-                    "JOIN order_statuses s ON o.order_status=s.order_status_id " +
-                    "JOIN cars c ON o.order_car_id=c.car_id JOIN bills b ON b.user_order_id=o.order_id " +
-                    "WHERE u.user_id=? GROUP BY o.order_id ORDER BY s.order_status_id, o.order_date DESC";
-
-    private static final String SELECT_ORDERS =
-            "SELECT u.user_login, u.user_id, o.order_id, o.order_date, o.order_pick_up_date, " +
-                    "o.order_drop_off_date, o.order_is_paid, s.order_status, SUM(b.bill_sum) as bill_sum, " +
-                    "c.car_id, c.car_brand, c.car_model, o.order_comment " +
-                    "FROM user_orders o JOIN users u ON o.user_id=u.user_id " +
-                    "JOIN order_statuses s ON o.order_status=s.order_status_id " +
-                    "JOIN cars c ON o.order_car_id=c.car_id JOIN bills b ON b.user_order_id=o.order_id " +
-                    "GROUP BY o.order_id ORDER BY s.order_status_id, o.order_date DESC LIMIT ?, ?";
 
     private static final String SELECT_USER_PASSPORT_BY_USER_ID =
             "SELECT p.user_id, p.user_passport_id, p.user_passport_series, p.user_passport_number, " +
                     "p.user_passport_date_of_issue, p.user_passport_issued_by, p.user_address, " +
                     "p.user_surname, p.user_name, p.user_thirdname, p.user_date_of_birth " +
                     "FROM user_passports p WHERE user_id=?";
-
-    private static final String SELECT_ALL_BANKCARD_NUMBERS_BY_USER_ID =
-            "SELECT user_bankcard_number FROM user_bankcards WHERE user_id=?";
 
     private static final String UPDATE_USER_DETAILS_BY_USER_ID
             = "UPDATE users SET user_phone=?, user_email=? WHERE user_id=?";
@@ -93,9 +59,6 @@ public class UserDAOImpl implements UserDAO {
             "user_passport_date_of_issue=?, user_passport_issued_by=?, user_address=?, user_surname=?, " +
             "user_name=?, user_thirdname=?, user_date_of_birth=? WHERE user_id=?";
 
-    private static final String DELETE_BANKCARD_BY_USER_ID =
-            "DELETE FROM user_bankcards WHERE user_id=? AND user_bankcard_number=?;";
-
     private static final String COLUMN_USER_ID = "user_id";
     private static final String COLUMN_USER_LOGIN = "user_login";
     private static final String COLUMN_USER_ROLE = "user_role";
@@ -104,16 +67,6 @@ public class UserDAOImpl implements UserDAO {
     private static final String COLUMN_USER_PHONE = "user_phone";
     private static final String COLUMN_USER_EMAIL = "user_email";
     private static final String COLUMN_USER_REGISTRATION_DATE = "user_registration_date";
-
-    private static final String COLUMN_ORDER_ID = "order_id";
-    private static final String COLUMN_ORDER_DATE = "order_date";
-    private static final String COLUMN_ORDER_STATUS = "order_status";
-    private static final String COLUMN_ORDER_PICK_UP_DATE = "order_pick_up_date";
-    private static final String COLUMN_ORDER_DROP_OFF_DATE = "order_drop_off_date";
-    private static final String COLUMN_ORDER_IS_PAID = "order_is_paid";
-    private static final String COLUMN_COMMENT = "order_comment";
-
-    private static final String COLUMN_BILL_SUM = "bill_sum";
 
     private static final String COLUMN_PASSPORT_ID = "user_passport_id";
     private static final String COLUMN_PASSPORT_SERIES = "user_passport_series";
@@ -125,12 +78,6 @@ public class UserDAOImpl implements UserDAO {
     private static final String COLUMN_PASSPORT_USER_NAME = "user_name";
     private static final String COLUMN_PASSPORT_USER_THIRDNAME = "user_thirdname";
     private static final String COLUMN_PASSPORT_USER_DATE_OF_BIRTH = "user_date_of_birth";
-
-    private static final String COLUMN_BANKCARD_NUMBER = "user_bankcard_number";
-
-    private static final String COLUMN_CAR_ID = "car_id";
-    private static final String COLUMN_CAR_BRAND = "car_brand";
-    private static final String COLUMN_CAR_MODEL = "car_model";
 
     /** Executes SQL query and return object User if it exists or throws exception.
      * Never return null
@@ -276,97 +223,34 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public List<Order> getUserOrders(int userID) throws DAOException {
-        List<Order> userOrders = new ArrayList<>();
-
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        try {
-            connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(SELECT_ALL_ORDERS_BY_USER_ID);
-            preparedStatement.setInt(1, userID);
-            resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                Order order = createOrder(resultSet);
-                userOrders.add(order);
-            }
-        } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Could not retrieve user orders.", e);
-            throw new DAOException("Could not retrieve user orders.", e);
-        } finally {
-            if (connection != null) {
-                connectionPool.closeConnection(connection, preparedStatement, resultSet);
-            }
-        }
-
-        return userOrders;
-    }
-
-    @Override
-    public List<Order> getOrders(int offset, int linesAmount) throws DAOException {
-        List<Order> allOrders = new ArrayList<>();
-
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        try {
-            connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(SELECT_ORDERS);
-            preparedStatement.setInt(1, offset);
-            preparedStatement.setInt(2, linesAmount);
-            resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                Order order = createOrder(resultSet);
-                allOrders.add(order);
-            }
-        } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Could not retrieve all user orders.", e);
-            throw new DAOException("Could not retrieve all user orders.", e);
-        } finally {
-            if (connection != null) {
-                connectionPool.closeConnection(connection, preparedStatement, resultSet);
-            }
-        }
-
-        return allOrders;
-    }
-
-    @Override
     public Passport getUserPassport(int userID) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
         try {
+            Passport passport = new Passport();
+
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(SELECT_USER_PASSPORT_BY_USER_ID);
             preparedStatement.setInt(1, userID);
             resultSet = preparedStatement.executeQuery();
 
-            if (!resultSet.next()) {
-                return null;
+            if (resultSet.next()) {
+                passport.setUserID(resultSet.getInt(COLUMN_USER_ID));
+                passport.setPassportID(resultSet.getInt(COLUMN_PASSPORT_ID));
+                passport.setPassportSeries(resultSet.getString(COLUMN_PASSPORT_SERIES));
+                passport.setPassportNumber(resultSet.getString(COLUMN_PASSPORT_NUMBER));
+                passport.setPassportDateOfIssue(
+                        resultSet.getDate(COLUMN_PASSPORT_DATE_OF_ISSUE).toLocalDate());
+                passport.setPassportIssuedBy(resultSet.getString(COLUMN_PASSPORT_ISSUED_BY));
+                passport.setPassportUserAddress(resultSet.getString(COLUMN_PASSPORT_USER_ADDRESS));
+                passport.setPassportUserSurname(resultSet.getString(COLUMN_PASSPORT_USER_SURNAME));
+                passport.setPassportUserName(resultSet.getString(COLUMN_PASSPORT_USER_NAME));
+                passport.setPassportUserThirdName(resultSet.getString(COLUMN_PASSPORT_USER_THIRDNAME));
+                passport.setPassportUserDateOfBirth(
+                        resultSet.getDate(COLUMN_PASSPORT_USER_DATE_OF_BIRTH).toLocalDate());
             }
-
-            Passport passport = new Passport();
-
-            passport.setUserID(resultSet.getInt(COLUMN_USER_ID));
-            passport.setPassportID(resultSet.getInt(COLUMN_PASSPORT_ID));
-            passport.setPassportSeries(resultSet.getString(COLUMN_PASSPORT_SERIES));
-            passport.setPassportNumber(resultSet.getString(COLUMN_PASSPORT_NUMBER));
-            passport.setPassportDateOfIssue(
-                    resultSet.getDate(COLUMN_PASSPORT_DATE_OF_ISSUE).toLocalDate());
-            passport.setPassportIssuedBy(resultSet.getString(COLUMN_PASSPORT_ISSUED_BY));
-            passport.setPassportUserAddress(resultSet.getString(COLUMN_PASSPORT_USER_ADDRESS));
-            passport.setPassportUserSurname(resultSet.getString(COLUMN_PASSPORT_USER_SURNAME));
-            passport.setPassportUserName(resultSet.getString(COLUMN_PASSPORT_USER_NAME));
-            passport.setPassportUserThirdName(resultSet.getString(COLUMN_PASSPORT_USER_THIRDNAME));
-            passport.setPassportUserDateOfBirth(
-                    resultSet.getDate(COLUMN_PASSPORT_USER_DATE_OF_BIRTH).toLocalDate());
 
             return passport;
         } catch (ConnectionPoolError | SQLException e) {
@@ -377,36 +261,6 @@ public class UserDAOImpl implements UserDAO {
                 connectionPool.closeConnection(connection, preparedStatement, resultSet);
             }
         }
-    }
-
-    @Override
-    public List<Long> getBankcardNumbers(int userID) throws DAOException {
-        List<Long> userCardAccounts = new ArrayList<>();
-
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        try {
-            connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(SELECT_ALL_BANKCARD_NUMBERS_BY_USER_ID);
-            preparedStatement.setInt(1, userID);
-            resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                Long cardAccount = resultSet.getLong(COLUMN_BANKCARD_NUMBER);
-                userCardAccounts.add(cardAccount);
-            }
-        } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Could not retrieve user cards.", e);
-            throw new DAOException("Could not retrieve user cards.", e);
-        } finally {
-            if (connection != null) {
-                connectionPool.closeConnection(connection, preparedStatement, resultSet);
-            }
-        }
-
-        return userCardAccounts;
     }
 
     @Override
@@ -474,113 +328,6 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
-    @Override
-    public void createBankcard(Bankcard bankCard) throws DAOException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(INSERT_BANKCARD);
-            preparedStatement.setLong(1, bankCard.getBankcardNumber());
-            preparedStatement.setDate(2,
-                    java.sql.Date.valueOf(bankCard.getBankcardValidTrue()));
-            preparedStatement.setString(3, bankCard.getBankcardUserFirstname());
-            preparedStatement.setString(4, bankCard.getBankcardUserLastname());
-            preparedStatement.setString(5, bankCard.getBankcardCVV());
-            preparedStatement.setInt(6, bankCard.getUserID());
-
-            preparedStatement.executeUpdate();
-        } catch (SQLIntegrityConstraintViolationException e) {
-            throw new EntityAlreadyExistsDAOException(e);
-        } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Could not add card.", e);
-            throw new DAOException("Could not add card.", e);
-        } finally {
-            if (connectionPool != null) {
-                connectionPool.closeConnection(connection, preparedStatement);
-            }
-        }
-    }
-
-    @Override
-    public void addOrder(Order order) throws DAOException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            connection = connectionPool.takeConnection();
-            connection.setAutoCommit(false);
-
-            preparedStatement =
-                    connection.prepareStatement(INSERT_ORDER, Statement.RETURN_GENERATED_KEYS);
-            LocalDate pickUpDate = order.getPickUpDate();
-            LocalDate dropOffDate = order.getDropOffDate();
-            if (pickUpDate != null && dropOffDate != null) {
-                preparedStatement.setDate(1,
-                        java.sql.Date.valueOf(order.getPickUpDate()));
-                preparedStatement.setDate(2,
-                        java.sql.Date.valueOf(order.getDropOffDate()));
-            } else {
-                preparedStatement.setDate(1, null);
-                preparedStatement.setDate(2, null);
-            }
-
-            preparedStatement.setInt(3, order.getCar().getCarID());
-            preparedStatement.setInt(4, order.getUserID());
-            preparedStatement.executeUpdate();
-
-            int generatedKey = 0;
-            ResultSet rs = preparedStatement.getGeneratedKeys();
-            if (rs.next()) {
-                generatedKey = rs.getInt(1);
-            }
-
-            preparedStatement = connection.prepareStatement(INSERT_BILL);
-            preparedStatement.setDouble(1, order.getBillSum());
-            preparedStatement.setInt(2, generatedKey);
-            preparedStatement.executeUpdate();
-
-            connection.commit();
-        } catch (ConnectionPoolError | SQLException e) {
-            try {
-                if (connection != null) {
-                    connection.rollback();
-                }
-            } catch (SQLException ex) {
-                logger.error("Severe database error! Could not make rollback", ex);
-            }
-            logger.error("Severe database error! Could not add order.", e);
-            throw new DAOException("Could not add order.", e);
-        } finally {
-            if (connectionPool != null) {
-                connectionPool.closeConnection(connection, preparedStatement);
-            }
-        }
-    }
-
-    @Override
-    public void deleteBankcard(int userID, long cardNumber) throws DAOException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(DELETE_BANKCARD_BY_USER_ID);
-            preparedStatement.setInt(1, userID);
-            preparedStatement.setLong(2, cardNumber);
-
-            preparedStatement.executeUpdate();
-        } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Could not delete bankcard.", e);
-            throw new DAOException("Could not delete bankcard.", e);
-        } finally {
-            if (connectionPool != null) {
-                connectionPool.closeConnection(connection, preparedStatement);
-            }
-        }
-    }
-
     private User createUser(ResultSet resultSet) throws SQLException {
         User user = new User();
         user.setId(resultSet.getInt(COLUMN_USER_ID));
@@ -592,32 +339,5 @@ public class UserDAOImpl implements UserDAO {
                 resultSet.getTimestamp(COLUMN_USER_REGISTRATION_DATE).toLocalDateTime());
 
         return user;
-    }
-
-    private Order createOrder(ResultSet resultSet) throws SQLException {
-        Order order = new Order();
-        Car car = new Car();
-
-        order.setUserID(resultSet.getInt(COLUMN_USER_ID));
-        order.setUserLogin(resultSet.getString(COLUMN_USER_LOGIN));
-        order.setOrderId(resultSet.getInt(COLUMN_ORDER_ID));
-        order.setOrderDate(resultSet.getTimestamp(COLUMN_ORDER_DATE).toLocalDateTime());
-        order.setOrderStatus(resultSet.getString(COLUMN_ORDER_STATUS));
-
-        order.setPickUpDate(resultSet.getDate(COLUMN_ORDER_PICK_UP_DATE) != null
-                ? resultSet.getDate(COLUMN_ORDER_PICK_UP_DATE).toLocalDate() : null);
-        order.setDropOffDate(resultSet.getDate(COLUMN_ORDER_DROP_OFF_DATE) != null
-                ? resultSet.getDate(COLUMN_ORDER_DROP_OFF_DATE).toLocalDate() : null);
-
-        order.setBillSum(resultSet.getDouble(COLUMN_BILL_SUM));
-        order.setPaid(resultSet.getBoolean(COLUMN_ORDER_IS_PAID));
-        order.setComment(resultSet.getString(COLUMN_COMMENT));
-
-        car.setCarID(resultSet.getInt(COLUMN_CAR_ID));
-        car.setBrand(resultSet.getString(COLUMN_CAR_BRAND));
-        car.setModel(resultSet.getString(COLUMN_CAR_MODEL));
-        order.setCar(car);
-
-        return order;
     }
 }

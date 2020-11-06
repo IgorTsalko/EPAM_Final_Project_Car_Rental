@@ -47,7 +47,7 @@
                     <td>${order.dropOffDate}</td>
                     <td>${order.car.brand} ${order.car.model}</td>
                     <td>
-                        <fmt:formatNumber minFractionDigits="2" value="${order.billSum}"/> ${currency}
+                        <fmt:formatNumber minFractionDigits="2" value="${order.totalSum}"/> ${currency}
                     </td>
                     <td style="text-align: center">
                         <c:if test="${order.paid eq true}">

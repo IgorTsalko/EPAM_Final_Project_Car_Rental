@@ -1,10 +1,10 @@
 package by.epamtc.tsalko.controller.command.impl.user.create;
 
-import by.epamtc.tsalko.bean.user.Bankcard;
+import by.epamtc.tsalko.bean.Bankcard;
 import by.epamtc.tsalko.controller.TechValidator;
 import by.epamtc.tsalko.controller.command.Command;
+import by.epamtc.tsalko.service.BankcardService;
 import by.epamtc.tsalko.service.ServiceProvider;
-import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.EntityAlreadyExistsServiceException;
 import by.epamtc.tsalko.service.exception.InvalidInputDataServiceException;
 import by.epamtc.tsalko.service.exception.ServiceException;
@@ -53,10 +53,10 @@ public class CreateBankcardCommand implements Command {
             bankcard.setBankcardCVV(req.getParameter(PARAMETER_BANKCARD_CVV));
 
             ServiceProvider serviceProvider = ServiceProvider.getInstance();
-            UserService userService = serviceProvider.getUserService();
+            BankcardService bankcardService = serviceProvider.getBankcardService();
 
             if (TechValidator.bankcardValidation(bankcard)) {
-                userService.createBankcard(bankcard);
+                bankcardService.createBankcard(bankcard);
                 page.append(GO_TO_PERSONAL_PAGE_BANKCARDS);
             } else {
                 page.append(GO_TO_PERSONAL_PAGE_CREATE_BANKCARD)

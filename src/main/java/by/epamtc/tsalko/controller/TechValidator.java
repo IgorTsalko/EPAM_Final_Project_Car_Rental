@@ -1,5 +1,6 @@
 package by.epamtc.tsalko.controller;
 
+import by.epamtc.tsalko.bean.Bankcard;
 import by.epamtc.tsalko.bean.Order;
 import by.epamtc.tsalko.bean.user.*;
 
@@ -102,21 +103,21 @@ public class TechValidator {
         return bankcardNumber >= 1000_0000_0000_000L && bankcardNumber <= 9999_9999_9999_9999L;
     }
 
-    public static boolean userBankCardDeleteValidation(int userID, long bankcardNumber) {
-        return userID > 0 && bankcardNumber >= 1000_0000_0000_000L
-                && bankcardNumber <= 9999_9999_9999_9999L;
+    public static boolean userBankCardDeleteValidation(int userID, int bankcardID) {
+        return userID > 0 && bankcardID > 0;
     }
-
 
     public static boolean orderValidation(Order order) {
         int userID = order.getUserID();
         double discount = order.getDiscount();
+        String orderStatus = order.getOrderStatus();
         int carID = order.getCar().getCarID();
         double pricePerDay = order.getCar().getPricePerDay();
 
         return userID > 0
                 && discount >= 0 && discount < 100
                 && carID > 0
+                && orderStatus != null
                 && pricePerDay > 0;
     }
 }

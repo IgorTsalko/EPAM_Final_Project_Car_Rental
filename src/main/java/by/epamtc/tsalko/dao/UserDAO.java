@@ -1,6 +1,5 @@
 package by.epamtc.tsalko.dao;
 
-import by.epamtc.tsalko.bean.*;
 import by.epamtc.tsalko.bean.user.*;
 import by.epamtc.tsalko.dao.exception.DAOException;
 
@@ -13,16 +12,8 @@ public interface UserDAO {
 
     UserDetails getUserDetails(int userID) throws DAOException;
     List<User> getUsers(int offset, int linesAmount) throws DAOException;
-    List<Order> getUserOrders(int userID) throws DAOException;
-    List<Order> getOrders(int offset, int rowsAmount) throws DAOException;
     Passport getUserPassport(int userID) throws DAOException;
-    List<Long> getBankcardNumbers(int userID) throws DAOException;
 
     void updateUserDetails(UserDetails userDetails) throws DAOException;
     void updateUserPassport(Passport passport) throws DAOException;
-
-    void createBankcard(Bankcard bankcard) throws DAOException;
-    void addOrder(Order order) throws DAOException;
-
-    void deleteBankcard(int userID, long cardNumber) throws DAOException;
 }

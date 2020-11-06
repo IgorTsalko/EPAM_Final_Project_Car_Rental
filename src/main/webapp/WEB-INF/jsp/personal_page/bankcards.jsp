@@ -33,14 +33,14 @@
                     <input type="hidden" name="user_id" value="${sessionScope.user.id}">
                 </c:otherwise>
             </c:choose>
-            <c:forEach items="${requestScope.bankcard_numbers}" var="bankcard_number">
+            <c:forEach items="${requestScope.bankcards}" var="bankcard">
                 <div class="bankcard">
                     <div class="bankcard-delete">
-                        <button type="submit" name="bankcard_number" value="${bankcard_number}">&#10006;</button>
+                        <button type="submit" name="bankcard_id" value="${bankcard.bankcardID}">&#10006;</button>
                     </div>
-                    <div class="bankcard-image"><mytag:paymentSystem cardNumber="${bankcard_number}"/></div>
+                    <div class="bankcard-image"><mytag:paymentSystem cardNumber="${bankcard.bankcardNumber}"/></div>
                     <div class="bankcard-number">
-                        <p>${fn:substring(bankcard_number, 0, 4)} ●●●● ●●●● ${fn:substring(bankcard_number, 12, 16)}</p>
+                        <p>${fn:substring(bankcard.bankcardNumber, 0, 4)} ●●●● ●●●● ${fn:substring(bankcard.bankcardNumber, 12, 16)}</p>
                     </div>
                 </div>
             </c:forEach>

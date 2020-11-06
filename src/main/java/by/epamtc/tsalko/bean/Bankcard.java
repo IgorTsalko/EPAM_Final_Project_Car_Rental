@@ -1,4 +1,4 @@
-package by.epamtc.tsalko.bean.user;
+package by.epamtc.tsalko.bean;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -9,6 +9,7 @@ public class Bankcard implements Serializable {
     private static final long serialVersionUID = -3945500796807866469L;
 
     private int userID;
+    private int bankcardID;
     private long bankcardNumber;
     private LocalDate bankcardValidTrue;
     private String bankcardUserFirstname;
@@ -20,10 +21,19 @@ public class Bankcard implements Serializable {
     }
 
     public void setUserID(int userID) {
-        if (userID < 0) {
-            userID = 0;
+        if (userID > 0) {
+            this.userID = userID;
         }
-        this.userID = userID;
+    }
+
+    public int getBankcardID() {
+        return bankcardID;
+    }
+
+    public void setBankcardID(int bankcardID) {
+        if (bankcardID > 0) {
+            this.bankcardID = bankcardID;
+        }
     }
 
     public long getBankcardNumber() {
@@ -31,10 +41,9 @@ public class Bankcard implements Serializable {
     }
 
     public void setBankcardNumber(long bankcardNumber) {
-        if (bankcardNumber < 0) {
-            bankcardNumber = 0;
+        if (bankcardNumber > 0) {
+            this.bankcardNumber = bankcardNumber;
         }
-        this.bankcardNumber = bankcardNumber;
     }
 
     public LocalDate getBankcardValidTrue() {

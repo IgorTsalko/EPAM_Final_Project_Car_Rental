@@ -1,7 +1,7 @@
 package by.epamtc.tsalko.service;
 
 import by.epamtc.tsalko.bean.Order;
-import by.epamtc.tsalko.bean.user.Bankcard;
+import by.epamtc.tsalko.bean.Bankcard;
 import by.epamtc.tsalko.bean.user.Passport;
 import by.epamtc.tsalko.bean.user.UserDetails;
 

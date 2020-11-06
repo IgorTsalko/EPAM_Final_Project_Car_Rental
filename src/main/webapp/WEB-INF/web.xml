@@ -24,6 +24,15 @@
     <url-pattern>/exception</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>CreateOrderController</servlet-name>
+    <servlet-class>by.epamtc.tsalko.controller.order.CreateOrderController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CreateOrderController</servlet-name>
+    <url-pattern>/createOrder</url-pattern>
+  </servlet-mapping>
+
   <filter>
     <filter-name>CharacterEncodingFilter</filter-name>
     <filter-class>by.epamtc.tsalko.controller.CharacterEncodingFilter</filter-class>
@@ -40,6 +49,24 @@
   <filter-mapping>
     <filter-name>SecurityFilter</filter-name>
     <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>CreateNewUserDuringOrder</filter-name>
+    <filter-class>by.epamtc.tsalko.controller.order.CreateNewUserDuringOrderFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>CreateNewUserDuringOrder</filter-name>
+    <servlet-name>CreateOrderController</servlet-name>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>UpdatePassportDuringOrder</filter-name>
+    <filter-class>by.epamtc.tsalko.controller.order.UpdatePassportDuringOrderFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>UpdatePassportDuringOrder</filter-name>
+    <servlet-name>CreateOrderController</servlet-name>
   </filter-mapping>
 
   <error-page>

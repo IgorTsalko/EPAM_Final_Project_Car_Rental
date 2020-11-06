@@ -1,15 +1,15 @@
 package by.epamtc.tsalko.service;
 
-import by.epamtc.tsalko.service.impl.CarServiceImpl;
-import by.epamtc.tsalko.service.impl.ContentServiceImpl;
-import by.epamtc.tsalko.service.impl.UserServiceImpl;
+import by.epamtc.tsalko.service.impl.*;
 
 public class ServiceProvider {
 
     private static final ServiceProvider instance = new ServiceProvider();
 
     private final UserService userService = new UserServiceImpl();
+    private final OrderService orderService = new OrderServiceImpl();
     private final CarService carService = new CarServiceImpl();
+    private final BankcardService bankcardService = new BankcardServiceImpl();
     private final ContentService contentService = new ContentServiceImpl();
 
     private ServiceProvider() {}
@@ -22,8 +22,16 @@ public class ServiceProvider {
         return userService;
     }
 
+    public OrderService getOrderService() {
+        return orderService;
+    }
+
     public CarService getCarService() {
         return carService;
+    }
+
+    public BankcardService getBankcardService() {
+        return bankcardService;
     }
 
     public ContentService getContentService() {

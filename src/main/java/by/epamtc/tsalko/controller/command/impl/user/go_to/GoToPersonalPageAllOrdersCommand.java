@@ -2,8 +2,8 @@ package by.epamtc.tsalko.controller.command.impl.user.go_to;
 
 import by.epamtc.tsalko.bean.Order;
 import by.epamtc.tsalko.controller.command.Command;
+import by.epamtc.tsalko.service.OrderService;
 import by.epamtc.tsalko.service.ServiceProvider;
-import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.ServiceException;
 
 import javax.servlet.ServletException;
@@ -31,7 +31,7 @@ public class GoToPersonalPageAllOrdersCommand implements Command {
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             ServiceProvider serviceProvider = ServiceProvider.getInstance();
-            UserService userService = serviceProvider.getUserService();
+            OrderService orderService = serviceProvider.getOrderService();
 
             int page = 1;
             try {
@@ -42,7 +42,7 @@ public class GoToPersonalPageAllOrdersCommand implements Command {
             }
 
             int offset = (page - 1) * ROWS_AMOUNT;
-            List<Order> orders = userService.getOrders(offset, ROWS_AMOUNT);
+            List<Order> orders = orderService.getOrders(offset, ROWS_AMOUNT);
 
             if (orders.size() < ROWS_AMOUNT) {
                 req.setAttribute(LAST_PAGE, true);

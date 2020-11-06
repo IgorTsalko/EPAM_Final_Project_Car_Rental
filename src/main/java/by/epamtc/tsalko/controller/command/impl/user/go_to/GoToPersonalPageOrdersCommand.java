@@ -3,8 +3,8 @@ package by.epamtc.tsalko.controller.command.impl.user.go_to;
 import by.epamtc.tsalko.bean.Order;
 import by.epamtc.tsalko.bean.user.User;
 import by.epamtc.tsalko.controller.command.Command;
+import by.epamtc.tsalko.service.OrderService;
 import by.epamtc.tsalko.service.ServiceProvider;
-import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.ServiceException;
 
 import javax.servlet.ServletException;
@@ -30,11 +30,11 @@ public class GoToPersonalPageOrdersCommand implements Command {
         int userID = user.getId();
 
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
-        UserService userService = serviceProvider.getUserService();
+        OrderService orderService = serviceProvider.getOrderService();
 
         List<Order> userOrders;
         try {
-            userOrders = userService.getUserOrders(userID);
+            userOrders = orderService.getUserOrders(userID);
             req.setAttribute(USER_ORDERS, userOrders);
         } catch (ServiceException e) {
             req.setAttribute(MESSAGE_ORDERS, ERROR_DATA_RETRIEVE);

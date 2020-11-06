@@ -18,21 +18,26 @@ public class Order implements Serializable {
     private String orderStatus;
     private LocalDate pickUpDate;
     private LocalDate dropOffDate;
-    private double billSum;
+    private double totalSum;
     private boolean paid;
     private double discount;
     private String comment;
 
     private Car car;
 
+    public Order() {
+        orderStatus = "new";
+    }
+
     public int getUserID() {
         return userID;
     }
 
     public void setUserID(int userID) {
-        if (userID >= 0) {
-            this.userID = userID;
+        if (userID < 0) {
+            userID = 0;
         }
+        this.userID = userID;
     }
 
     public String getUserLogin() {
@@ -48,9 +53,10 @@ public class Order implements Serializable {
     }
 
     public void setOrderId(int orderId) {
-        if (orderId >= 0) {
-            this.orderId = orderId;
+        if (orderId < 0) {
+            orderId = 0;
         }
+        this.orderId = orderId;
     }
 
     public LocalDateTime getOrderDate() {
@@ -85,14 +91,15 @@ public class Order implements Serializable {
         this.dropOffDate = dropOffDate;
     }
 
-    public double getBillSum() {
-        return billSum;
+    public double getTotalSum() {
+        return totalSum;
     }
 
-    public void setBillSum(double billSum) {
-        if (billSum >= 0) {
-            this.billSum = billSum;
+    public void setTotalSum(double totalSum) {
+        if (totalSum < 0) {
+            totalSum = 0;
         }
+        this.totalSum = totalSum;
     }
 
     public boolean isPaid() {
@@ -108,9 +115,10 @@ public class Order implements Serializable {
     }
 
     public void setDiscount(double discount) {
-        if (discount >= 0) {
-            this.discount = discount;
+        if (discount < 0) {
+            discount = 0;
         }
+        this.discount = discount;
     }
 
     public String getComment() {
@@ -136,7 +144,7 @@ public class Order implements Serializable {
         Order order = (Order) o;
         return userID == order.userID &&
                 orderId == order.orderId &&
-                Double.compare(order.billSum, billSum) == 0 &&
+                Double.compare(order.totalSum, totalSum) == 0 &&
                 paid == order.paid &&
                 Double.compare(order.discount, discount) == 0 &&
                 Objects.equals(userLogin, order.userLogin) &&
@@ -151,7 +159,7 @@ public class Order implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(userID, userLogin, orderId, orderDate, orderStatus, pickUpDate,
-                dropOffDate, billSum, paid, discount, comment, car);
+                dropOffDate, totalSum, paid, discount, comment, car);
     }
 
     @Override
@@ -164,7 +172,7 @@ public class Order implements Serializable {
                 ", orderStatus='" + orderStatus + '\'' +
                 ", pickUpDate=" + pickUpDate +
                 ", dropOffDate=" + dropOffDate +
-                ", billSum=" + billSum +
+                ", totalSum=" + totalSum +
                 ", paid=" + paid +
                 ", discount=" + discount +
                 ", comment='" + comment + '\'' +
