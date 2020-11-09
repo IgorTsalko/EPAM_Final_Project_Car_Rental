@@ -26,7 +26,7 @@ public class GoToAllUserDataCommand implements Command {
     private static final String ALL_ROLES = "all_roles";
     private static final String ALL_RATINGS = "all_ratings";
     private static final String USER_PASSPORT = "user_passport";
-    private static final String BANKCARD_NUMBERS = "bankcard_numbers";
+    private static final String BANKCARDS = "bankcards";
 
     private static final String MESSAGE_DETAILS = "message_details";
     private static final String MESSAGE_PASSPORT = "message_passport";
@@ -73,7 +73,7 @@ public class GoToAllUserDataCommand implements Command {
 
         try {
             bankcards = bankcardService.getUserBankcards(userID);
-            req.setAttribute(BANKCARD_NUMBERS, bankcards);
+            req.setAttribute(BANKCARDS, bankcards);
         } catch (ServiceException e) {
             req.setAttribute(MESSAGE_BANKCARDS, ERROR_DATA_RETRIEVE);
         }

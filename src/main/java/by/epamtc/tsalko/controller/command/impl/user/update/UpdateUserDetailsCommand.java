@@ -7,6 +7,8 @@ import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.InvalidInputDataServiceException;
 import by.epamtc.tsalko.service.exception.ServiceException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class UpdateUserDetailsCommand implements Command {
+
+    private static final Logger logger = LogManager.getLogger(UpdateUserDetailsCommand.class);
 
     private static final String ATTRIBUTE_PREVIOUS_REQUEST = "previous_request";
 
@@ -49,6 +53,7 @@ public class UpdateUserDetailsCommand implements Command {
                 userService.updateUserDetails(userDetails);
                 page.append(MESSAGE_DETAILS_UPDATE).append(DATA_UPDATED);
             } else {
+                logger.info(userDetails + " failed validation.");
                 page.append(MESSAGE_DETAILS_UPDATE).append(INCORRECT_DATA);
             }
         } catch (NumberFormatException | InvalidInputDataServiceException e) {

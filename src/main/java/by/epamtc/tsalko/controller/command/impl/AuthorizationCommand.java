@@ -8,6 +8,8 @@ import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.ServiceException;
 import by.epamtc.tsalko.service.exception.EntityNotFoundServiceException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AuthorizationCommand implements Command {
+
+    private static final Logger logger = LogManager.getLogger(AuthorizationCommand.class);
+
     private static final String LOGIN_REQUEST_PAGE = "login_request_page";
 
     private static final String ATTRIBUTE_USER = "user";
@@ -59,6 +64,7 @@ public class AuthorizationCommand implements Command {
                 page = GO_TO_LOGIN_PAGE + MESSAGE_AUTHORIZATION + ERROR;
             }
         } else {
+            logger.info(authorizationData + " failed validation.");
             page = GO_TO_LOGIN_PAGE + MESSAGE_AUTHORIZATION + INCORRECT_DATA;
         }
 

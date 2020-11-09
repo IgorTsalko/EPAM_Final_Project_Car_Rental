@@ -15,9 +15,6 @@ import java.util.List;
 public class GoToOurCarsCommand implements Command {
 
     private static final String ATTRIBUTE_CARS = "cars";
-    private static final String ATTRIBUTE_MESSAGE = "message";
-
-    private static final String ERROR_DATA_RETRIEVE = "data_retrieve_error";
 
     private static final String OUR_CARS_PAGE = "/WEB-INF/jsp/car/ourCarsPage.jsp";
 
@@ -26,15 +23,13 @@ public class GoToOurCarsCommand implements Command {
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         CarService carService = serviceProvider.getCarService();
 
-        List<Car> cars;
-
         try {
-            cars = carService.getAllCars();
+            List<Car> cars = carService.getAllCars();
             req.setAttribute(ATTRIBUTE_CARS, cars);
-        } catch (ServiceException e) {
-            req.setAttribute(ATTRIBUTE_MESSAGE, ERROR_DATA_RETRIEVE);
-        }
 
-        req.getRequestDispatcher(OUR_CARS_PAGE).forward(req, resp);
+            req.getRequestDispatcher(OUR_CARS_PAGE).forward(req, resp);
+        } catch (ServiceException e) {
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
     }
 }

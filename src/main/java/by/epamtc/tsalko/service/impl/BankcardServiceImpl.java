@@ -21,7 +21,7 @@ public class BankcardServiceImpl implements BankcardService {
     private static final Logger logger = LogManager.getLogger(BankcardServiceImpl.class);
 
     @Override
-    public boolean makePayment(Bankcard bankcard, Order order) throws ServiceException {
+    public boolean makePayment(Bankcard bankcard, Order order) {
         double totalSum = order.getTotalSum();
 
         if (UserValidator.bankCardValidation(bankcard)) {
@@ -33,13 +33,13 @@ public class BankcardServiceImpl implements BankcardService {
                     totalSum, bankcard.getUserID(), bankcard.getBankcardNumber()));
             return true;
         } else {
-            logger.info("Could not make payment for bankcardID: " + bankcard.getBankcardID());
+            logger.info(bankcard + " failed validation");
             return false;
         }
     }
 
     @Override
-    public boolean makePayment(int bankcardID, Order order) throws ServiceException {
+    public boolean makePayment(int bankcardID, Order order) {
         double totalSum = order.getTotalSum();
 
         DAOProvider daoProvider = DAOProvider.getInstance();
@@ -62,7 +62,7 @@ public class BankcardServiceImpl implements BankcardService {
                     "Mock payment in the amount of: %.2f is made. UserID: %d; bankcardNumber: %d",
                     totalSum, bankcard.getUserID(), bankcard.getBankcardNumber()));
         } else {
-            logger.info("Could not make payment for bankcardID: " + bankcard.getBankcardID());
+            logger.info("bankcardID: " + bankcardID + " failed validation");
             return false;
         }
 
@@ -88,6 +88,7 @@ public class BankcardServiceImpl implements BankcardService {
     @Override
     public void createBankcard(Bankcard bankCard) throws ServiceException {
         if (!UserValidator.bankCardValidation(bankCard)) {
+            logger.info(bankCard + " failed validation");
             throw new InvalidInputDataServiceException();
         }
 

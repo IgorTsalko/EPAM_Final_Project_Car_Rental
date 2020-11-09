@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface BankcardService {
 
-    boolean makePayment(Bankcard bankCard, Order order) throws ServiceException;
-    boolean makePayment(int bankCardID, Order order) throws ServiceException;
+    boolean makePayment(Bankcard bankCard, Order order);
+    boolean makePayment(int bankCardID, Order order);
 
     List<Bankcard> getUserBankcards(int userID) throws ServiceException;
 

@@ -7,6 +7,8 @@ import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.InvalidInputDataServiceException;
 import by.epamtc.tsalko.service.exception.ServiceException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +18,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class UpdateUserPassportCommand implements Command {
+
+    private static final Logger logger = LogManager.getLogger(UpdateUserPassportCommand.class);
 
     private static final String ATTRIBUTE_PREVIOUS_REQUEST = "previous_request";
 
@@ -62,6 +66,7 @@ public class UpdateUserPassportCommand implements Command {
                 userService.updateUserPassport(passport);
                 page.append(MESSAGE_PASSPORT_UPDATE).append(DATA_UPDATED);
             } else {
+                logger.info(passport + " failed validation.");
                 page.append(MESSAGE_PASSPORT_UPDATE).append(INCORRECT_DATA);
             }
         } catch (DateTimeParseException | NumberFormatException | InvalidInputDataServiceException e) {

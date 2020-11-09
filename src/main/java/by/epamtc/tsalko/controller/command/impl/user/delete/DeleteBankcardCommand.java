@@ -5,6 +5,8 @@ import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.BankcardService;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.exception.ServiceException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class DeleteBankcardCommand implements Command {
+
+    private static final Logger logger = LogManager.getLogger(DeleteBankcardCommand.class);
 
     private static final String ATTRIBUTE_PREVIOUS_REQUEST = "previous_request";
 
@@ -34,6 +38,7 @@ public class DeleteBankcardCommand implements Command {
 
                 bankcardService.deleteBankcard(userID, bankcardID);
             } else {
+                logger.info("userID: " + userID + ", bankcardID: " + bankcardID + " failed validation.");
                 page.append(MESSAGE_BANKCARD_DELETE).append(DATA_DELETE_ERROR);
             }
         }  catch (NumberFormatException | ServiceException e) {

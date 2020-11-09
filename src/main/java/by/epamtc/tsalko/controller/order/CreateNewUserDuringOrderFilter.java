@@ -10,6 +10,7 @@ import by.epamtc.tsalko.service.exception.ServiceException;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
@@ -25,7 +26,7 @@ public class CreateNewUserDuringOrderFilter implements Filter {
                          FilterChain filterChain) throws IOException, ServletException {
 
         HttpServletRequest req = (HttpServletRequest) servletRequest;
-
+        HttpServletResponse resp = (HttpServletResponse) servletResponse;
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute(ATTRIBUTE_USER);
 
@@ -53,11 +54,11 @@ public class CreateNewUserDuringOrderFilter implements Filter {
                     userService.registration(registrationData);
                     user = userService.authorization(authorizationData);
 
-                    req.getSession().setAttribute(ATTRIBUTE_USER, user);
+                    session.setAttribute(ATTRIBUTE_USER, user);
 
                     filterChain.doFilter(servletRequest, servletResponse);
                 } catch (ServiceException e) {
-                    //todo отправляем на предыдущую страницу, с ошибкой
+                    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 }
             }
         } else {

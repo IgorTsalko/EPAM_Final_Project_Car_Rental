@@ -36,17 +36,19 @@ public class SecurityFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        userCommand.add(ParameterName.GO_TO_PERSONAL_PAGE_BANKCARDS);
         userCommand.add(ParameterName.GO_TO_PERSONAL_PAGE);
-        userCommand.add(ParameterName.GO_TO_PERSONAL_PAGE_DETAILS);
         userCommand.add(ParameterName.GO_TO_PERSONAL_PAGE_ORDERS);
+        userCommand.add(ParameterName.GO_TO_PERSONAL_PAGE_DETAILS);
         userCommand.add(ParameterName.GO_TO_PERSONAL_PAGE_PASSPORT);
+        userCommand.add(ParameterName.GO_TO_PERSONAL_PAGE_BANKCARDS);
         userCommand.add(ParameterName.GO_TO_PERSONAL_PAGE_CREATE_BANKCARD);
+        userCommand.add(ParameterName.GO_TO_PAYMENT_PAGE);
 
-        crudCommand.add(ParameterName.CREATE_BANKCARD);
-        crudCommand.add(ParameterName.DELETE_BANKCARD);
         crudCommand.add(ParameterName.UPDATE_USER_DETAILS);
         crudCommand.add(ParameterName.UPDATE_USER_PASSPORT);
+        crudCommand.add(ParameterName.CREATE_BANKCARD);
+        crudCommand.add(ParameterName.DELETE_BANKCARD);
+        crudCommand.add(ParameterName.PAY_ORDER);
 
         adminCommand.add(ParameterName.GO_TO_ALL_USER_DATA);
         adminCommand.add(ParameterName.GO_TO_PERSONAL_PAGE_ALL_ORDERS);

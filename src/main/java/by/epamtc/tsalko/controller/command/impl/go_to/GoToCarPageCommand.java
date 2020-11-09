@@ -22,8 +22,6 @@ public class GoToCarPageCommand implements Command {
 
     private static final String PARAMETER_CAR_ID = "car_id";
 
-    private static final String MESSAGE_CAR_PAGE = "message_car_page";
-    private static final String ERROR_DATA_RETRIEVE = "data_retrieve_error";
     private static final String CAR_PAGE = "/WEB-INF/jsp/car/carPage.jsp";
 
     @Override
@@ -44,8 +42,7 @@ public class GoToCarPageCommand implements Command {
         } catch (EntityNotFoundServiceException | NumberFormatException e) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
         } catch (ServiceException e) {
-            req.setAttribute(MESSAGE_CAR_PAGE, ERROR_DATA_RETRIEVE);
-            req.getRequestDispatcher(CAR_PAGE).forward(req, resp);
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 }

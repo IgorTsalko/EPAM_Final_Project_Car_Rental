@@ -208,10 +208,11 @@ header .menu-utility {
     width: 100%;
     height: 35px;
     margin-top: 10px;
+    font-size: 18px;
 }
 
 .searching-form {
-    width: 230px;
+    width: 280px;
     height: 230px;
     border: 1px solid rgb(190,190,190);
     border-radius: 5px;
@@ -235,7 +236,7 @@ header .menu-utility {
 .main-text {
     position: absolute;
     width: 400px;
-    margin: 280px 0 0 570px;
+    margin: 280px 0 0 610px;
     background-color: #ffffff;
     padding: 0 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
@@ -248,7 +249,8 @@ header .menu-utility {
 }
 
 .main-image img {
-    max-width: 100%;
+    width: 1090px;
+    margin-left: -40px;
 }
 
 .boxShadow {
@@ -415,6 +417,11 @@ footer ul {
     color: red;
 }
 
+.error-message2 {
+    margin: 0 0 5px 20px;
+    color: red;
+}
+
 #localization {
     display: inline-flex;
 }
@@ -424,7 +431,7 @@ footer ul {
 }
 
 #searching-form-title {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 600;
 }
 

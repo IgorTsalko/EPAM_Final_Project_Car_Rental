@@ -42,12 +42,12 @@ public class GoToPaymentPageCommand implements Command {
 
             req.setAttribute(ORDER, order);
             req.setAttribute(BANKCARDS, bankcards);
-        } catch (NumberFormatException e) {
-            //todo
-        } catch (ServiceException e) {
-            //todo
-        }
 
-        req.getRequestDispatcher(PAYMENT_PAGE).forward(req, resp);
+            req.getRequestDispatcher(PAYMENT_PAGE).forward(req, resp);
+        } catch (NumberFormatException e) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        } catch (ServiceException e) {
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -30,9 +30,8 @@ public class GoToCreateOrderCommand implements Command {
 
     private static final String BANKCARDS = "bankcards";
 
-    private static final String MESSAGE_CREATE_ORDER = "message_create_order";
-    private static final String ERROR_DATA_RETRIEVE = "data_retrieve_error";
     private static final String CREATE_ORDER_PAGE = "/WEB-INF/jsp/createOrder.jsp";
+
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -51,26 +50,20 @@ public class GoToCreateOrderCommand implements Command {
             if (user != null) {
                 int userID = user.getId();
 
-                try {
-                    UserDetails userDetails = userService.getUserDetails(userID);
-                    List<Bankcard> bankcards = bankcardService.getUserBankcards(userID);
-                    Passport passport = userService.getUserPassport(userID);
+                UserDetails userDetails = userService.getUserDetails(userID);
+                List<Bankcard> bankcards = bankcardService.getUserBankcards(userID);
+                Passport passport = userService.getUserPassport(userID);
 
-                    req.setAttribute(USER_DETAILS, userDetails);
-                    req.setAttribute(BANKCARDS, bankcards);
-                    req.setAttribute(USER_PASSPORT, passport);
-                } catch (ServiceException e) {
-                    //todo
-                }
+                req.setAttribute(USER_DETAILS, userDetails);
+                req.setAttribute(BANKCARDS, bankcards);
+                req.setAttribute(USER_PASSPORT, passport);
             }
 
             req.getRequestDispatcher(CREATE_ORDER_PAGE).forward(req, resp);
-        } catch (NumberFormatException e) {
-            //todo
-        } catch (EntityNotFoundServiceException e) {
+        } catch (EntityNotFoundServiceException | NumberFormatException e) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
         } catch (ServiceException e) {
-            //todo
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 }

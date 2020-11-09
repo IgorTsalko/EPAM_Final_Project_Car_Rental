@@ -12,11 +12,15 @@ import by.epamtc.tsalko.service.exception.InvalidInputDataServiceException;
 import by.epamtc.tsalko.service.exception.ServiceException;
 import by.epamtc.tsalko.service.exception.EntityAlreadyExistsServiceException;
 import by.epamtc.tsalko.service.exception.EntityNotFoundServiceException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
+
+    private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
     private static final int MIN_EMAIL_LENGTH = 5;
 
@@ -113,6 +117,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUserDetails(UserDetails userDetails) throws ServiceException {
         if (!UserValidator.userDetailsValidation(userDetails)) {
+            logger.info(userDetails + " failed validation");
             throw new InvalidInputDataServiceException();
         }
 
@@ -129,6 +134,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUserPassport(Passport passport) throws ServiceException {
         if (!UserValidator.passportValidation(passport)) {
+            logger.info(passport + " failed validation");
             throw new InvalidInputDataServiceException();
         }
 

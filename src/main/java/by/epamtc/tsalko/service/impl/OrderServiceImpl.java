@@ -4,10 +4,14 @@ import by.epamtc.tsalko.bean.Order;
 import by.epamtc.tsalko.dao.DAOProvider;
 import by.epamtc.tsalko.dao.OrderDAO;
 import by.epamtc.tsalko.dao.exception.DAOException;
+import by.epamtc.tsalko.dao.exception.EntityNotFoundDAOException;
 import by.epamtc.tsalko.service.OrderService;
 import by.epamtc.tsalko.service.UserValidator;
+import by.epamtc.tsalko.service.exception.EntityNotFoundServiceException;
 import by.epamtc.tsalko.service.exception.InvalidInputDataServiceException;
 import by.epamtc.tsalko.service.exception.ServiceException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -15,9 +19,12 @@ import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
 
+    private static final Logger logger = LogManager.getLogger(OrderServiceImpl.class);
+
     @Override
     public void createOrder(Order order) throws ServiceException {
         if (!UserValidator.orderValidation(order)) {
+            logger.info(order + " failed validation");
             throw new InvalidInputDataServiceException();
         }
 
@@ -87,6 +94,8 @@ public class OrderServiceImpl implements OrderService {
 
         try {
             order = orderDAO.getOrder(orderID);
+        } catch (EntityNotFoundDAOException e) {
+            throw new EntityNotFoundServiceException(e);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }

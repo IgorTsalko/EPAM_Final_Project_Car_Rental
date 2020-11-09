@@ -53,9 +53,7 @@ public class UserValidator {
 
         LocalDate now = LocalDate.now();
 
-        return (pickUpDate == null && dropOffDate == null)
-                || (pickUpDate != null && dropOffDate != null
-                && (now.isEqual(pickUpDate) || now.isBefore(pickUpDate))
-                && pickUpDate.isBefore(dropOffDate));
+        return (now.isEqual(pickUpDate) || now.isBefore(pickUpDate))
+                && pickUpDate.isBefore(dropOffDate);
     }
 }

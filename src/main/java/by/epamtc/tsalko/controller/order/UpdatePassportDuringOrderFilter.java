@@ -5,7 +5,6 @@ import by.epamtc.tsalko.bean.user.User;
 import by.epamtc.tsalko.controller.TechValidator;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
-import by.epamtc.tsalko.service.exception.InvalidInputDataServiceException;
 import by.epamtc.tsalko.service.exception.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -65,18 +64,15 @@ public class UpdatePassportDuringOrderFilter implements Filter {
                 passport.setPassportUserThirdName(req.getParameter(PARAMETER_USER_PASSPORT_THIRDNAME));
 
                 if (TechValidator.passportValidation(passport)) {
-                    try {
-                        userService.updateUserPassport(passport);
-                    } catch (InvalidInputDataServiceException e) {
-                        logger.info("Could not update user passport, incorrect data", e);
-                    } catch (ServiceException e) {
-                        logger.info("Could not update user passport", e);
-                    }
+
+                    userService.updateUserPassport(passport);
                 } else {
-                    logger.info("Could not update user passport, incorrect data");
+                    logger.info(passport + " failed validation");
                 }
             } catch (DateTimeParseException e) {
                 logger.info("Could not update user passport, incorrect data", e);
+            }  catch (ServiceException e) {
+                logger.info("Could not update user passport", e);
             }
         }
 

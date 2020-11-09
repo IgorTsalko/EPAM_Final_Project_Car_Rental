@@ -48,16 +48,21 @@ public class UserDAOImpl implements UserDAO {
                     "p.user_surname, p.user_name, p.user_thirdname, p.user_date_of_birth " +
                     "FROM user_passports p WHERE user_id=?";
 
+    private static final String UPDATE_PASSPORT_BY_USER_ID
+            = "UPDATE user_passports SET user_passport_series=?, user_passport_number=?, " +
+            "user_passport_date_of_issue=?, user_passport_issued_by=?, user_address=?, user_surname=?, " +
+            "user_name=?, user_thirdname=?, user_date_of_birth=? WHERE user_id=?";
+
+    private static final String INSERT_PASSPORT
+            = "INSERT INTO user_passports (user_passport_series, user_passport_number, " +
+            "user_passport_date_of_issue, user_passport_issued_by, user_address, user_surname, " +
+            "user_name, user_thirdname, user_date_of_birth, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
     private static final String UPDATE_USER_DETAILS_BY_USER_ID
             = "UPDATE users SET user_phone=?, user_email=? WHERE user_id=?";
 
     private static final String EX_UPDATE_USER_DETAILS_BY_USER_ID
             = "UPDATE users SET user_role=?, user_rating=?, user_phone=?, user_email=? WHERE user_id=?";
-
-    private static final String UPDATE_PASSPORT_BY_USER_ID
-            = "UPDATE user_passports SET user_passport_series=?, user_passport_number=?, " +
-            "user_passport_date_of_issue=?, user_passport_issued_by=?, user_address=?, user_surname=?, " +
-            "user_name=?, user_thirdname=?, user_date_of_birth=? WHERE user_id=?";
 
     private static final String COLUMN_USER_ID = "user_id";
     private static final String COLUMN_USER_LOGIN = "user_login";
@@ -300,10 +305,20 @@ public class UserDAOImpl implements UserDAO {
     public void updateUserPassport(Passport passport) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
 
         try {
             connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(UPDATE_PASSPORT_BY_USER_ID);
+            preparedStatement = connection.prepareStatement(SELECT_USER_PASSPORT_BY_USER_ID);
+            preparedStatement.setInt(1, passport.getUserID());
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                preparedStatement = connection.prepareStatement(UPDATE_PASSPORT_BY_USER_ID);
+            } else {
+                preparedStatement = connection.prepareStatement(INSERT_PASSPORT);
+            }
+
             preparedStatement.setString(1, passport.getPassportSeries());
             preparedStatement.setString(2, passport.getPassportNumber());
             preparedStatement.setDate(3,
@@ -323,7 +338,7 @@ public class UserDAOImpl implements UserDAO {
             throw new DAOException("Could not update user passport.", e);
         } finally {
             if (connection != null) {
-                connectionPool.closeConnection(connection, preparedStatement);
+                connectionPool.closeConnection(connection, preparedStatement, resultSet);
             }
         }
     }

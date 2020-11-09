@@ -12,6 +12,7 @@ function enableAddingNewCard () {
 
     newCardInputs.forEach(function (item) {
         item.setAttribute('form', 'pay-order-form');
+        item.setAttribute('required', '');
         item.removeAttribute('disabled');
     });
 
@@ -46,6 +47,7 @@ useLinkedCardsBtn.addEventListener('click', function () {
     newCardInputs.forEach(function (item) {
         item.removeAttribute('form');
         item.removeAttribute('value');
+        item.removeAttribute('required')
         item.setAttribute('disabled', '');
     });
 

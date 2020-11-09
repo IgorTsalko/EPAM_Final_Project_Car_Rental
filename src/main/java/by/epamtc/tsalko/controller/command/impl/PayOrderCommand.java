@@ -40,6 +40,9 @@ public class PayOrderCommand implements Command {
     private static final String PARAMETER_USE_ANOTHER_BANKCARD = "use_another_bankcard";
     private static final String PARAMETER_ADD_BANKCARD = "add_bankcard";
 
+    private static final String MESSAGE_PAYMENT = "&payment=";
+    private static final String INCORRECT_DATA = "incorrect_data";
+
     private static final String validTrueFormatPattern = "d-MM-yy";
 
     private static final String GO_TO_USER_ORDERS = "mainController?command=go_to_personal_page_orders";
@@ -55,6 +58,8 @@ public class PayOrderCommand implements Command {
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         BankcardService bankcardService = serviceProvider.getBankcardService();
         OrderService orderService = serviceProvider.getOrderService();
+
+        StringBuilder page = new StringBuilder();
 
         try {
             boolean useAnotherBankcard = Boolean.parseBoolean(req.getParameter(PARAMETER_USE_ANOTHER_BANKCARD));
@@ -81,28 +86,30 @@ public class PayOrderCommand implements Command {
                     paid = bankcardService.makePayment(bankcard, order);
 
                     if (addBankcard) {
-                        bankcardService.createBankcard(bankcard);
+                        try {
+                            bankcardService.createBankcard(bankcard);
+                        } catch (ServiceException ignore) {/*NOPE*/}
                     }
+                } else {
+                    logger.info(bankcard + " failed validation");
                 }
             } else {
                 int bankcardID = Integer.parseInt(req.getParameter(PARAMETER_BANKCARD_ID));
                 paid = bankcardService.makePayment(bankcardID, order);
             }
-        } catch (DateTimeParseException | NumberFormatException e) {
-            //todo
-        } catch (ServiceException e) {
-            //todo
-        }
 
-        try {
             if (paid && order != null) {
                 orderService.updateOrder(order);
             }
+
+            page.append(GO_TO_USER_ORDERS);
+        } catch (DateTimeParseException | NumberFormatException e) {
+            logger.info("Could not pay order, incorrect data.", e);
+            page.append(previousRequest).append(MESSAGE_PAYMENT).append(INCORRECT_DATA);
         } catch (ServiceException e) {
-            //todo
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 
-        resp.sendRedirect(GO_TO_USER_ORDERS);
-        //todo добавить вывод информации о неверном платеже
+        resp.sendRedirect(page.toString());
     }
 }

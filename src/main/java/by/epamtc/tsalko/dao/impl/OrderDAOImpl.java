@@ -11,7 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -257,12 +256,8 @@ public class OrderDAOImpl implements OrderDAO {
         order.setOrderId(resultSet.getInt(COLUMN_ORDER_ID));
         order.setOrderDate(resultSet.getTimestamp(COLUMN_ORDER_DATE).toLocalDateTime());
         order.setOrderStatus(resultSet.getString(COLUMN_ORDER_STATUS));
-
-        order.setPickUpDate(resultSet.getDate(COLUMN_ORDER_PICK_UP_DATE) != null
-                ? resultSet.getDate(COLUMN_ORDER_PICK_UP_DATE).toLocalDate() : null);
-        order.setDropOffDate(resultSet.getDate(COLUMN_ORDER_DROP_OFF_DATE) != null
-                ? resultSet.getDate(COLUMN_ORDER_DROP_OFF_DATE).toLocalDate() : null);
-
+        order.setPickUpDate(resultSet.getDate(COLUMN_ORDER_PICK_UP_DATE).toLocalDate());
+        order.setDropOffDate(resultSet.getDate(COLUMN_ORDER_DROP_OFF_DATE).toLocalDate());
         order.setTotalSum(resultSet.getDouble(COLUMN_BILL_SUM));
         order.setPaid(resultSet.getBoolean(COLUMN_ORDER_IS_PAID));
         order.setComment(resultSet.getString(COLUMN_COMMENT));

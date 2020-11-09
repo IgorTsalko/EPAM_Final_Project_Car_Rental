@@ -27,11 +27,13 @@ public class CreateOrderController extends HttpServlet {
     private static final String ATTRIBUTE_PREVIOUS_REQUEST = "previous_request";
 
     private static final String PARAM_ORDER_ID = "&order_id=";
-
+    private static final String PARAMETER_CAR_ID = "car_id";
     private static final String PARAMETER_PICK_UP_DATE = "pick_up_date";
     private static final String PARAMETER_DROP_OFF_DATE = "drop_off_date";
 
-    private static final String PARAMETER_CAR_ID = "car_id";
+    private static final String MESSAGE_CREATE_ORDER = "&create_order=";
+    private static final String CREATE_ORDER_ERROR = "create_order_error";
+    private static final String INCORRECT_DATA = "incorrect_data";
 
     private static final String GO_TO_PAYMENT = "mainController?command=go_to_payment_page";
 
@@ -41,6 +43,8 @@ public class CreateOrderController extends HttpServlet {
         String previousRequest = (String) session.getAttribute(ATTRIBUTE_PREVIOUS_REQUEST);
         User user = (User) session.getAttribute(ATTRIBUTE_USER);
         Order order = new Order();
+
+        StringBuilder page = new StringBuilder();
 
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         CarService carService = serviceProvider.getCarService();
@@ -55,13 +59,18 @@ public class CreateOrderController extends HttpServlet {
 
             if (TechValidator.orderValidation(order)) {
                 orderService.createOrder(order);
+                page.append(GO_TO_PAYMENT).append(PARAM_ORDER_ID).append(order.getOrderId());
+            } else {
+                logger.info(order + " failed validation.");
+                page.append(previousRequest).append(MESSAGE_CREATE_ORDER).append(INCORRECT_DATA);
             }
         } catch (DateTimeParseException | NumberFormatException e) {
-            //todo
+            logger.info("Could not create order, incorrect data.", e);
+            page.append(previousRequest).append(MESSAGE_CREATE_ORDER).append(INCORRECT_DATA);
         } catch (ServiceException e) {
-            //todo
+            page.append(previousRequest).append(MESSAGE_CREATE_ORDER).append(CREATE_ORDER_ERROR);
         }
 
-        resp.sendRedirect(GO_TO_PAYMENT + PARAM_ORDER_ID + order.getOrderId());
+        resp.sendRedirect(page.toString());
     }
 }

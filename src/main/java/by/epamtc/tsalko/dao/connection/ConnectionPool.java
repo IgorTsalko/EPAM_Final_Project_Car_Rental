@@ -144,6 +144,11 @@ public final class ConnectionPool {
         }
     }
 
+    public void reloadConnectionPool() {
+        dropAllConnections();
+        initPoolData();
+    }
+
     // Логический Connection
     private class PooledConnection implements Connection {
 
