@@ -24,7 +24,7 @@ public class OrderDAOImpl implements OrderDAO {
             "INSERT INTO user_orders (order_pick_up_date, order_drop_off_date, order_car_id, user_id) " +
                     "VALUES (?, ?, ?, ?)";
 
-    private static final String INSERT_BILL = "INSERT INTO bills (bill_sum, user_order_id) VALUES (?, ?)";
+    private static final String INSERT_BILL = "INSERT INTO bills (bill_sum, user_order_id, main_bill) VALUES (?, ?, 1)";
 
     private static final String SELECT_ALL_ORDERS_BY_USER_ID =
             "SELECT u.user_login, u.user_id, o.order_id, o.order_date, o.order_pick_up_date, " +
