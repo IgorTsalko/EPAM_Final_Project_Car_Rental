@@ -2,8 +2,6 @@ package by.epamtc.tsalko.controller;
 
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.controller.command.CommandProvider;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +14,7 @@ import java.util.Locale;
 public class MainController extends HttpServlet {
 
     private static final String PARAMETER_COMMAND = "command";
-    private static final String PARAMETER_LOCAL = "local";
+    private static final String PARAMETER_LOCALE = "locale";
 
     private static final String MAIN_CONTROLLER = "mainController?";
     private static final String PREVIOUS_REQUEST = "previous_request";
@@ -33,8 +31,8 @@ public class MainController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        if (session.getAttribute(PARAMETER_LOCAL) == null) {
-            session.setAttribute(PARAMETER_LOCAL, Locale.getDefault());
+        if (session.getAttribute(PARAMETER_LOCALE) == null) {
+            session.setAttribute(PARAMETER_LOCALE, Locale.getDefault());
         }
 
         String commandName = req.getParameter(PARAMETER_COMMAND);

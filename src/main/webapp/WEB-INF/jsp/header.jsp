@@ -11,8 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <script type="text/javascript" src="js/common.js"></script>
 
-    <c:if test="${not empty sessionScope.local}">
-        <fmt:setLocale value="${sessionScope.local}"/>
+    <c:if test="${not empty sessionScope.locale}">
+        <fmt:setLocale value="${sessionScope.locale}"/>
     </c:if>
 
     <fmt:setBundle basename="appLocalization.app"/>
@@ -69,8 +69,8 @@
 
                 <div id="localization">
                     <form action="mainController?command=app_localization" method="post">
-                        <button type="submit" name="local" value="ru">${button_ru}</button>
-                        <button type="submit" name="local" value="en">${button_en}</button>
+                        <button type="submit" name="locale" value="ru">${button_ru}</button>
+                        <button type="submit" name="locale" value="en">${button_en}</button>
                     </form>
                 </div>
             </div>

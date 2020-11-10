@@ -1,8 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<%@include file="header.jsp"%>
+<%@include file="header.jsp" %>
 <title>Car_rental Igor Tsalko</title>
 
+<fmt:message key="main_slogan" var="main_slogan"/>
 <fmt:message key="search" var="search"/>
 <fmt:message key="searching_form" var="form_title"/>
 <fmt:message key="pick_up_date" var="pick_up_date"/>
@@ -15,17 +17,20 @@
         <div class="main">
 
             <div id="main-search" class="searching-form boxShadow clear">
-                <form class="" action="someAction" method="post">
+                <form action="mainController" method="post">
+                    <input type="hidden" name="command" value="go_to_our_cars">
                     <div class="field">
                         <p id="searching-form-title">${form_title}</p>
                     </div>
                     <div class="field">
                         <p>${pick_up_date}</p>
-                        <input type="date">
+                        <input type="date" name="pick_up_date"
+                               value="<%=java.time.LocalDate.now()%>" required>
                     </div>
                     <div class="field">
                         <p>${drop_off_date}</p>
-                        <input type="date">
+                        <input type="date" name="drop_off_date"
+                               value="<%=java.time.LocalDate.now().plusDays(3)%>" required>
                     </div>
                     <div class="field">
                         <button type="submit">${search}</button>
@@ -34,7 +39,7 @@
             </div>
 
             <div class="main-text">
-                <p>Аренда авто без залога!</p>
+                <p>${main_slogan}</p>
             </div>
             <div class="main-image">
                 <img src="img/car_rental.jpg" alt="">
@@ -42,37 +47,32 @@
         </div>
 
         <div class="features">
-            <div class="feature">
-                <div class="feature-title">
-                    <h2>Аренда от одного дня</h2>
-                </div>
-                <div class="feature-info">
-                    <p>Стоимость аренды от 45 руб/сутки. Нужен только паспорт и водительские права. Выдача авто в течении 15 минут!</p>
-                </div>
-                <a href="someLink">узнай больше..</a>
-            </div>
-
-            <div class="feature">
-                <div class="feature-title">
-                    <h2>Автокаско на все!</h2>
-                </div>
-                <div class="feature-info">
-                    <p>Страховка все покроет! Полное автокаско на любые виды повреждений. С нами - вам не о чем беспокоиться!</p>
-                </div>
-                <a href="someLink">узнай больше..</a>
-            </div>
-
-            <div class="feature">
-                <div class="feature-title">
-                    <h2>Детское кресло - Бесплатно!</h2>
-                </div>
-                <div class="feature-info">
-                    <p>Если вам нужно перевезти ребенка, мы выдадим вам автокресло абсолютно бессплатно!</p>
-                </div>
-                <a href="someLink">узнай больше..</a>
-            </div>
+            <c:forEach items="${requestScope.all_news}" var="news" end="3">
+                <c:choose>
+                    <c:when test="${fn:startsWith(sessionScope.locale, 'en')}">
+                        <div class="feature">
+                            <div class="feature-title">
+                                <h2>${news.titleEN}</h2>
+                            </div>
+                            <div class="feature-info">
+                                <p>${news.textEN}</p>
+                            </div>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="feature">
+                            <div class="feature-title">
+                                <h2>${news.titleRU}</h2>
+                            </div>
+                            <div class="feature-info">
+                                <p>${news.textRU}</p>
+                            </div>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
         </div>
     </div>
 </div>
 <%--END MAIN-CONTENT--%>
-<%@include file="footer.jsp"%>
+<%@include file="footer.jsp" %>

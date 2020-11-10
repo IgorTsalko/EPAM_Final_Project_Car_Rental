@@ -1,5 +1,6 @@
 package by.epamtc.tsalko.dao;
 
+import by.epamtc.tsalko.bean.content.News;
 import by.epamtc.tsalko.bean.content.OrderStatus;
 import by.epamtc.tsalko.bean.content.Rating;
 import by.epamtc.tsalko.bean.content.Role;
@@ -14,4 +15,6 @@ public interface ContentDAO {
     List<Rating> getAllRatings() throws DAOException;
     Rating getRatingByID(int ratingID) throws DAOException;
     List<OrderStatus> getAllOrderStatuses() throws DAOException;
+
+    List<News> getAllNews() throws DAOException;
 }

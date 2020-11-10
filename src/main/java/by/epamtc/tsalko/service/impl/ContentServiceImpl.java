@@ -1,5 +1,6 @@
 package by.epamtc.tsalko.service.impl;
 
+import by.epamtc.tsalko.bean.content.News;
 import by.epamtc.tsalko.bean.content.OrderStatus;
 import by.epamtc.tsalko.bean.content.Rating;
 import by.epamtc.tsalko.bean.content.Role;
@@ -91,5 +92,21 @@ public class ContentServiceImpl implements ContentService {
         }
 
         return orderStatuses;
+    }
+
+    @Override
+    public List<News> getAllNews() throws ServiceException {
+        List<News> allNews;
+
+        DAOProvider daoProvider = DAOProvider.getInstance();
+        ContentDAO contentDAO = daoProvider.getContentDAO();
+
+        try {
+            allNews = contentDAO.getAllNews();
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+
+        return allNews;
     }
 }

@@ -38,7 +38,7 @@ public class OrderDAOImpl implements OrderDAO {
 
     private static final String SELECT_ORDER_BY_ORDER_ID =
             "SELECT u.user_login, u.user_id, o.order_id, o.order_date, o.order_pick_up_date, " +
-                    "o.order_drop_off_date, o.order_is_paid, s.order_status, b.bill_sum, " +
+                    "o.order_drop_off_date, o.order_is_paid, s.order_status, SUM(b.bill_sum) as bill_sum, " +
                     "c.car_id, c.car_brand, c.car_model, c.car_year_production, o.order_comment " +
                     "FROM user_orders o JOIN users u ON o.user_id=u.user_id " +
                     "JOIN order_statuses s ON o.order_status_id=s.order_status_id " +
@@ -59,7 +59,7 @@ public class OrderDAOImpl implements OrderDAO {
             "UPDATE user_orders JOIN bills ON user_orders.order_id=bills.user_order_id " +
                     "SET order_pick_up_date=?, order_drop_off_date=?, order_car_id=?, " +
                     "order_status_id=(SELECT order_status_id FROM order_statuses WHERE order_status=?), " +
-                    "order_is_paid=?, order_comment=?, bill_sum=? WHERE order_id=?";
+                    "order_is_paid=?, order_comment=?, bill_sum=? WHERE order_id=? AND main_bill=1";
 
     private static final String UPDATE_ORDER_SET_PAYMENT
             = "UPDATE user_orders SET order_is_paid=1 WHERE order_id=?";

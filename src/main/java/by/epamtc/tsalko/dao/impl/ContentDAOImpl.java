@@ -1,5 +1,6 @@
 package by.epamtc.tsalko.dao.impl;
 
+import by.epamtc.tsalko.bean.content.News;
 import by.epamtc.tsalko.bean.content.OrderStatus;
 import by.epamtc.tsalko.bean.content.Rating;
 import by.epamtc.tsalko.bean.content.Role;
@@ -27,6 +28,9 @@ public class ContentDAOImpl implements ContentDAO {
     private static final String SELECT_ALL_RATINGS = "SELECT * FROM user_ratings";
     private static final String SELECT_RATING_BY_ID = "SELECT * FROM user_ratings WHERE user_rating_id=?";
     private static final String SELECT_ALL_ORDER_STATUSES = "SELECT * FROM order_statuses";
+    private static final String SELECT_ALL_NEWS = "SELECT * FROM news";
+
+    private static final String COLUMN_USER_ID = "user_id";
 
     private static final String COLUMN_ROLE_ID = "user_role_id";
     private static final String COLUMN_ROLE = "user_role";
@@ -37,6 +41,11 @@ public class ContentDAOImpl implements ContentDAO {
 
     private static final String COLUMN_ORDER_STATUS_ID = "order_status_id";
     private static final String COLUMN_ORDER_STATUS = "order_status";
+
+    private static final String COLUMN_NEWS_TITLE_RU = "news_title_ru";
+    private static final String COLUMN_NEWS_TITLE_EN = "news_title_en";
+    private static final String COLUMN_NEWS_TEXT_RU = "news_text_ru";
+    private static final String COLUMN_NEWS_TEXT_EN = "news_text_en";
 
     @Override
     public List<Role> getAllRoles() throws DAOException {
@@ -204,5 +213,42 @@ public class ContentDAOImpl implements ContentDAO {
         }
 
         return orderStatuses;
+    }
+
+    @Override
+    public List<News> getAllNews() throws DAOException {
+        List<News> allNews;
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_ALL_NEWS);
+            resultSet = preparedStatement.executeQuery();
+
+            allNews = new ArrayList<>();
+
+            while (resultSet.next()) {
+                News news = new News();
+                news.setUserID(resultSet.getInt(COLUMN_USER_ID));
+                news.setTitleRU(resultSet.getString(COLUMN_NEWS_TITLE_RU));
+                news.setTitleEN(resultSet.getString(COLUMN_NEWS_TITLE_EN));
+                news.setTextRU(resultSet.getString(COLUMN_NEWS_TEXT_RU));
+                news.setTextEN(resultSet.getString(COLUMN_NEWS_TEXT_EN));
+
+                allNews.add(news);
+            }
+        } catch (SQLException e) {
+            logger.error("Severe database error! Could not retrieve all news!", e);
+            throw new DAOException(e);
+        } finally {
+            if (connection != null) {
+                connectionPool.closeConnection(connection, preparedStatement, resultSet);
+            }
+        }
+
+        return allNews;
     }
 }

@@ -245,8 +245,8 @@ header .menu-utility {
 
 .main-text {
     position: absolute;
-    width: 400px;
-    margin: 280px 0 0 610px;
+    width: 450px;
+    margin: 280px 0 0 560px;
     background-color: #ffffff;
     padding: 0 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
@@ -497,6 +497,7 @@ footer ul {
 .feature {
     display: inline-block;
     width: 300px;
+    vertical-align: top;
 }
 
 .feature p {

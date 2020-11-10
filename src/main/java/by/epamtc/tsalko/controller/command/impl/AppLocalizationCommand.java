@@ -10,16 +10,16 @@ import java.io.IOException;
 
 public class AppLocalizationCommand implements Command {
 
-    private static final String PARAMETER_LOCAL = "local";
+    private static final String PARAMETER_LOCALE = "locale";
 
     private static final String ATTRIBUTE_PREVIOUS_REQUEST = "previous_request";
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        String local = req.getParameter(PARAMETER_LOCAL);
+        String locale = req.getParameter(PARAMETER_LOCALE);
         String previousRequest = (String) session.getAttribute(ATTRIBUTE_PREVIOUS_REQUEST);
-        session.setAttribute(PARAMETER_LOCAL, local);
+        session.setAttribute(PARAMETER_LOCALE, locale);
         resp.sendRedirect(previousRequest);
     }
 }
