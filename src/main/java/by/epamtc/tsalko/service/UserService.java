@@ -16,4 +16,6 @@ public interface UserService {
 
     void updateUserDetails(UserDetails userDetails) throws ServiceException;
     void updateUserPassport(Passport passport) throws ServiceException;
+    boolean updateUserLogin(int userID, String newUserLogin) throws ServiceException;
+    boolean updateUserPassword(int userID, String oldPassword, String newPassword) throws ServiceException;
 }

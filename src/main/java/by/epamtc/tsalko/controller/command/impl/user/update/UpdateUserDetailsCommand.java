@@ -3,9 +3,9 @@ package by.epamtc.tsalko.controller.command.impl.user.update;
 import by.epamtc.tsalko.bean.user.UserDetails;
 import by.epamtc.tsalko.controller.TechValidator;
 import by.epamtc.tsalko.controller.command.Command;
+import by.epamtc.tsalko.service.ContentService;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
-import by.epamtc.tsalko.service.exception.InvalidInputDataServiceException;
 import by.epamtc.tsalko.service.exception.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,27 +36,35 @@ public class UpdateUserDetailsCommand implements Command {
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         StringBuilder page = new StringBuilder((String) req.getSession().getAttribute(ATTRIBUTE_PREVIOUS_REQUEST));
 
+        ServiceProvider serviceProvider = ServiceProvider.getInstance();
+        UserService userService = serviceProvider.getUserService();
+        ContentService contentService = serviceProvider.getContentService();
+
         try {
-            UserDetails userDetails = new UserDetails();
-            userDetails.setUserID(Integer.parseInt(req.getParameter(PARAMETER_USER_ID)));
+            UserDetails userDetails
+                    = userService.getUserDetails(
+                            Integer.parseInt(req.getParameter(PARAMETER_USER_ID)));
+
             userDetails.setUserPhone(req.getParameter(PARAMETER_USER_PHONE));
             userDetails.setUserEmail(req.getParameter(PARAMETER_USER_EMAIL));
+
             try {
-                userDetails.setUserRoleID(Integer.parseInt(req.getParameter(PARAMETER_USER_ROLE_ID)));
-                userDetails.setUserRatingID(Integer.parseInt(req.getParameter(PARAMETER_USER_RATING_ID)));
+                userDetails.setUserRole(
+                        contentService.getRoleByID(
+                                Integer.parseInt(req.getParameter(PARAMETER_USER_ROLE_ID))));
+                userDetails.setUserRating(
+                        contentService.getRatingByID(
+                                Integer.parseInt(req.getParameter(PARAMETER_USER_RATING_ID))));
             } catch (NumberFormatException ignore) {/*NOPE*/}
 
             if (TechValidator.userDetailsValidation(userDetails)) {
-                ServiceProvider serviceProvider = ServiceProvider.getInstance();
-                UserService userService = serviceProvider.getUserService();
-
                 userService.updateUserDetails(userDetails);
                 page.append(MESSAGE_DETAILS_UPDATE).append(DATA_UPDATED);
             } else {
                 logger.info(userDetails + " failed validation.");
                 page.append(MESSAGE_DETAILS_UPDATE).append(INCORRECT_DATA);
             }
-        } catch (NumberFormatException | InvalidInputDataServiceException e) {
+        } catch (NumberFormatException e) {
             page.append(MESSAGE_DETAILS_UPDATE).append(INCORRECT_DATA);
         } catch (ServiceException e) {
             page.append(MESSAGE_DETAILS_UPDATE).append(DATA_UPDATE_ERROR);

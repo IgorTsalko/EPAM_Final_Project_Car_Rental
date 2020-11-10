@@ -1,5 +1,8 @@
 package by.epamtc.tsalko.bean.user;
 
+import by.epamtc.tsalko.bean.content.Rating;
+import by.epamtc.tsalko.bean.content.Role;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -10,13 +13,12 @@ public class UserDetails implements Serializable {
 
     private int userID;
     private String userLogin;
-    private String userRoleName;
-    private int userRoleID;
-    private String userRatingName;
-    private int userRatingID;
     private String userPhone;
     private String userEmail;
     private LocalDateTime userRegistrationDate;
+
+    private Role userRole;
+    private Rating userRating;
 
     public int getUserID() {
         return userID;
@@ -35,44 +37,6 @@ public class UserDetails implements Serializable {
 
     public void setUserLogin(String userLogin) {
         this.userLogin = userLogin;
-    }
-
-    public String getUserRoleName() {
-        return userRoleName;
-    }
-
-    public void setUserRoleName(String userRoleName) {
-        this.userRoleName = userRoleName;
-    }
-
-    public int getUserRoleID() {
-        return userRoleID;
-    }
-
-    public void setUserRoleID(int userRoleID) {
-        if (userRoleID < 0) {
-            userRoleID = 0;
-        }
-        this.userRoleID = userRoleID;
-    }
-
-    public String getUserRatingName() {
-        return userRatingName;
-    }
-
-    public void setUserRatingName(String userRatingName) {
-        this.userRatingName = userRatingName;
-    }
-
-    public int getUserRatingID() {
-        return userRatingID;
-    }
-
-    public void setUserRatingID(int userRatingID) {
-        if (userRatingID < 0) {
-            userRatingID = 0;
-        }
-        this.userRatingID = userRatingID;
     }
 
     public String getUserPhone() {
@@ -99,26 +63,40 @@ public class UserDetails implements Serializable {
         this.userRegistrationDate = userRegistrationDate;
     }
 
+    public Role getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(Role userRole) {
+        this.userRole = userRole;
+    }
+
+    public Rating getUserRating() {
+        return userRating;
+    }
+
+    public void setUserRating(Rating userRating) {
+        this.userRating = userRating;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserDetails that = (UserDetails) o;
         return userID == that.userID &&
-                userRoleID == that.userRoleID &&
-                userRatingID == that.userRatingID &&
                 Objects.equals(userLogin, that.userLogin) &&
-                Objects.equals(userRoleName, that.userRoleName) &&
-                Objects.equals(userRatingName, that.userRatingName) &&
                 Objects.equals(userPhone, that.userPhone) &&
                 Objects.equals(userEmail, that.userEmail) &&
-                Objects.equals(userRegistrationDate, that.userRegistrationDate);
+                Objects.equals(userRegistrationDate, that.userRegistrationDate) &&
+                Objects.equals(userRole, that.userRole) &&
+                Objects.equals(userRating, that.userRating);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userID, userLogin, userRoleName, userRoleID, userRatingName,
-                userRatingID, userPhone, userEmail, userRegistrationDate);
+        return Objects.hash(userID, userLogin, userPhone, userEmail, userRegistrationDate,
+                userRole, userRating);
     }
 
     @Override
@@ -126,13 +104,11 @@ public class UserDetails implements Serializable {
         return this.getClass().getSimpleName() + "{" +
                 "userID=" + userID +
                 ", userLogin='" + userLogin + '\'' +
-                ", userRoleName='" + userRoleName + '\'' +
-                ", userRoleID=" + userRoleID +
-                ", userRatingName='" + userRatingName + '\'' +
-                ", userRatingID=" + userRatingID +
                 ", userPhone='" + userPhone + '\'' +
                 ", userEmail='" + userEmail + '\'' +
                 ", userRegistrationDate=" + userRegistrationDate +
+                ", userRole=" + userRole +
+                ", userRating=" + userRating +
                 '}';
     }
 }

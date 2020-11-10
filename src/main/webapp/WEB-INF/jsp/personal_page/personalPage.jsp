@@ -1,8 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
-<%@ taglib uri="http://localhost:8080/CarRentalFinalProjectJWD/mytag" prefix="mytag"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://localhost:8080/CarRentalFinalProjectJWD/mytag" prefix="mytag" %>
 
-<%@include file="../header.jsp"%>
+<%@include file="../header.jsp" %>
 <title>${sessionScope.user.login}</title>
 
 <fmt:message key="user.role" var="role"/>
@@ -21,7 +21,7 @@
 <%--START MAIN-CONTENT--%>
 <div id="content" class="clear">
     <div class="container main-content">
-        
+
         <c:choose>
             <c:when test="${empty sessionScope.user}">
                 <c:redirect url="mainController?command=go_to_main_page"/>
@@ -37,10 +37,12 @@
                     <p>${sessionScope.user.login.charAt(0)}</p>
                 </div>
                 <h3>${hello} ${sessionScope.user.login}</h3>
-                <p id="registration-date">${registration_date}: <mytag:dateFormatTag localDateTime="${sessionScope.user.registrationDate}"/></p>
-                <p>${role}: ${sessionScope.user.role} • ${rating}: ${sessionScope.user.rating} • ${discount} <fmt:formatNumber type="number"
-                                                                                                                               maxFractionDigits="0"
-                                                                                                                               value="${sessionScope.user.discount}"/>%</p>
+                <p id="registration-date">${registration_date}: <mytag:dateFormatTag
+                        localDateTime="${sessionScope.user.registrationDate}"/></p>
+                <p>${role}: ${sessionScope.user.role} • ${rating}: ${sessionScope.user.rating}
+                    • ${discount} <fmt:formatNumber type="number"
+                                                    maxFractionDigits="0"
+                                                    value="${sessionScope.user.discount}"/>%</p>
 
                 <div class="user-data">
                     <div id="user-menu" class="clear">
@@ -70,28 +72,28 @@
                     <div id="user-menu-content">
                         <c:choose>
                             <c:when test="${command eq 'go_to_personal_page_orders'}">
-                                <%@include file="orders.jsp"%>
+                                <%@include file="orders.jsp" %>
                             </c:when>
                             <c:when test="${command eq 'go_to_personal_page_details'}">
-                                <%@include file="userDetails.jsp"%>
+                                <%@include file="userDetails.jsp" %>
                             </c:when>
                             <c:when test="${command eq 'go_to_personal_page_passport'}">
-                                <%@include file="passport.jsp"%>
+                                <%@include file="passport.jsp" %>
                             </c:when>
                             <c:when test="${command eq 'go_to_personal_page_bankcards'}">
                                 <p class="link-add-bankcard">
                                     <a href="mainController?command=go_to_personal_page_create_bankcard">&#10010; ${bankcard_adding_title}</a>
                                 </p>
-                                <%@include file="bankcards.jsp"%>
+                                <%@include file="bankcards.jsp" %>
                             </c:when>
                             <c:when test="${command eq 'go_to_personal_page_create_bankcard'}">
-                                <%@include file="createBankcard.jsp"%>
+                                <%@include file="createBankcard.jsp" %>
                             </c:when>
                             <c:when test="${command eq 'go_to_personal_page_all_orders'}">
-                                <%@include file="allOrders.jsp"%>
+                                <%@include file="allOrders.jsp" %>
                             </c:when>
                             <c:when test="${command eq 'go_to_personal_page_all_users'}">
-                                <%@include file="allUsers.jsp"%>
+                                <%@include file="allUsers.jsp" %>
                             </c:when>
                         </c:choose>
                     </div>
@@ -103,4 +105,4 @@
 </div>
 <%--END MAIN-CONTENT--%>
 
-<%@include file="../footer.jsp"%>
+<%@include file="../footer.jsp" %>

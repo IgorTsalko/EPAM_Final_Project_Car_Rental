@@ -59,6 +59,6 @@ function closeWarning() {
     window.location.href = 'mainController?command=go_to_main_page';
 }
 
-function closeModal(modalID) {
-    document.getElementById(modalID).style.display = "none";
+function editOrder() {
+
 }

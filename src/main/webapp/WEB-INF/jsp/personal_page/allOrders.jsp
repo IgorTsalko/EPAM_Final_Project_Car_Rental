@@ -18,16 +18,16 @@
 
 <table>
     <tr>
-        <th style="width: 20px;">№</th>
-        <th style="width: 120px;">${login_title}</th>
+        <th style="width: 115px;">${login_title}</th>
         <th style="width: 110px;">${order_date}</th>
         <th style="width: 65px; text-align: center;">${order_status}</th>
         <th style="width: 80px;">${pick_up_date}</th>
         <th style="width: 85px;">${drop_off_date}</th>
-        <th style="width: 120px;">${order_car}</th>
+        <th style="width: 110px;">${order_car}</th>
         <th style="width: 75px;">${bill_sum}</th>
         <th>${is_paid}</th>
         <th>${order_comment}</th>
+        <th style="width: 20px"></th>
     </tr>
 
     <c:choose>
@@ -39,10 +39,15 @@
             <p class="data-error">${data_retrieve_error}</p>
         </c:when>
         <c:otherwise>
+            <c:set var="command"
+                   value="${pageContext.request.getParameter(\"command\")}"/>
             <c:set var="lineNumber" value="${requestScope.offset + 1}"/>
+            <form id="edit-order-form" action="mainController">
+                <input type="hidden" name="command" value="go_to_edit_order">
+                <input type="hidden" name="sender_login" value="${sessionScope.user.login}">
+            </form>
             <c:forEach items="${requestScope.orders}" var="order">
-                <tr>
-                    <td style="font-weight: 700">${lineNumber}</td>
+                <tr <c:if test="${command eq 'go_to_personal_page_all_orders'}">class="changeable-order"</c:if>>
                     <td><a href="mainController?command=go_to_all_user_data&user_id=${order.userID}">${order.userLogin}</a></td>
                     <td><mytag:dateFormatTag localDateTime="${order.orderDate}"/></td>
                     <td style="text-align: center;" class="
@@ -68,6 +73,9 @@
                         </c:if>
                     </td>
                     <td>${order.comment}</td>
+                    <td class="change-order-btn">
+                        <button form="edit-order-form" name="order_id" value="${order.orderId}">&#9998;</button>
+                    </td>
                 </tr>
                 <c:set var="lineNumber" value="${lineNumber + 1}"/>
             </c:forEach>

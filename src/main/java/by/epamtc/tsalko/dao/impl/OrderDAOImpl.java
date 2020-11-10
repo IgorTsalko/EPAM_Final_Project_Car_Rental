@@ -56,9 +56,13 @@ public class OrderDAOImpl implements OrderDAO {
                     "ORDER BY s.order_status_id, o.order_date DESC LIMIT ?, ?";
 
     private static final String UPDATE_ORDER =
-            "UPDATE user_orders SET order_pick_up_date=?, order_drop_off_date=?, order_car_id=?, " +
+            "UPDATE user_orders JOIN bills ON user_orders.order_id=bills.user_order_id " +
+                    "SET order_pick_up_date=?, order_drop_off_date=?, order_car_id=?, " +
                     "order_status_id=(SELECT order_status_id FROM order_statuses WHERE order_status=?), " +
-                    "order_is_paid=?, order_comment=? WHERE order_id=?";
+                    "order_is_paid=?, order_comment=?, bill_sum=? WHERE order_id=?";
+
+    private static final String UPDATE_ORDER_SET_PAYMENT
+            = "UPDATE user_orders SET order_is_paid=1 WHERE order_id=?";
 
     private static final String COLUMN_USER_ID = "user_id";
     private static final String COLUMN_USER_LOGIN = "user_login";
@@ -78,6 +82,11 @@ public class OrderDAOImpl implements OrderDAO {
     private static final String COLUMN_CAR_MODEL = "car_model";
     private static final String COLUMN_CAR_YEAR_PRODUCTION = "car_year_production";
 
+    /**
+     *
+     * @param order
+     * @throws DAOException
+     */
     @Override
     public void addOrder(Order order) throws DAOException {
         Connection connection = null;
@@ -220,7 +229,8 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public void updateOrder(Order order) throws DAOException {
+    public boolean updateOrder(Order order) throws DAOException {
+        boolean updated = false;
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -234,12 +244,38 @@ public class OrderDAOImpl implements OrderDAO {
             preparedStatement.setString(4, order.getOrderStatus());
             preparedStatement.setBoolean(5, order.isPaid());
             preparedStatement.setString(6, order.getComment());
-            preparedStatement.setInt(7, order.getOrderId());
+            preparedStatement.setDouble(7, order.getTotalSum());
+            preparedStatement.setInt(8, order.getOrderId());
 
-            preparedStatement.executeUpdate();
+            if (preparedStatement.executeUpdate() > 0) {
+                updated = true;
+            }
         } catch (ConnectionPoolError | SQLException e) {
             logger.error("Severe database error! Could not update user order.", e);
             throw new DAOException("Could not update user order.", e);
+        } finally {
+            if (connection != null) {
+                connectionPool.closeConnection(connection, preparedStatement);
+            }
+        }
+
+        return updated;
+    }
+
+    @Override
+    public void setPayment(Order order) throws DAOException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(UPDATE_ORDER_SET_PAYMENT);
+            preparedStatement.setInt(1, order.getOrderId());
+
+            preparedStatement.executeUpdate();
+        } catch (ConnectionPoolError | SQLException e) {
+            logger.error("Severe database error! Could not update order payment.", e);
+            throw new DAOException("Could not update order payment.", e);
         } finally {
             if (connection != null) {
                 connectionPool.closeConnection(connection, preparedStatement);

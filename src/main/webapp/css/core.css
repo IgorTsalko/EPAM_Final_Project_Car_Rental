@@ -4,6 +4,10 @@ html {
     line-height: 18px;
 }
 
+textarea {
+    font-family: 'Roboto', sans-serif;
+}
+
 body {
     min-width: 1080px;
     font-size: 14px;
@@ -40,6 +44,11 @@ body {
     font-size: 22px;
     font-weight: 200;
     margin: 10px 5px 10px 0;
+}
+
+.heading4 {
+    font-size: 26px;
+    margin: 0 0 20px 0;
 }
 
 a {
@@ -94,7 +103,8 @@ button:focus {
 }
 
 input,
-select {
+select,
+textarea {
     box-sizing: border-box;
     transition: all .3s;
     border-radius: 2px;
@@ -513,6 +523,12 @@ footer ul {
     margin-left: 20px;
 }
 
+#user-menu-content .user-login,
+#user-menu-content .user-change-password,
+#user-menu-content .personal-data {
+    margin: 20px 0;
+}
+
 #stack-trace {
     font-size: 0.9em;
 }
@@ -629,14 +645,13 @@ tr:hover {
 }
 
 .new-order {
-    background-color: #9de044;
-    border: none;
-    font-size: 16px;
+    background-color: #9de0448c;
+    border-color: #f1f1f1;
 }
 
 .expired-order {
-    background-color: lightcoral;
-    border: none;
+    background-color: #f080808c;
+    border-color: #f1f1f1;
 }
 
 .small-car-img {
@@ -799,6 +814,10 @@ tr:hover {
     margin: 0 10px 5px 0;
 }
 
+#user-menu-content .edit-button {
+    margin-left: 20px;
+}
+
 .edit-button:hover {
     color: #313131!important;
     background-color: #e7f3fd!important;
@@ -854,7 +873,7 @@ tr:hover {
 
 #bankcard-number {
     float: left;
-    width: 200px;
+    width: 190px;
     margin-bottom: 15px;
 }
 
@@ -941,6 +960,10 @@ tr:hover {
 .data-updated {
     color: green;
     margin: 5px 0 0 0;
+}
+
+.login-updated {
+    text-align: center;
 }
 
 .user-menu-tab {
@@ -1498,4 +1521,59 @@ input[type="checkbox"] {
 
 .passport-in-office {
     display: none;
+}
+
+.changeable-order .change-order-btn {
+    padding: 0;
+}
+
+.changeable-order .change-order-btn button {
+    font-size: 24px;
+    background: none;
+    color: inherit;
+    font-weight: 200;
+    display: none;
+}
+
+.changeable-order:hover button {
+    display: block;
+}
+
+.selected-order {
+    background-color: #e2ffe2!important;
+}
+
+#order-editing {
+    padding: 10px 50px;
+}
+
+#order-editing .order-car-img img {
+    width: 390px;
+}
+
+#order-editing textarea {
+    width: 300px;
+    height: 100px;
+    resize: none;
+}
+
+#order-editing span {
+    margin-right: 5px;
+}
+
+#order-editing button {
+    padding: 10px;
+    width: 300px;
+}
+
+#order-editing #change-order-form {
+    height: 100%;
+}
+
+#order-editing .comment {
+    height: 100px;
+}
+
+#postpaid-btn {
+    font-weight: 400!important;
 }

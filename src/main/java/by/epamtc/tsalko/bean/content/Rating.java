@@ -9,7 +9,7 @@ public class Rating implements Serializable {
 
     private int ratingID;
     private String ratingName;
-    private int discount;
+    private double discount;
 
     public int getRatingID() {
         return ratingID;
@@ -30,11 +30,11 @@ public class Rating implements Serializable {
         this.ratingName = ratingName;
     }
 
-    public int getDiscount() {
+    public double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(int discount) {
+    public void setDiscount(double discount) {
         if (discount < 0) {
             discount = 0;
         }

@@ -6,27 +6,27 @@ import by.epamtc.tsalko.bean.user.Passport;
 import by.epamtc.tsalko.bean.user.UserDetails;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserValidator {
+
+    private static final List<String> availableOrderStatuses = new ArrayList<>();
+
+    static {
+        availableOrderStatuses.add("expired");
+        availableOrderStatuses.add("new");
+        availableOrderStatuses.add("processing");
+        availableOrderStatuses.add("rent");
+        availableOrderStatuses.add("ended");
+        availableOrderStatuses.add("canceled");
+    }
 
     private static final String START_VISA = "4";
     private static final String START_MASTERCARD = "5";
 
-    private static final int MIN_USER_ROLE_ID = 0;
-    private static final int MAX_USER_ROLE_ID = 2;
-    private static final int MIN_USER_RATING_ID = 0;
-    private static final int MAX_USER_RATING_ID = 4;
-
     private static final int MIN_USER_AGE = 16;
     private static final int MAX_PASSPORT_YEARS = 10;
-
-    public static boolean userDetailsValidation(UserDetails userDetails) {
-        int roleID = userDetails.getUserRoleID();
-        int ratingID = userDetails.getUserRatingID();
-
-        return roleID >= MIN_USER_ROLE_ID && roleID <= MAX_USER_ROLE_ID
-                && ratingID >= MIN_USER_RATING_ID && ratingID <= MAX_USER_RATING_ID;
-    }
 
     public static boolean passportValidation(Passport passport) {
         LocalDate passportDateOfIssue = passport.getPassportDateOfIssue();
@@ -54,6 +54,17 @@ public class UserValidator {
         LocalDate now = LocalDate.now();
 
         return (now.isEqual(pickUpDate) || now.isBefore(pickUpDate))
+                && pickUpDate.isBefore(dropOffDate);
+    }
+
+    public static boolean updateOrderValidation(Order order) {
+        String orderStatus = order.getOrderStatus();
+        String orderComment = order.getComment();
+        LocalDate pickUpDate = order.getPickUpDate();
+        LocalDate dropOffDate = order.getDropOffDate();
+
+        return availableOrderStatuses.contains(orderStatus)
+                && (orderComment == null || orderComment.length() <= 255)
                 && pickUpDate.isBefore(dropOffDate);
     }
 }

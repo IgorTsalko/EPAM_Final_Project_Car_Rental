@@ -1,4 +1,4 @@
-package by.epamtc.tsalko.controller.order;
+package by.epamtc.tsalko.controller.order_creation;
 
 import by.epamtc.tsalko.bean.Order;
 import by.epamtc.tsalko.bean.user.User;

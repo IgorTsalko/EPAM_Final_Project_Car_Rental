@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://localhost:8080/CarRentalFinalProjectJWD/mytag" prefix="mytag"%>
 
+<fmt:message key="payment.to_pay" var="to_pay"/>
 <fmt:message key="order.date" var="order_date"/>
 <fmt:message key="order.status" var="order_status"/>
 <fmt:message key="pick_up_date" var="pick_up_date"/>
@@ -39,6 +40,9 @@
             </p>
         </c:when>
         <c:otherwise>
+            <form id="pay-order-form" action="mainController">
+                <input type="hidden" name="command" value="go_to_payment_page">
+            </form>
             <c:forEach items="${requestScope.user_orders}" var="order">
                 <tr>
                     <td><mytag:dateFormatTag localDateTime="${order.orderDate}"/></td>
@@ -50,9 +54,15 @@
                         <fmt:formatNumber minFractionDigits="2" value="${order.totalSum}"/> ${currency}
                     </td>
                     <td style="text-align: center">
-                        <c:if test="${order.paid eq true}">
-                            <span style="color: green">&#10004;</span>
-                        </c:if>
+                        <c:choose>
+                            <c:when test="${order.paid eq true}">
+                                <span style="color: green">&#10004;</span>
+                            </c:when>
+                            <c:otherwise>
+                                <button id="postpaid-btn" form="pay-order-form" type="submit" name="order_id" value="${order.orderId}">${to_pay}</button>
+                                <span style="text-transform: lowercase;"></span>
+                            </c:otherwise>
+                        </c:choose>
                     </td>
                 </tr>
             </c:forEach>

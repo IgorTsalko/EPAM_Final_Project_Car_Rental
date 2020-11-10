@@ -46,7 +46,7 @@ public class AuthorizationCommand implements Command {
         authorizationData.setLogin(login);
         authorizationData.setPassword(password);
 
-        if (TechValidator.loginValidation(authorizationData)) {
+        if (TechValidator.authValidation(authorizationData)) {
             ServiceProvider serviceProvider = ServiceProvider.getInstance();
             UserService userService = serviceProvider.getUserService();
 

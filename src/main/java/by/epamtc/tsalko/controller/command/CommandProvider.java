@@ -7,7 +7,9 @@ import by.epamtc.tsalko.controller.command.impl.user.create.CreateBankcardComman
 import by.epamtc.tsalko.controller.command.impl.user.delete.DeleteBankcardCommand;
 import by.epamtc.tsalko.controller.command.impl.user.go_to.*;
 import by.epamtc.tsalko.controller.command.impl.user.update.UpdateUserDetailsCommand;
+import by.epamtc.tsalko.controller.command.impl.user.update.UpdateUserLoginCommand;
 import by.epamtc.tsalko.controller.command.impl.user.update.UpdateUserPassportCommand;
+import by.epamtc.tsalko.controller.command.impl.user.update.UpdateUserPasswordCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,12 +42,16 @@ public class CommandProvider {
         commands.put(ParameterName.GO_TO_PERSONAL_PAGE_PASSPORT, new GoToPersonalPagePassportCommand());
         commands.put(ParameterName.GO_TO_PERSONAL_PAGE_BANKCARDS, new GoToPersonalPageBankcardsCommand());
         commands.put(ParameterName.GO_TO_PERSONAL_PAGE_CREATE_BANKCARD, new GoToPersonalPageCreateBankcardCommand());
+        commands.put(ParameterName.GO_TO_EDIT_ORDER, new GoToEditOrderCommand());
 
         commands.put(ParameterName.GO_TO_CREATE_ORDER, new GoToCreateOrderCommand());
         commands.put(ParameterName.GO_TO_PAYMENT_PAGE, new GoToPaymentPageCommand());
 
         commands.put(ParameterName.UPDATE_USER_DETAILS, new UpdateUserDetailsCommand());
         commands.put(ParameterName.UPDATE_USER_PASSPORT, new UpdateUserPassportCommand());
+        commands.put(ParameterName.UPDATE_USER_LOGIN, new UpdateUserLoginCommand());
+        commands.put(ParameterName.UPDATE_USER_PASSWORD, new UpdateUserPasswordCommand());
+        commands.put(ParameterName.UPDATE_ORDER, new UpdateOrderCommand());
         commands.put(ParameterName.CREATE_BANKCARD, new CreateBankcardCommand());
         commands.put(ParameterName.DELETE_BANKCARD, new DeleteBankcardCommand());
         commands.put(ParameterName.PAY_ORDER, new PayOrderCommand());

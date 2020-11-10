@@ -13,5 +13,7 @@ public interface OrderDAO {
     List<Order> getOrders(int offset, int rowsAmount) throws DAOException;
     Order getOrder(int orderID) throws DAOException;
 
-    void updateOrder(Order order) throws DAOException;
+    boolean updateOrder(Order order) throws DAOException;
+
+    void setPayment(Order order) throws DAOException;
 }

@@ -16,4 +16,6 @@ public interface UserDAO {
 
     void updateUserDetails(UserDetails userDetails) throws DAOException;
     void updateUserPassport(Passport passport) throws DAOException;
+    boolean updateUserLogin(int userID, String newUserLogin) throws DAOException;
+    boolean updateUserPassword(int userID, String oldPassword, String newPassword) throws DAOException;
 }

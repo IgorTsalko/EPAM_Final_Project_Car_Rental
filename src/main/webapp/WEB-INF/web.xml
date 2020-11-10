@@ -26,7 +26,7 @@
 
   <servlet>
     <servlet-name>CreateOrderController</servlet-name>
-    <servlet-class>by.epamtc.tsalko.controller.order.CreateOrderController</servlet-class>
+    <servlet-class>by.epamtc.tsalko.controller.order_creation.CreateOrderController</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>CreateOrderController</servlet-name>
@@ -53,7 +53,7 @@
 
   <filter>
     <filter-name>CreateNewUserDuringOrder</filter-name>
-    <filter-class>by.epamtc.tsalko.controller.order.CreateNewUserDuringOrderFilter</filter-class>
+    <filter-class>by.epamtc.tsalko.controller.order_creation.CreateNewUserDuringOrderFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>CreateNewUserDuringOrder</filter-name>
@@ -62,7 +62,7 @@
 
   <filter>
     <filter-name>UpdatePassportDuringOrder</filter-name>
-    <filter-class>by.epamtc.tsalko.controller.order.UpdatePassportDuringOrderFilter</filter-class>
+    <filter-class>by.epamtc.tsalko.controller.order_creation.UpdatePassportDuringOrderFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>UpdatePassportDuringOrder</filter-name>

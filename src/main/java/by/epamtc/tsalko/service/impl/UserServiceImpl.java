@@ -116,11 +116,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserDetails(UserDetails userDetails) throws ServiceException {
-        if (!UserValidator.userDetailsValidation(userDetails)) {
-            logger.info(userDetails + " failed validation");
-            throw new InvalidInputDataServiceException();
-        }
-
         DAOProvider daoProvider = DAOProvider.getInstance();
         UserDAO userDAO = daoProvider.getUserDAO();
 
@@ -146,5 +141,42 @@ public class UserServiceImpl implements UserService {
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public boolean updateUserLogin(int userID, String newUserLogin) throws ServiceException {
+        boolean updated;
+
+        DAOProvider daoProvider = DAOProvider.getInstance();
+        UserDAO userDAO = daoProvider.getUserDAO();
+
+        try {
+            updated = userDAO.updateUserLogin(userID, newUserLogin);
+        } catch (EntityAlreadyExistsDAOException e) {
+            throw new EntityAlreadyExistsServiceException(e);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+
+        return updated;
+    }
+
+    @Override
+    public boolean updateUserPassword(int userID, String oldPassword, String newPassword) throws ServiceException {
+        boolean updated;
+
+        DAOProvider daoProvider = DAOProvider.getInstance();
+        UserDAO userDAO = daoProvider.getUserDAO();
+
+        try {
+            oldPassword = Encoder.encrypt(oldPassword);
+            newPassword = Encoder.encrypt(newPassword);
+
+            updated = userDAO.updateUserPassword(userID, oldPassword, newPassword);
+        } catch (DAOException | NoSuchAlgorithmException e) {
+            throw new ServiceException(e);
+        }
+
+        return updated;
     }
 }

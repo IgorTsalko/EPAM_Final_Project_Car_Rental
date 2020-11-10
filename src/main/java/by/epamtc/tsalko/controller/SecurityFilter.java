@@ -46,6 +46,8 @@ public class SecurityFilter implements Filter {
 
         crudCommand.add(ParameterName.UPDATE_USER_DETAILS);
         crudCommand.add(ParameterName.UPDATE_USER_PASSPORT);
+        crudCommand.add(ParameterName.UPDATE_USER_LOGIN);
+        crudCommand.add(ParameterName.UPDATE_USER_PASSWORD);
         crudCommand.add(ParameterName.CREATE_BANKCARD);
         crudCommand.add(ParameterName.DELETE_BANKCARD);
         crudCommand.add(ParameterName.PAY_ORDER);
@@ -53,6 +55,8 @@ public class SecurityFilter implements Filter {
         adminCommand.add(ParameterName.GO_TO_ALL_USER_DATA);
         adminCommand.add(ParameterName.GO_TO_PERSONAL_PAGE_ALL_ORDERS);
         adminCommand.add(ParameterName.GO_TO_PERSONAL_PAGE_ALL_USERS);
+        adminCommand.add(ParameterName.GO_TO_EDIT_ORDER);
+        adminCommand.add(ParameterName.UPDATE_ORDER);
     }
 
     @Override

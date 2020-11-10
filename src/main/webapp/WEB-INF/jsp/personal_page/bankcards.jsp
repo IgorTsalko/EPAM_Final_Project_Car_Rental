@@ -15,7 +15,7 @@
     <c:when test="${requestScope.message_bankcards eq 'data_retrieve_error'}">
         <p class="data-error">${data_retrieve_error}</p>
     </c:when>
-    <c:when test="${requestScope.bankcard_numbers.size() lt 1}">
+    <c:when test="${requestScope.bankcards.size() lt 1}">
         <p class="message">${bankcard_message_not_exists}</p>
     </c:when>
     <c:when test="${message_bankcard_delete eq 'data_delete_error'}">

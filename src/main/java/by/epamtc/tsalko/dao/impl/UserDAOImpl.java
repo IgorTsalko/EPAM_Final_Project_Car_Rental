@@ -1,5 +1,7 @@
 package by.epamtc.tsalko.dao.impl;
 
+import by.epamtc.tsalko.bean.content.Rating;
+import by.epamtc.tsalko.bean.content.Role;
 import by.epamtc.tsalko.bean.user.*;
 import by.epamtc.tsalko.dao.UserDAO;
 import by.epamtc.tsalko.dao.connection.ConnectionPool;
@@ -28,7 +30,7 @@ public class UserDAOImpl implements UserDAO {
 
     private static final String SELECT_USER_BY_ID =
             "SELECT u.user_id, u.user_login, u.user_email, u.user_phone, u.user_registration_date, " +
-                    "rol.user_role, rat.user_rating, rat.user_discount " +
+                    "rol.user_role_id, rol.user_role, rat.user_rating_id, rat.user_rating, rat.user_discount " +
                     "FROM users u JOIN user_roles rol ON u.user_role=rol.user_role_id " +
                     "JOIN user_ratings rat ON u.user_rating=rat.user_rating_id WHERE u.user_id=?";
 
@@ -59,19 +61,26 @@ public class UserDAOImpl implements UserDAO {
             "user_name, user_thirdname, user_date_of_birth, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String UPDATE_USER_DETAILS_BY_USER_ID
-            = "UPDATE users SET user_phone=?, user_email=? WHERE user_id=?";
-
-    private static final String EX_UPDATE_USER_DETAILS_BY_USER_ID
             = "UPDATE users SET user_role=?, user_rating=?, user_phone=?, user_email=? WHERE user_id=?";
+
+    private static final String UPDATE_USER_LOGIN_BY_USER_ID
+            = "UPDATE users SET user_login=? WHERE user_id=?";
+
+    private static final String UPDATE_USER_PASSWORD_BY_USER_ID
+            = "UPDATE users SET user_password=? WHERE user_id=? AND user_password=?";
 
     private static final String COLUMN_USER_ID = "user_id";
     private static final String COLUMN_USER_LOGIN = "user_login";
-    private static final String COLUMN_USER_ROLE = "user_role";
-    private static final String COLUMN_USER_RATING = "user_rating";
-    private static final String COLUMN_USER_DISCOUNT = "user_discount";
     private static final String COLUMN_USER_PHONE = "user_phone";
     private static final String COLUMN_USER_EMAIL = "user_email";
     private static final String COLUMN_USER_REGISTRATION_DATE = "user_registration_date";
+
+    private static final String COLUMN_USER_ROLE_ID = "user_role_id";
+    private static final String COLUMN_USER_ROLE = "user_role";
+
+    private static final String COLUMN_USER_RATING_ID = "user_rating_id";
+    private static final String COLUMN_USER_RATING = "user_rating";
+    private static final String COLUMN_USER_DISCOUNT = "user_discount";
 
     private static final String COLUMN_PASSPORT_ID = "user_passport_id";
     private static final String COLUMN_PASSPORT_SERIES = "user_passport_series";
@@ -173,10 +182,19 @@ public class UserDAOImpl implements UserDAO {
             userDetails = new UserDetails();
 
             if (resultSet.next()) {
+                Rating rating = new Rating();
+                rating.setRatingID(resultSet.getInt(COLUMN_USER_RATING_ID));
+                rating.setRatingName(resultSet.getString(COLUMN_USER_RATING));
+                rating.setDiscount(resultSet.getDouble(COLUMN_USER_DISCOUNT));
+
+                Role role = new Role();
+                role.setRoleID(resultSet.getInt(COLUMN_USER_ROLE_ID));
+                role.setRoleName(resultSet.getString(COLUMN_USER_ROLE));
+
+                userDetails.setUserRating(rating);
+                userDetails.setUserRole(role);
                 userDetails.setUserID(resultSet.getInt(COLUMN_USER_ID));
                 userDetails.setUserLogin(resultSet.getString(COLUMN_USER_LOGIN));
-                userDetails.setUserRoleName(resultSet.getString(COLUMN_USER_ROLE));
-                userDetails.setUserRatingName(resultSet.getString(COLUMN_USER_RATING));
                 userDetails.setUserPhone(resultSet.getString(COLUMN_USER_PHONE));
                 userDetails.setUserEmail(resultSet.getString(COLUMN_USER_EMAIL));
                 userDetails.setUserRegistrationDate(
@@ -275,20 +293,12 @@ public class UserDAOImpl implements UserDAO {
 
         try {
             connection = connectionPool.takeConnection();
-
-            if (userDetails.getUserRoleID() > 0 && userDetails.getUserRatingID() > 0) {
-                preparedStatement = connection.prepareStatement(EX_UPDATE_USER_DETAILS_BY_USER_ID);
-                preparedStatement.setInt(1, userDetails.getUserRoleID());
-                preparedStatement.setInt(2, userDetails.getUserRatingID());
-                preparedStatement.setString(3, userDetails.getUserPhone());
-                preparedStatement.setString(4, userDetails.getUserEmail());
-                preparedStatement.setInt(5, userDetails.getUserID());
-            } else {
-                preparedStatement = connection.prepareStatement(UPDATE_USER_DETAILS_BY_USER_ID);
-                preparedStatement.setString(1, userDetails.getUserPhone());
-                preparedStatement.setString(2, userDetails.getUserEmail());
-                preparedStatement.setInt(3, userDetails.getUserID());
-            }
+            preparedStatement = connection.prepareStatement(UPDATE_USER_DETAILS_BY_USER_ID);
+            preparedStatement.setInt(1, userDetails.getUserRole().getRoleID());
+            preparedStatement.setInt(2, userDetails.getUserRating().getRatingID());
+            preparedStatement.setString(3, userDetails.getUserPhone());
+            preparedStatement.setString(4, userDetails.getUserEmail());
+            preparedStatement.setInt(5, userDetails.getUserID());
 
             preparedStatement.executeUpdate();
         } catch (ConnectionPoolError | SQLException e) {
@@ -341,6 +351,63 @@ public class UserDAOImpl implements UserDAO {
                 connectionPool.closeConnection(connection, preparedStatement, resultSet);
             }
         }
+    }
+
+    @Override
+    public boolean updateUserLogin(int userID, String newUserLogin) throws DAOException {
+        boolean updated = false;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(UPDATE_USER_LOGIN_BY_USER_ID);
+            preparedStatement.setString(1, newUserLogin);
+            preparedStatement.setInt(2, userID);
+
+            if (preparedStatement.executeUpdate() == 1) {
+                updated = true;
+            }
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new EntityAlreadyExistsDAOException(e);
+        } catch (ConnectionPoolError | SQLException e) {
+            logger.error("Severe database error! Could not update user login.", e);
+            throw new DAOException("Could not update user login.", e);
+        } finally {
+            if (connection != null) {
+                connectionPool.closeConnection(connection, preparedStatement);
+            }
+        }
+
+        return updated;
+    }
+
+    @Override
+    public boolean updateUserPassword(int userID, String oldPassword, String newPassword) throws DAOException {
+        boolean updated = false;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(UPDATE_USER_PASSWORD_BY_USER_ID);
+            preparedStatement.setString(1, newPassword);
+            preparedStatement.setInt(2, userID);
+            preparedStatement.setString(3, oldPassword);
+
+            if (preparedStatement.executeUpdate() == 1) {
+                updated = true;
+            }
+        } catch (ConnectionPoolError | SQLException e) {
+            logger.error("Severe database error! Could not update user password.", e);
+            throw new DAOException("Could not update user password.", e);
+        } finally {
+            if (connection != null) {
+                connectionPool.closeConnection(connection, preparedStatement);
+            }
+        }
+
+        return updated;
     }
 
     private User createUser(ResultSet resultSet) throws SQLException {

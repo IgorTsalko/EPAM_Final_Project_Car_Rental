@@ -2,6 +2,8 @@ package by.epamtc.tsalko.controller;
 
 import by.epamtc.tsalko.bean.Bankcard;
 import by.epamtc.tsalko.bean.Order;
+import by.epamtc.tsalko.bean.content.Rating;
+import by.epamtc.tsalko.bean.content.Role;
 import by.epamtc.tsalko.bean.user.*;
 
 import java.time.LocalDate;
@@ -25,12 +27,20 @@ public class TechValidator {
     private static final String CARD_USER_FIRSTNAME_REGEXP = "^[a-zA-Z]{3,50}$";
     private static final String CARD_USER_LASTNAME_REGEXP = "^[a-zA-Z]{3,50}$";
 
-    public static boolean loginValidation(AuthorizationData data) {
+    public static boolean authValidation(AuthorizationData data) {
         String login = data.getLogin();
         String password = data.getPassword();
 
         return login != null && login.matches(LOGIN_REGEXP)
                 && password != null && password.matches(PASSWORD_REGEXP);
+    }
+
+    public static boolean loginValidation(String login) {
+        return login != null && login.matches(LOGIN_REGEXP);
+    }
+
+    public static boolean passwordValidation(String password) {
+        return password != null && password.matches(PASSWORD_REGEXP);
     }
 
     public static boolean registrationValidation(RegistrationData data) {
@@ -47,16 +57,16 @@ public class TechValidator {
 
     public static boolean userDetailsValidation(UserDetails userDetails) {
         int userID = userDetails.getUserID();
-        int roleID = userDetails.getUserRoleID();
-        int ratingID = userDetails.getUserRatingID();
+        Role role = userDetails.getUserRole();
+        Rating rating = userDetails.getUserRating();
         String phone = userDetails.getUserPhone();
         String email = userDetails.getUserEmail();
 
         return userID > 0
                 &&(email == null || email.length() == 0 || email.matches(EMAIL_REGEXP))
                 && phone != null && phone.matches(PHONE_REGEXP)
-                && roleID >= 0
-                && ratingID >= 0;
+                && role != null
+                && rating != null;
     }
 
     public static boolean passportValidation(Passport passport) {

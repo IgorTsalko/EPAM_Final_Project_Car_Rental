@@ -52,7 +52,6 @@ public class PayOrderCommand implements Command {
         HttpSession session = req.getSession();
         String previousRequest = (String) session.getAttribute(ATTRIBUTE_PREVIOUS_REQUEST);
         User user = (User) session.getAttribute(ATTRIBUTE_USER);
-        Order order = null;
         boolean paid = false;
 
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
@@ -66,7 +65,7 @@ public class PayOrderCommand implements Command {
             boolean addBankcard = Boolean.parseBoolean(req.getParameter(PARAMETER_ADD_BANKCARD));
 
             int orderID = Integer.parseInt(req.getParameter(PARAMETER_ORDER_ID));
-            order = orderService.getOrder(orderID);
+            Order order = orderService.getOrder(orderID);
             Bankcard bankcard;
 
             if (useAnotherBankcard) {
@@ -99,7 +98,7 @@ public class PayOrderCommand implements Command {
             }
 
             if (paid && order != null) {
-                orderService.updateOrder(order);
+                orderService.setPayment(order);
             }
 
             page.append(GO_TO_USER_ORDERS);

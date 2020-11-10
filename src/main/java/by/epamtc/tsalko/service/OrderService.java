@@ -13,5 +13,7 @@ public interface OrderService {
     List<Order> getOrders(int offset, int rowsAmount) throws ServiceException;
     Order getOrder(int orderID) throws ServiceException;
 
-    void updateOrder(Order order) throws ServiceException;
+    boolean updateOrder(Order order) throws ServiceException;
+
+    void setPayment(Order order) throws ServiceException;
 }

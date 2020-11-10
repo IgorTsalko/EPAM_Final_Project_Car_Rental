@@ -1,4 +1,4 @@
-package by.epamtc.tsalko.controller.order;
+package by.epamtc.tsalko.controller.order_creation;
 
 import by.epamtc.tsalko.bean.user.AuthorizationData;
 import by.epamtc.tsalko.bean.user.RegistrationData;
@@ -48,7 +48,7 @@ public class CreateNewUserDuringOrderFilter implements Filter {
             authorizationData.setPassword(userPhone);
 
             if (TechValidator.registrationValidation(registrationData)
-                    && TechValidator.loginValidation(authorizationData)) {
+                    && TechValidator.authValidation(authorizationData)) {
 
                 try {
                     userService.registration(registrationData);

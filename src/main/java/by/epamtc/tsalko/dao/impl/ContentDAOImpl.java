@@ -1,5 +1,6 @@
 package by.epamtc.tsalko.dao.impl;
 
+import by.epamtc.tsalko.bean.content.OrderStatus;
 import by.epamtc.tsalko.bean.content.Rating;
 import by.epamtc.tsalko.bean.content.Role;
 import by.epamtc.tsalko.dao.ContentDAO;
@@ -22,7 +23,10 @@ public class ContentDAOImpl implements ContentDAO {
     private static final ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     private static final String SELECT_ALL_ROLES = "SELECT * FROM user_roles";
+    private static final String SELECT_ROLE_BY_ID = "SELECT * FROM user_roles WHERE user_role_id=?";
     private static final String SELECT_ALL_RATINGS = "SELECT * FROM user_ratings";
+    private static final String SELECT_RATING_BY_ID = "SELECT * FROM user_ratings WHERE user_rating_id=?";
+    private static final String SELECT_ALL_ORDER_STATUSES = "SELECT * FROM order_statuses";
 
     private static final String COLUMN_ROLE_ID = "user_role_id";
     private static final String COLUMN_ROLE = "user_role";
@@ -30,6 +34,9 @@ public class ContentDAOImpl implements ContentDAO {
     private static final String COLUMN_RATING_ID = "user_rating_id";
     private static final String COLUMN_RATING = "user_rating";
     private static final String COLUMN_DISCOUNT = "user_discount";
+
+    private static final String COLUMN_ORDER_STATUS_ID = "order_status_id";
+    private static final String COLUMN_ORDER_STATUS = "order_status";
 
     @Override
     public List<Role> getAllRoles() throws DAOException {
@@ -65,6 +72,39 @@ public class ContentDAOImpl implements ContentDAO {
     }
 
     @Override
+    public Role getRoleByID(int roleID) throws DAOException {
+        Role role;
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_ROLE_BY_ID);
+            preparedStatement.setInt(1, roleID);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                role = new Role();
+                role.setRoleID(resultSet.getInt(COLUMN_ROLE_ID));
+                role.setRoleName(resultSet.getString(COLUMN_ROLE));
+            } else {
+                throw new DAOException("Could not retrieve role.");
+            }
+        } catch (SQLException e) {
+            logger.error("Severe database error! Could not retrieve role!", e);
+            throw new DAOException(e);
+        } finally {
+            if (connection != null) {
+                connectionPool.closeConnection(connection, preparedStatement, resultSet);
+            }
+        }
+
+        return role;
+    }
+
+    @Override
     public List<Rating> getAllRatings() throws DAOException {
         List<Rating> allRatings;
 
@@ -96,5 +136,73 @@ public class ContentDAOImpl implements ContentDAO {
         }
 
         return allRatings;
+    }
+
+    @Override
+    public Rating getRatingByID(int ratingID) throws DAOException {
+        Rating rating;
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_RATING_BY_ID);
+            preparedStatement.setInt(1, ratingID);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                rating = new Rating();
+                rating.setRatingID(resultSet.getInt(COLUMN_RATING_ID));
+                rating.setRatingName(resultSet.getString(COLUMN_RATING));
+                rating.setDiscount(resultSet.getInt(COLUMN_DISCOUNT));
+            } else {
+                throw new DAOException("Could not retrieve rating.");
+            }
+        } catch (SQLException e) {
+            logger.error("Severe database error! Could not retrieve rating!", e);
+            throw new DAOException(e);
+        } finally {
+            if (connection != null) {
+                connectionPool.closeConnection(connection, preparedStatement, resultSet);
+            }
+        }
+
+        return rating;
+    }
+
+    @Override
+    public List<OrderStatus> getAllOrderStatuses() throws DAOException {
+        List<OrderStatus> orderStatuses;
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = connectionPool.takeConnection();
+            preparedStatement = connection.prepareStatement(SELECT_ALL_ORDER_STATUSES);
+            resultSet = preparedStatement.executeQuery();
+
+            orderStatuses = new ArrayList<>();
+
+            while (resultSet.next()) {
+                OrderStatus orderStatus = new OrderStatus();
+                orderStatus.setOrderStatusID(resultSet.getInt(COLUMN_ORDER_STATUS_ID));
+                orderStatus.setOrderStatus(resultSet.getString(COLUMN_ORDER_STATUS));
+
+                orderStatuses.add(orderStatus);
+            }
+        } catch (SQLException e) {
+            logger.error("Severe database error! Could not retrieve all order statuses!", e);
+            throw new DAOException(e);
+        } finally {
+            if (connection != null) {
+                connectionPool.closeConnection(connection, preparedStatement, resultSet);
+            }
+        }
+
+        return orderStatuses;
     }
 }
