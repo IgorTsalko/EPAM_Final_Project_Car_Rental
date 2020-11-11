@@ -34,9 +34,9 @@ public class UserValidator {
 
         LocalDate now = LocalDate.now();
 
-        return now.isAfter(passportDateOfIssue)
-                && now.minusYears(MIN_USER_AGE).isAfter(passportUserDateOfBirth)
-                && now.minusYears(MAX_PASSPORT_YEARS).isBefore(passportDateOfIssue);
+        return (passportDateOfIssue.isBefore(now) || passportDateOfIssue.isEqual(now))
+                && passportDateOfIssue.isAfter(now.minusYears(MAX_PASSPORT_YEARS))
+                && passportUserDateOfBirth.isBefore(now.minusYears(MIN_USER_AGE));
     }
 
     public static boolean bankCardValidation(Bankcard bankCard) {

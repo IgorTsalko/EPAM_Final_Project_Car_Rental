@@ -7,6 +7,7 @@ import by.epamtc.tsalko.service.CarService;
 import by.epamtc.tsalko.service.OrderService;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
+import by.epamtc.tsalko.service.exception.EntityNotFoundServiceException;
 import by.epamtc.tsalko.service.exception.InvalidInputDataServiceException;
 import by.epamtc.tsalko.service.exception.ServiceException;
 import org.apache.logging.log4j.LogManager;
@@ -67,7 +68,7 @@ public class UpdateOrderCommand implements Command {
                 logger.info(order + " failed validation.");
                 page.append(previousRequest).append(MESSAGE_UPDATE_ORDER).append(INCORRECT_DATA);
             }
-        } catch (NumberFormatException | InvalidInputDataServiceException e) {
+        } catch (NumberFormatException | InvalidInputDataServiceException | EntityNotFoundServiceException e) {
             page.append(previousRequest).append(MESSAGE_UPDATE_ORDER).append(INCORRECT_DATA);
         } catch (ServiceException e) {
             page.append(previousRequest).append(MESSAGE_UPDATE_ORDER).append(DATA_UPDATE_ERROR);

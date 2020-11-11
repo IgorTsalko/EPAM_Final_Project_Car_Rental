@@ -93,11 +93,13 @@ public class UserDAOImpl implements UserDAO {
     private static final String COLUMN_PASSPORT_USER_THIRDNAME = "user_thirdname";
     private static final String COLUMN_PASSPORT_USER_DATE_OF_BIRTH = "user_date_of_birth";
 
-    /** Executes SQL query and return object User if it exists or throws exception.
-     * Never return null
+    /**
+     * Execute the SQL statement and return User object created from data
+     * obtained from the database by authorizationData or throws exception if
+     * such user does not exists. Never return null.
      * @param authorizationData data about existing User
-     * @return object User that contains data from data base about user
-     * @exception DAOException if occurred severe problem with data base
+     * @return User object that contains the main data about user from database
+     * @exception DAOException if occurred severe problem with database
      * @throws EntityNotFoundDAOException if corresponding User not found
      */
     @Override
@@ -132,11 +134,11 @@ public class UserDAOImpl implements UserDAO {
         return user;
     }
 
-    /** Executes SQL query and enroll new User if in data base or throws exception.
+    /**
+     * Enroll new User in data base if such user do not exists or throws exception.
      * @param registrationData data about new User
-     * @return true if managed to enroll a new User
-     * @exception DAOException if occurred severe problem with data base
-     * @throws EntityAlreadyExistsDAOException if User already exists
+     * @exception DAOException if occurred severe problem with database
+     * @throws EntityAlreadyExistsDAOException if such user already exists
      */
     @Override
     public void registration(RegistrationData registrationData) throws DAOException {
@@ -165,6 +167,16 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    /**
+     * Execute the SQL statement and return UserDetails object created from data
+     * obtained from the database by unique user identifier or throws exception if
+     * such user does not exist. Never return null.
+     * @param userID unique user identifier in database
+     * @return UserDetails object that contains the details data about user
+     * from database.
+     * @exception DAOException if occurred severe problem with database
+     * @throws EntityNotFoundDAOException if corresponding User not found
+     */
     @Override
     public UserDetails getUserDetails(int userID) throws DAOException {
         UserDetails userDetails;
@@ -179,27 +191,29 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setInt(1, userID);
             resultSet = preparedStatement.executeQuery();
 
+            if (!resultSet.next()) {
+                throw new EntityNotFoundDAOException();
+            }
+
             userDetails = new UserDetails();
 
-            if (resultSet.next()) {
-                Rating rating = new Rating();
-                rating.setRatingID(resultSet.getInt(COLUMN_USER_RATING_ID));
-                rating.setRatingName(resultSet.getString(COLUMN_USER_RATING));
-                rating.setDiscount(resultSet.getDouble(COLUMN_USER_DISCOUNT));
+            Rating rating = new Rating();
+            rating.setRatingID(resultSet.getInt(COLUMN_USER_RATING_ID));
+            rating.setRatingName(resultSet.getString(COLUMN_USER_RATING));
+            rating.setDiscount(resultSet.getDouble(COLUMN_USER_DISCOUNT));
 
-                Role role = new Role();
-                role.setRoleID(resultSet.getInt(COLUMN_USER_ROLE_ID));
-                role.setRoleName(resultSet.getString(COLUMN_USER_ROLE));
+            Role role = new Role();
+            role.setRoleID(resultSet.getInt(COLUMN_USER_ROLE_ID));
+            role.setRoleName(resultSet.getString(COLUMN_USER_ROLE));
 
-                userDetails.setUserRating(rating);
-                userDetails.setUserRole(role);
-                userDetails.setUserID(resultSet.getInt(COLUMN_USER_ID));
-                userDetails.setUserLogin(resultSet.getString(COLUMN_USER_LOGIN));
-                userDetails.setUserPhone(resultSet.getString(COLUMN_USER_PHONE));
-                userDetails.setUserEmail(resultSet.getString(COLUMN_USER_EMAIL));
-                userDetails.setUserRegistrationDate(
-                        resultSet.getTimestamp(COLUMN_USER_REGISTRATION_DATE).toLocalDateTime());
-            }
+            userDetails.setUserRating(rating);
+            userDetails.setUserRole(role);
+            userDetails.setUserID(resultSet.getInt(COLUMN_USER_ID));
+            userDetails.setUserLogin(resultSet.getString(COLUMN_USER_LOGIN));
+            userDetails.setUserPhone(resultSet.getString(COLUMN_USER_PHONE));
+            userDetails.setUserEmail(resultSet.getString(COLUMN_USER_EMAIL));
+            userDetails.setUserRegistrationDate(
+                    resultSet.getTimestamp(COLUMN_USER_REGISTRATION_DATE).toLocalDateTime());
         } catch (ConnectionPoolError | SQLException e) {
             logger.error("Severe database error! Could not retrieve user details.", e);
             throw new DAOException("Could not retrieve user details.", e);
@@ -212,6 +226,16 @@ public class UserDAOImpl implements UserDAO {
         return userDetails;
     }
 
+    /**
+     * Execute the SQL statement and return list of objects User created from data
+     * obtained from the database or return or empty list if
+     * linesAmount is outside the number of records or records are missing.
+     * @param offset index number from which to start extraction
+     * @param linesAmount number of retrievable objects
+     * @return list of User objects from database or empty list if
+     * linesAmount is outside the number of records or records are missing
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
     public List<User> getUsers(int offset, int linesAmount) throws DAOException {
         List<User> users;
@@ -245,21 +269,30 @@ public class UserDAOImpl implements UserDAO {
         return users;
     }
 
+    /**
+     * Execute the SQL statement and return Passport object created from data
+     * obtained from the database by unique user identifier or return null.
+     * @param userID unique user identifier in database
+     * @return Passport object that describes unique user passport data
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
     public Passport getUserPassport(int userID) throws DAOException {
+        Passport passport = null;
+
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
         try {
-            Passport passport = new Passport();
-
             connection = connectionPool.takeConnection();
             preparedStatement = connection.prepareStatement(SELECT_USER_PASSPORT_BY_USER_ID);
             preparedStatement.setInt(1, userID);
             resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
+                passport = new Passport();
+
                 passport.setUserID(resultSet.getInt(COLUMN_USER_ID));
                 passport.setPassportID(resultSet.getInt(COLUMN_PASSPORT_ID));
                 passport.setPassportSeries(resultSet.getString(COLUMN_PASSPORT_SERIES));
@@ -274,8 +307,6 @@ public class UserDAOImpl implements UserDAO {
                 passport.setPassportUserDateOfBirth(
                         resultSet.getDate(COLUMN_PASSPORT_USER_DATE_OF_BIRTH).toLocalDate());
             }
-
-            return passport;
         } catch (ConnectionPoolError | SQLException e) {
             logger.error("Severe database error! Could not retrieve user passport.", e);
             throw new DAOException("Could not retrieve user passport.", e);
@@ -284,10 +315,20 @@ public class UserDAOImpl implements UserDAO {
                 connectionPool.closeConnection(connection, preparedStatement, resultSet);
             }
         }
+
+        return passport;
     }
 
+    /**
+     * Execute the SQL statement and update details user data in database.
+     * @param userDetails object that describes details data user
+     * @return true if the data has been successfully updated or false if it has been not
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
-    public void updateUserDetails(UserDetails userDetails) throws DAOException {
+    public boolean updateUserDetails(UserDetails userDetails) throws DAOException {
+        boolean updated = false;
+
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -300,7 +341,9 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setString(4, userDetails.getUserEmail());
             preparedStatement.setInt(5, userDetails.getUserID());
 
-            preparedStatement.executeUpdate();
+            if (preparedStatement.executeUpdate() == 1) {
+                updated = true;
+            }
         } catch (ConnectionPoolError | SQLException e) {
             logger.error("Severe database error! Could not update user details.", e);
             throw new DAOException("Could not update user details.", e);
@@ -309,10 +352,22 @@ public class UserDAOImpl implements UserDAO {
                 connectionPool.closeConnection(connection, preparedStatement);
             }
         }
+
+        return updated;
     }
 
+    /**
+     * Execute the SQL statement and check if user already has passport.
+     * If user does not have passport, add a new, if passport exist, update it in database.
+     * @param passport object that describes user passport data
+     * @return true if the data has been successfully updated or false if it has been not
+     * @throws EntityNotFoundDAOException if user for passport does not exist
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
-    public void updateUserPassport(Passport passport) throws DAOException {
+    public boolean updateUserPassport(Passport passport) throws DAOException {
+        boolean updated = false;
+
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -342,7 +397,11 @@ public class UserDAOImpl implements UserDAO {
                     java.sql.Date.valueOf(passport.getPassportUserDateOfBirth()));
             preparedStatement.setInt(10, passport.getUserID());
 
-            preparedStatement.executeUpdate();
+            if (preparedStatement.executeUpdate() == 1) {
+                updated = true;
+            }
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new EntityNotFoundDAOException(e);
         } catch (ConnectionPoolError | SQLException e) {
             logger.error("Severe database error! Could not update user passport.", e);
             throw new DAOException("Could not update user passport.", e);
@@ -351,8 +410,17 @@ public class UserDAOImpl implements UserDAO {
                 connectionPool.closeConnection(connection, preparedStatement, resultSet);
             }
         }
+
+        return updated;
     }
 
+    /**
+     * Execute the SQL statement and update user login in database.
+     * @param userID unique user identifier in database
+     * @param newUserLogin new user login
+     * @return true if the data has been successfully updated or false if it has been not
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
     public boolean updateUserLogin(int userID, String newUserLogin) throws DAOException {
         boolean updated = false;
@@ -368,8 +436,6 @@ public class UserDAOImpl implements UserDAO {
             if (preparedStatement.executeUpdate() == 1) {
                 updated = true;
             }
-        } catch (SQLIntegrityConstraintViolationException e) {
-            throw new EntityAlreadyExistsDAOException(e);
         } catch (ConnectionPoolError | SQLException e) {
             logger.error("Severe database error! Could not update user login.", e);
             throw new DAOException("Could not update user login.", e);
@@ -382,6 +448,15 @@ public class UserDAOImpl implements UserDAO {
         return updated;
     }
 
+    /**
+     * Execute the SQL statement and if old password and new password equals
+     * update user password in database.
+     * @param userID unique user identifier in database
+     * @param oldPassword old user oldPassword
+     * @param newPassword new user password
+     * @return true if the data has been successfully updated or false if it has been not
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
     public boolean updateUserPassword(int userID, String oldPassword, String newPassword) throws DAOException {
         boolean updated = false;

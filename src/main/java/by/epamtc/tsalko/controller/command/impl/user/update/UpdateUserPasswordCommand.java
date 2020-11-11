@@ -53,6 +53,7 @@ public class UpdateUserPasswordCommand implements Command {
                 page.append(MESSAGE_UPDATE_PASSWORD).append(INCORRECT_DATA);
             }
         } catch (NumberFormatException e) {
+            logger.warn("Incorrect input data.", e);
             page.append(MESSAGE_UPDATE_PASSWORD).append(INCORRECT_DATA);
         } catch (ServiceException e) {
             page.append(MESSAGE_UPDATE_PASSWORD).append(DATA_UPDATE_ERROR);

@@ -55,6 +55,7 @@ public class UpdateUserLoginCommand implements Command {
                         .append(MESSAGE_UPDATE_LOGIN).append(INCORRECT_DATA);
             }
         } catch (NumberFormatException e) {
+            logger.warn("Incorrect input data.", e);
             page.append(GO_TO_PERSONAL_PAGE_DETAILS)
                     .append(MESSAGE_UPDATE_LOGIN).append(INCORRECT_DATA);
         } catch (ServiceException e) {

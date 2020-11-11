@@ -63,10 +63,8 @@ public class UpdatePassportDuringOrderFilter implements Filter {
                 passport.setPassportUserName(req.getParameter(PARAMETER_USER_PASSPORT_NAME));
                 passport.setPassportUserThirdName(req.getParameter(PARAMETER_USER_PASSPORT_THIRDNAME));
 
-                if (TechValidator.passportValidation(passport)) {
-
-                    userService.updateUserPassport(passport);
-                } else {
+                if (!TechValidator.passportValidation(passport)
+                        || !userService.updateUserPassport(passport)) {
                     logger.info(passport + " failed validation");
                 }
             } catch (DateTimeParseException e) {

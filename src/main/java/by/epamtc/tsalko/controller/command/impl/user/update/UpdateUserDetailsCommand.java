@@ -6,6 +6,7 @@ import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.ContentService;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
+import by.epamtc.tsalko.service.exception.EntityNotFoundServiceException;
 import by.epamtc.tsalko.service.exception.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -58,13 +59,17 @@ public class UpdateUserDetailsCommand implements Command {
             } catch (NumberFormatException ignore) {/*NOPE*/}
 
             if (TechValidator.userDetailsValidation(userDetails)) {
-                userService.updateUserDetails(userDetails);
-                page.append(MESSAGE_DETAILS_UPDATE).append(DATA_UPDATED);
+                if (userService.updateUserDetails(userDetails)) {
+                    page.append(MESSAGE_DETAILS_UPDATE).append(DATA_UPDATED);
+                } else {
+                    page.append(MESSAGE_DETAILS_UPDATE).append(DATA_UPDATE_ERROR);
+                }
             } else {
                 logger.info(userDetails + " failed validation.");
                 page.append(MESSAGE_DETAILS_UPDATE).append(INCORRECT_DATA);
             }
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | EntityNotFoundServiceException e) {
+            logger.info("Incorrect input data.", e);
             page.append(MESSAGE_DETAILS_UPDATE).append(INCORRECT_DATA);
         } catch (ServiceException e) {
             page.append(MESSAGE_DETAILS_UPDATE).append(DATA_UPDATE_ERROR);

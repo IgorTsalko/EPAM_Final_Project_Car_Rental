@@ -63,13 +63,19 @@ public class UpdateUserPassportCommand implements Command {
                 ServiceProvider serviceProvider = ServiceProvider.getInstance();
                 UserService userService = serviceProvider.getUserService();
 
-                userService.updateUserPassport(passport);
-                page.append(MESSAGE_PASSPORT_UPDATE).append(DATA_UPDATED);
+                if (userService.updateUserPassport(passport)) {
+                    page.append(MESSAGE_PASSPORT_UPDATE).append(DATA_UPDATED);
+                } else {
+                    page.append(MESSAGE_PASSPORT_UPDATE).append(DATA_UPDATE_ERROR);
+                }
             } else {
                 logger.info(passport + " failed validation.");
                 page.append(MESSAGE_PASSPORT_UPDATE).append(INCORRECT_DATA);
             }
-        } catch (DateTimeParseException | NumberFormatException | InvalidInputDataServiceException e) {
+        } catch (DateTimeParseException | NumberFormatException e) {
+            logger.warn("Incorrect input data.", e);
+            page.append(MESSAGE_PASSPORT_UPDATE).append(INCORRECT_DATA);
+        } catch (InvalidInputDataServiceException e) {
             page.append(MESSAGE_PASSPORT_UPDATE).append(INCORRECT_DATA);
         } catch (ServiceException e) {
             page.append(MESSAGE_PASSPORT_UPDATE).append(DATA_UPDATE_ERROR);

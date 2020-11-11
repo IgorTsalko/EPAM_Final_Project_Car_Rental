@@ -14,8 +14,8 @@ public interface UserService {
     List<User> getUsers(int offset, int rowsAmount) throws ServiceException;
     Passport getUserPassport(int userID) throws ServiceException;
 
-    void updateUserDetails(UserDetails userDetails) throws ServiceException;
-    void updateUserPassport(Passport passport) throws ServiceException;
+    boolean updateUserDetails(UserDetails userDetails) throws ServiceException;
+    boolean updateUserPassport(Passport passport) throws ServiceException;
     boolean updateUserLogin(int userID, String newUserLogin) throws ServiceException;
     boolean updateUserPassword(int userID, String oldPassword, String newPassword) throws ServiceException;
 }

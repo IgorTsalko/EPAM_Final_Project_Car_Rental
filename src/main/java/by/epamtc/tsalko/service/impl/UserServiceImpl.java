@@ -75,6 +75,8 @@ public class UserServiceImpl implements UserService {
 
         try {
             userDetails = userDAO.getUserDetails(userID);
+        } catch (EntityNotFoundDAOException e) {
+            throw new EntityNotFoundServiceException(e);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
@@ -115,32 +117,40 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserDetails(UserDetails userDetails) throws ServiceException {
+    public boolean updateUserDetails(UserDetails userDetails) throws ServiceException {
+        boolean updated;
+
         DAOProvider daoProvider = DAOProvider.getInstance();
         UserDAO userDAO = daoProvider.getUserDAO();
 
         try {
-            userDAO.updateUserDetails(userDetails);
+            updated = userDAO.updateUserDetails(userDetails);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
+
+        return updated;
     }
 
     @Override
-    public void updateUserPassport(Passport passport) throws ServiceException {
+    public boolean updateUserPassport(Passport passport) throws ServiceException {
         if (!UserValidator.passportValidation(passport)) {
             logger.info(passport + " failed validation");
             throw new InvalidInputDataServiceException();
         }
 
+        boolean updated;
+
         DAOProvider daoProvider = DAOProvider.getInstance();
         UserDAO userDAO = daoProvider.getUserDAO();
 
         try {
-            userDAO.updateUserPassport(passport);
+            updated = userDAO.updateUserPassport(passport);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
+
+        return updated;
     }
 
     @Override
@@ -152,8 +162,6 @@ public class UserServiceImpl implements UserService {
 
         try {
             updated = userDAO.updateUserLogin(userID, newUserLogin);
-        } catch (EntityAlreadyExistsDAOException e) {
-            throw new EntityAlreadyExistsServiceException(e);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
