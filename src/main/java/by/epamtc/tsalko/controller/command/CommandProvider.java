@@ -59,6 +59,7 @@ public class CommandProvider {
         commands.put(ParameterName.GO_TO_MAIN_PAGE, new GoToMainPageCommand());
         commands.put(ParameterName.GO_TO_CONTACT_PAGE, new GoToContactPageCommand());
         commands.put(ParameterName.GO_TO_OUR_CARS, new GoToOurCarsCommand());
+        commands.put(ParameterName.GO_TO_FILTERED_CARS, new GoToFilteredCarsCommand());
         commands.put(ParameterName.GO_TO_CAR_PAGE, new GoToCarPageCommand());
         commands.put(ParameterName.GO_TO_NEWS, new GoToNewsCommand());
         commands.put(ParameterName.GO_TO_RULES, new GoToRulesCommand());

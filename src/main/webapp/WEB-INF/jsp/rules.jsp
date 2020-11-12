@@ -7,7 +7,7 @@
 <div id="content">
     <div class="container main-content">
 
-        <h1>${rules_title}</h1>
+        <h1><span class="page-title">${rules_title}</span></h1>
 
         <p>Здесь будет большой список правил и требований</p>
 

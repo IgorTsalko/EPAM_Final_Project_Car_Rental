@@ -76,12 +76,12 @@
                         <div class="rowing-left">
                             <p>${pick_up_date}</p>
                             <input id="pickUpDate" type="date" name="pick_up_date"
-                                   value="<%=java.time.LocalDate.now()%>" required>
+                                   value="${car.availableFrom}" required>
                         </div>
                         <div class="rowing-right">
                             <p>${drop_off_date}</p>
                             <input id="dropOffDate" type="date" name="drop_off_date"
-                                   value="<%=java.time.LocalDate.now().plusDays(3)%>" required>
+                                   value="${car.availableFrom.plusDays(3)}" required>
                         </div>
                         <div class="rowing-left">
                             <input type="tel" name="phone" pattern="^[0-9\s-+()]+$" maxlength="30" minlength="7"

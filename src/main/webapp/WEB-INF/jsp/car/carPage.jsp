@@ -87,7 +87,7 @@
                         <input type="hidden" name="car_id" value="${requestScope.car.carID}">
                         <button type="submit">${to_rent}</button>
                     </form>
-                    <p id="available-date">${nearest_available_date}: <%=java.time.LocalDate.now()%></p>
+                    <p id="available-date">${nearest_available_date}: ${requestScope.car.availableFrom}</p>
                 </div>
             </div>
         </div>

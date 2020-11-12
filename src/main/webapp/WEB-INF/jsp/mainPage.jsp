@@ -17,8 +17,8 @@
         <div class="main">
 
             <div id="main-search" class="searching-form boxShadow clear">
-                <form action="mainController" method="post">
-                    <input type="hidden" name="command" value="go_to_our_cars">
+                <form action="mainController">
+                    <input type="hidden" name="command" value="go_to_filtered_cars">
                     <div class="field">
                         <p id="searching-form-title">${form_title}</p>
                     </div>

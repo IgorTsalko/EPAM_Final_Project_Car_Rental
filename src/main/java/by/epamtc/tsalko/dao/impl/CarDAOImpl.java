@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,18 +26,21 @@ public class CarDAOImpl implements CarDAO {
 
     private static final String SELECT_ALL_CARS =
             "SELECT c.car_id, car_brand, car_model, car_year_production, car_transmission, car_engine_size, " +
-                    "car_fuel_type, car_odometer_value, car_price_per_day, car_comment, car_image_uri " +
-                    "FROM cars c JOIN car_images i ON i.car_id=c.car_id GROUP BY c.car_id";
-
-    private static final String SELECT_NUMBERS_OF_CARS = "SELECT COUNT(*) AS numbers_of_cars FROM cars";
+                    "car_fuel_type, car_odometer_value, car_price_per_day, car_comment, " +
+                    "MAX(drop_of_date) as drop_of_date, car_image_uri FROM cars c " +
+                    "LEFT JOIN car_rental_schedule l ON c.car_id=l.car_id " +
+                    "JOIN car_images i ON i.car_id=c.car_id GROUP BY c.car_id ORDER BY c.car_id";
 
     private static final String SELECT_CAR_BY_ID =
             "SELECT c.car_id, car_brand, car_model, car_year_production, car_transmission, car_engine_size, " +
-                    "car_fuel_type, car_odometer_value, car_price_per_day, car_comment," +
-                    "car_image_uri FROM cars c JOIN car_images i ON i.car_id=c.car_id " +
-                    "WHERE c.car_id=? LIMIT 1";
+                    "car_fuel_type, car_odometer_value, car_price_per_day, car_comment, " +
+                    "MAX(drop_of_date) as drop_of_date, car_image_uri FROM cars c " +
+                    "LEFT JOIN car_rental_schedule l ON c.car_id=l.car_id " +
+                    "JOIN car_images i ON i.car_id=c.car_id WHERE c.car_id=? LIMIT 1";
 
     private static final String SELECT_CAR_IMAGES_BY_ID = "SELECT car_image_uri FROM car_images WHERE car_id=?";
+
+    private static final String SELECT_NUMBERS_OF_CARS = "SELECT COUNT(*) AS numbers_of_cars FROM cars";
 
     private static final String COLUMN_CAR_ID = "car_id";
     private static final String COLUMN_NUMBERS_OF_CARS = "numbers_of_cars";
@@ -49,6 +53,7 @@ public class CarDAOImpl implements CarDAO {
     private static final String COLUMN_CAR_ODOMETER_VALUE = "car_odometer_value";
     private static final String COLUMN_CAR_PRICE_PER_DAY = "car_price_per_day";
     private static final String COLUMN_CAR_COMMENT = "car_comment";
+    private static final String COLUMN_DROP_OF_DATE = "drop_of_date";
     private static final String COLUMN_CAR_IMAGE_URI = "car_image_uri";
 
     @Override
@@ -202,6 +207,14 @@ public class CarDAOImpl implements CarDAO {
         car.setOdometerValue(resultSet.getInt(COLUMN_CAR_ODOMETER_VALUE));
         car.setPricePerDay(resultSet.getDouble(COLUMN_CAR_PRICE_PER_DAY));
         car.setComment(resultSet.getString(COLUMN_CAR_COMMENT));
+
+        LocalDate availableFrom = resultSet.getDate(COLUMN_DROP_OF_DATE)
+                == null ? null : resultSet.getDate(COLUMN_DROP_OF_DATE).toLocalDate();
+        if (availableFrom == null || availableFrom.isBefore(LocalDate.now())) {
+            car.setAvailableFrom(LocalDate.now());
+        } else {
+            car.setAvailableFrom(availableFrom.plusDays(1));
+        }
 
         carImages.add(resultSet.getString(COLUMN_CAR_IMAGE_URI));
         car.setCarImages(carImages);

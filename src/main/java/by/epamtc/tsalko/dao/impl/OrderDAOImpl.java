@@ -64,6 +64,12 @@ public class OrderDAOImpl implements OrderDAO {
     private static final String UPDATE_ORDER_SET_PAYMENT
             = "UPDATE user_orders SET order_is_paid=1 WHERE order_id=?";
 
+    private static final String INSERT_CAR_RENTAL_SCHEDULE
+            = "INSERT INTO car_rental_schedule (car_id, order_id, pick_up_date, drop_of_date) VALUES (?, ?, ?, ?)";
+
+    private static final String DELETE_CAR_RENTAL_SCHEDULE
+            = "DELETE FROM car_rental_schedule WHERE car_id=? AND order_id=?";
+
     private static final String COLUMN_USER_ID = "user_id";
     private static final String COLUMN_USER_LOGIN = "user_login";
 
@@ -81,6 +87,9 @@ public class OrderDAOImpl implements OrderDAO {
     private static final String COLUMN_CAR_BRAND = "car_brand";
     private static final String COLUMN_CAR_MODEL = "car_model";
     private static final String COLUMN_CAR_YEAR_PRODUCTION = "car_year_production";
+
+    private static final String ORDER_STATUS_NEW = "new";
+    private static final String ORDER_STATUS_CANCELED = "canceled";
 
     /**
      *
@@ -237,6 +246,8 @@ public class OrderDAOImpl implements OrderDAO {
 
         try {
             connection = connectionPool.takeConnection();
+            connection.setAutoCommit(false);
+
             preparedStatement = connection.prepareStatement(UPDATE_ORDER);
             preparedStatement.setDate(1, java.sql.Date.valueOf(order.getPickUpDate()));
             preparedStatement.setDate(2, java.sql.Date.valueOf(order.getDropOffDate()));
@@ -247,10 +258,43 @@ public class OrderDAOImpl implements OrderDAO {
             preparedStatement.setDouble(7, order.getTotalSum());
             preparedStatement.setInt(8, order.getOrderId());
 
-            if (preparedStatement.executeUpdate() > 0) {
+            if (preparedStatement.executeUpdate() == 2) {
                 updated = true;
             }
+
+            if (!ORDER_STATUS_NEW.equals(order.getOrderStatus())) {
+                if (ORDER_STATUS_CANCELED.equals(order.getOrderStatus())) {
+                    preparedStatement = connection.prepareStatement(DELETE_CAR_RENTAL_SCHEDULE);
+                    preparedStatement.setInt(1, order.getCar().getCarID());
+                    preparedStatement.setInt(2, order.getOrderId());
+                } else {
+                    preparedStatement = connection.prepareStatement(INSERT_CAR_RENTAL_SCHEDULE);
+                    preparedStatement.setInt(1, order.getCar().getCarID());
+                    preparedStatement.setInt(2, order.getOrderId());
+                    preparedStatement.setDate(3,
+                            java.sql.Date.valueOf(order.getPickUpDate()));
+                    preparedStatement.setDate(4,
+                            java.sql.Date.valueOf(order.getDropOffDate()));
+                }
+
+                if (preparedStatement.executeUpdate() != 1) {
+                    updated = false;
+                }
+            }
+
+            if (updated) {
+                connection.commit();
+            } else {
+                connection.rollback();
+            }
         } catch (ConnectionPoolError | SQLException e) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException ex) {
+                logger.error("Severe database error! Could not make rollback", ex);
+            }
             logger.error("Severe database error! Could not update user order.", e);
             throw new DAOException("Could not update user order.", e);
         } finally {

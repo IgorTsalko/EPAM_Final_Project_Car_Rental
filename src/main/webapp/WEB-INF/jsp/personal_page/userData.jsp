@@ -4,6 +4,9 @@
 
 <%@include file="../header.jsp"%>
 
+<title>User: ${user_details.userLogin} • ID: ${user_details.userID}</title>
+
+<fmt:message key="user.all_users" var="all_users"/>
 <fmt:message key="general_information" var="general_information"/>
 <fmt:message key="user.role" var="role"/>
 <fmt:message key="user.rating" var="rating"/>
@@ -30,6 +33,7 @@
                         <h1>User: ${user_details.userLogin} • ID: ${user_details.userID}</h1>
                         <p>${registration_date}: <mytag:dateFormatTag localDateTime="${user_details.userRegistrationDate}"/></p>
                     </div>
+                    <a href="mainController?command=go_to_personal_page_all_users">&#9668; ${all_users}</a>
                 </div>
                 <hr>
                 <div class="user-details clear">

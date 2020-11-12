@@ -1,6 +1,7 @@
 package by.epamtc.tsalko.bean.car;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,6 +19,7 @@ public class Car implements Serializable {
     private int odometerValue;
     private double pricePerDay;
     private String comment;
+    private LocalDate availableFrom;
 
     private List<String> carImages;
 
@@ -121,6 +123,14 @@ public class Car implements Serializable {
         this.carImages = carImages;
     }
 
+    public LocalDate getAvailableFrom() {
+        return availableFrom;
+    }
+
+    public void setAvailableFrom(LocalDate availableFrom) {
+        this.availableFrom = availableFrom;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -136,13 +146,14 @@ public class Car implements Serializable {
                 Objects.equals(engineSize, car.engineSize) &&
                 Objects.equals(fuelType, car.fuelType) &&
                 Objects.equals(comment, car.comment) &&
+                Objects.equals(availableFrom, car.availableFrom) &&
                 Objects.equals(carImages, car.carImages);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(carID, brand, model, yearProduction, transmission, engineSize,
-                fuelType, odometerValue, pricePerDay, comment, carImages);
+        return Objects.hash(carID, brand, model, yearProduction, transmission, engineSize, fuelType,
+                odometerValue, pricePerDay, comment, availableFrom, carImages);
     }
 
     @Override
@@ -158,6 +169,7 @@ public class Car implements Serializable {
                 ", odometerValue=" + odometerValue +
                 ", pricePerDay=" + pricePerDay +
                 ", comment='" + comment + '\'' +
+                ", availableFrom=" + availableFrom +
                 ", carImages=" + carImages +
                 '}';
     }

@@ -58,6 +58,9 @@
                             <c:when test="${order.orderStatus eq 'expired'}">
                                 expired-order
                             </c:when>
+                            <c:when test="${order.orderStatus eq 'processing'}">
+                                processing-order
+                            </c:when>
                          </c:choose>">
                         <fmt:message key="order.status.${order.orderStatus}"/>
                     </td>

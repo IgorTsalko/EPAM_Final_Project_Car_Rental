@@ -18,7 +18,7 @@
 <div id="content">
     <div class="container main-content">
 
-        <h1>${our_cars_title}</h1>
+        <h1><span class="page-title">${our_cars_title}</span></h1>
 
         <c:forEach items="${requestScope.cars}" var="car">
             <div class="car clear link">
@@ -67,7 +67,7 @@
                             <input type="hidden" name="car_id" value="${car.carID}">
                             <button type="submit">${to_rent}</button>
                         </form>
-                        <p id="available-date">${nearest_available_date}: <%=java.time.LocalDate.now()%></p>
+                        <p id="available-date">${nearest_available_date}: ${car.availableFrom}</p>
                     </div>
                 </div>
             </div>
