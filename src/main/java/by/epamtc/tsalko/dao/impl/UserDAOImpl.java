@@ -94,13 +94,13 @@ public class UserDAOImpl implements UserDAO {
     private static final String COLUMN_PASSPORT_USER_DATE_OF_BIRTH = "user_date_of_birth";
 
     /**
-     * Execute the SQL statement and return User object created from data
+     * Execute the SQL statement and return <code>User</code> object created from data
      * obtained from the database by authorizationData or throws exception if
-     * such user does not exists. Never return null.
-     * @param authorizationData data about existing User
-     * @return User object that contains the main data about user from database
+     * such user does not exists. Never return <code>null</code>.
+     * @param authorizationData data about existing <code>User</code>
+     * @return <code>User</code> object that contains the main data about user from database
      * @exception DAOException if occurred severe problem with database
-     * @throws EntityNotFoundDAOException if corresponding User not found
+     * @throws EntityNotFoundDAOException if corresponding user not found
      */
     @Override
     public User authorization(AuthorizationData authorizationData) throws DAOException {
@@ -135,8 +135,8 @@ public class UserDAOImpl implements UserDAO {
     }
 
     /**
-     * Enroll new User in data base if such user do not exists or throws exception.
-     * @param registrationData data about new User
+     * Enroll new <code>User</code> in data base if such user do not exists or throws exception.
+     * @param registrationData data about new <code>User</code>
      * @exception DAOException if occurred severe problem with database
      * @throws EntityAlreadyExistsDAOException if such user already exists
      */
@@ -168,11 +168,11 @@ public class UserDAOImpl implements UserDAO {
     }
 
     /**
-     * Execute the SQL statement and return UserDetails object created from data
+     * Execute the SQL statement and return <code>UserDetails</code> object created from data
      * obtained from the database by unique user identifier or throws exception if
-     * such user does not exist. Never return null.
+     * such user does not exist. Never return <code>null</code>.
      * @param userID unique user identifier in database
-     * @return UserDetails object that contains the details data about user
+     * @return <code>UserDetails</code> object that contains the details data about user
      * from database.
      * @exception DAOException if occurred severe problem with database
      * @throws EntityNotFoundDAOException if corresponding User not found
@@ -227,13 +227,13 @@ public class UserDAOImpl implements UserDAO {
     }
 
     /**
-     * Execute the SQL statement and return list of objects User created from data
-     * obtained from the database or return or empty list if
-     * linesAmount is outside the number of records or records are missing.
+     * Execute the SQL statement and return list of objects <code>User</code> created from data
+     * obtained from the database or return or empty list if <code>linesAmount</code> is outside
+     * the number of records or records are missing.
      * @param offset index number from which to start extraction
      * @param linesAmount number of retrievable objects
-     * @return list of User objects from database or empty list if
-     * linesAmount is outside the number of records or records are missing
+     * @return list of <code>User</code> objects from database or empty list if
+     * <code>linesAmount</code> is outside the number of records or records are missing
      * @throws DAOException if occurred severe problem with database
      */
     @Override
@@ -270,10 +270,10 @@ public class UserDAOImpl implements UserDAO {
     }
 
     /**
-     * Execute the SQL statement and return Passport object created from data
-     * obtained from the database by unique user identifier or return null.
+     * Execute the SQL statement and return <code>Passport</code> object created from data
+     * obtained from the database by unique user identifier or return <code>null</code>.
      * @param userID unique user identifier in database
-     * @return Passport object that describes unique user passport data
+     * @return <code>Passport</code> object that describes unique user passport data
      * @throws DAOException if occurred severe problem with database
      */
     @Override
@@ -322,7 +322,8 @@ public class UserDAOImpl implements UserDAO {
     /**
      * Execute the SQL statement and update details user data in database.
      * @param userDetails object that describes details data user
-     * @return true if the data has been successfully updated or false if it has been not
+     * @return <code>true</code> if the data has been successfully updated
+     * or <code>false</code> if it has been not
      * @throws DAOException if occurred severe problem with database
      */
     @Override
@@ -357,11 +358,13 @@ public class UserDAOImpl implements UserDAO {
     }
 
     /**
-     * Execute the SQL statement and check if user already has passport.
-     * If user does not have passport, add a new, if passport exist, update it in database.
+     * Execute the SQL statement and check if user already has <code>passport</code>.
+     * If user does not have <code>passport</code>, add a new, if <code>passport</code> exist,
+     * update it in database.
      * @param passport object that describes user passport data
-     * @return true if the data has been successfully updated or false if it has been not
-     * @throws EntityNotFoundDAOException if user for passport does not exist
+     * @return <code>true</code> if the data has been successfully updated
+     * or <code>false</code> if it has been not
+     * @throws EntityNotFoundDAOException if user for <code>passport</code> does not exist
      * @throws DAOException if occurred severe problem with database
      */
     @Override
@@ -415,10 +418,11 @@ public class UserDAOImpl implements UserDAO {
     }
 
     /**
-     * Execute the SQL statement and update user login in database.
+     * Execute the SQL statement and update user <code>login</code> in database.
      * @param userID unique user identifier in database
      * @param newUserLogin new user login
-     * @return true if the data has been successfully updated or false if it has been not
+     * @return <code>true</code> if the data has been successfully updated
+     * or <code>false</code> if it has been not
      * @throws DAOException if occurred severe problem with database
      */
     @Override
@@ -449,12 +453,13 @@ public class UserDAOImpl implements UserDAO {
     }
 
     /**
-     * Execute the SQL statement and if old password and new password equals
-     * update user password in database.
+     * Execute the SQL statement and if <code>oldPassword</code> and <code>newPassword</code>
+     * equals update user password in database.
      * @param userID unique user identifier in database
      * @param oldPassword old user oldPassword
      * @param newPassword new user password
-     * @return true if the data has been successfully updated or false if it has been not
+     * @return <code>true</code> if the data has been successfully updated or
+     * <code>false</code> if it has been not
      * @throws DAOException if occurred severe problem with database
      */
     @Override
