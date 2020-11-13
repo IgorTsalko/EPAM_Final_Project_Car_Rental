@@ -6,6 +6,7 @@ import by.epamtc.tsalko.controller.TechValidator;
 import by.epamtc.tsalko.service.CarService;
 import by.epamtc.tsalko.service.OrderService;
 import by.epamtc.tsalko.service.ServiceProvider;
+import by.epamtc.tsalko.service.exception.InvalidInputDataServiceException;
 import by.epamtc.tsalko.service.exception.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -64,6 +65,8 @@ public class CreateOrderController extends HttpServlet {
                 logger.info(order + " failed validation.");
                 page.append(previousRequest).append(MESSAGE_CREATE_ORDER).append(INCORRECT_DATA);
             }
+        } catch (InvalidInputDataServiceException e) {
+            page.append(previousRequest).append(MESSAGE_CREATE_ORDER).append(INCORRECT_DATA);
         } catch (DateTimeParseException | NumberFormatException e) {
             logger.info("Could not create order, incorrect data.", e);
             page.append(previousRequest).append(MESSAGE_CREATE_ORDER).append(INCORRECT_DATA);

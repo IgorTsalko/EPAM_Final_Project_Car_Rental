@@ -25,12 +25,14 @@
                     <div class="field">
                         <p>${pick_up_date}</p>
                         <input type="date" name="pick_up_date"
-                               value="<%=java.time.LocalDate.now()%>" required>
+                               value="<%=java.time.LocalDate.now()%>"
+                               min="<%=java.time.LocalDate.now()%>" required>
                     </div>
                     <div class="field">
                         <p>${drop_off_date}</p>
                         <input type="date" name="drop_off_date"
-                               value="<%=java.time.LocalDate.now().plusDays(3)%>" required>
+                               value="<%=java.time.LocalDate.now().plusDays(3)%>"
+                               min="<%=java.time.LocalDate.now().plusDays(1)%>" required>
                     </div>
                     <div class="field">
                         <button type="submit">${search}</button>

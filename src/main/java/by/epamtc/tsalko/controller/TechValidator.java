@@ -2,6 +2,8 @@ package by.epamtc.tsalko.controller;
 
 import by.epamtc.tsalko.bean.Bankcard;
 import by.epamtc.tsalko.bean.Order;
+import by.epamtc.tsalko.bean.ReturnAct;
+import by.epamtc.tsalko.bean.content.OrderStatus;
 import by.epamtc.tsalko.bean.content.Rating;
 import by.epamtc.tsalko.bean.content.Role;
 import by.epamtc.tsalko.bean.user.*;
@@ -56,21 +58,18 @@ public class TechValidator {
     }
 
     public static boolean userDetailsValidation(UserDetails userDetails) {
-        int userID = userDetails.getUserID();
         Role role = userDetails.getUserRole();
         Rating rating = userDetails.getUserRating();
         String phone = userDetails.getUserPhone();
         String email = userDetails.getUserEmail();
 
-        return userID > 0
-                &&(email == null || email.length() == 0 || email.matches(EMAIL_REGEXP))
+        return (email == null || email.length() == 0 || email.matches(EMAIL_REGEXP))
                 && phone != null && phone.matches(PHONE_REGEXP)
                 && role != null
                 && rating != null;
     }
 
     public static boolean passportValidation(Passport passport) {
-        int userID = passport.getUserID();
         String passportSeries = passport.getPassportSeries();
         String passportNumber = passport.getPassportNumber();
         LocalDate passportDateOfIssue = passport.getPassportDateOfIssue();
@@ -81,8 +80,7 @@ public class TechValidator {
         String passportUserThirdName = passport.getPassportUserThirdName();
         LocalDate passportUserDateOfBirth = passport.getPassportUserDateOfBirth();
 
-        return userID > 0
-                && passportSeries != null && passportSeries.matches(PASSPORT_SERIES_REGEXP)
+        return passportSeries != null && passportSeries.matches(PASSPORT_SERIES_REGEXP)
                 && passportNumber != null && passportNumber.matches(PASSPORT_NUMBER_REGEXP)
                 && passportDateOfIssue != null
                 && passportIssuedBy != null && passportIssuedBy.matches(PASSPORT_ISSUED_BY_REGEXP)
@@ -94,15 +92,13 @@ public class TechValidator {
     }
 
     public static boolean bankcardValidation(Bankcard bankCard) {
-        int userID = bankCard.getUserID();
         long bankcardNumber = bankCard.getBankcardNumber();
         LocalDate cardValidTrue = bankCard.getBankcardValidTrue();
         String cardUserFirstname = bankCard.getBankcardUserFirstname();
         String cardUserLastname = bankCard.getBankcardUserLastname();
         String authorizationCode = bankCard.getBankcardCVV();
 
-        return userID > 0
-                && bankcardNumber >= 1000_0000_0000_000L && bankcardNumber <= 9999_9999_9999_9999L
+        return bankcardNumber >= 1000_0000_0000_000L && bankcardNumber <= 9999_9999_9999_9999L
                 && cardValidTrue != null
                 && cardUserFirstname != null && cardUserFirstname.matches(CARD_USER_FIRSTNAME_REGEXP)
                 && cardUserLastname != null && cardUserLastname.matches(CARD_USER_LASTNAME_REGEXP)
@@ -114,20 +110,14 @@ public class TechValidator {
     }
 
     public static boolean orderValidation(Order order) {
-        int userID = order.getUserID();
         double discount = order.getDiscount();
-        String orderStatus = order.getOrderStatus();
+        OrderStatus orderStatus = order.getOrderStatus();
         LocalDate pickUpDate = order.getPickUpDate();
         LocalDate dropOffDate = order.getDropOffDate();
-        int carID = order.getCar().getCarID();
-        double pricePerDay = order.getCar().getPricePerDay();
 
-        return userID > 0
-                && discount >= 0 && discount < 100
-                && carID > 0
+        return  discount < 100
                 && orderStatus != null
                 && pickUpDate != null
-                && dropOffDate != null
-                && pricePerDay > 0;
+                && dropOffDate != null;
     }
 }

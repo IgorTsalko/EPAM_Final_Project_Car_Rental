@@ -748,7 +748,7 @@ tr:hover {
     margin: 20px 0;
     border-left: 1px solid #dddddd;
     min-height: 150px;
-    width: 200px;
+    width: 205px;
 }
 
 .quick-order .quick-order-content {
@@ -801,7 +801,7 @@ tr:hover {
 
 .user-data-fields input,
 .user-data-fields select {
-    padding: 5px;
+    padding: 5px 5px 5px 10px;
     margin-right: 5px;
     width: 100%;
     float: left;
@@ -1555,16 +1555,16 @@ input[type="checkbox"] {
 }
 
 #order-editing {
-    padding: 10px 50px;
+    padding: 0 80px;
 }
 
 #order-editing .order-car-img img {
-    width: 390px;
+    width: 340px;
 }
 
 #order-editing textarea {
     width: 300px;
-    height: 100px;
+    height: 55px;
     resize: none;
 }
 
@@ -1572,7 +1572,7 @@ input[type="checkbox"] {
     margin-right: 5px;
 }
 
-#order-editing button {
+#order-editing #change-order-btn {
     padding: 10px;
     width: 300px;
 }
@@ -1582,7 +1582,7 @@ input[type="checkbox"] {
 }
 
 #order-editing .comment {
-    height: 100px;
+    height: 60px;
 }
 
 #postpaid-btn {
@@ -1594,7 +1594,7 @@ input[type="checkbox"] {
 }
 
 .page-title {
-    margin-bottom: 20px;
+    padding-bottom: 20px;
     font-size: 28px;
     font-weight: 600;
     position: relative;
@@ -1616,4 +1616,20 @@ input[type="checkbox"] {
 
 h1 {
     margin-top: 0;
+}
+
+#return-act {
+    display: none;
+}
+
+#enable-order-editing,
+#cancel-order-editing {
+    display: none;
+    float: right;
+    margin-right: 0;
+}
+
+.denied-order {
+    color: #8a8a8a!important;
+    background-color: #fff8ef!important;
 }

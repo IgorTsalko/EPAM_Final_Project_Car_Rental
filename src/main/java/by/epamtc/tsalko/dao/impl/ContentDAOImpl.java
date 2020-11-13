@@ -198,8 +198,8 @@ public class ContentDAOImpl implements ContentDAO {
 
             while (resultSet.next()) {
                 OrderStatus orderStatus = new OrderStatus();
-                orderStatus.setOrderStatusID(resultSet.getInt(COLUMN_ORDER_STATUS_ID));
-                orderStatus.setOrderStatus(resultSet.getString(COLUMN_ORDER_STATUS));
+                orderStatus.setStatusID(resultSet.getInt(COLUMN_ORDER_STATUS_ID));
+                orderStatus.setStatus(resultSet.getString(COLUMN_ORDER_STATUS));
 
                 orderStatuses.add(orderStatus);
             }

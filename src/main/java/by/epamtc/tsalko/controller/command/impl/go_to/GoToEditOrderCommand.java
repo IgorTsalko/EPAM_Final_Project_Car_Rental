@@ -18,7 +18,6 @@ public class GoToEditOrderCommand implements Command {
     private static final String PARAMETER_ORDER_ID = "order_id";
 
     private static final String ORDER = "order";
-    private static final String CAR = "car";
     private static final String CARS = "cars";
     private static final String ORDER_STATUSES = "order_statuses";
 
@@ -33,11 +32,11 @@ public class GoToEditOrderCommand implements Command {
 
         try {
             Order order = orderService.getOrder(Integer.parseInt(req.getParameter(PARAMETER_ORDER_ID)));
-            Car car = carService.getCarByID(order.getCar().getCarID());
+            order.setCar(carService.getCarByID(order.getCar().getCarID()));
+            order.setReturnAct(orderService.getReturnAct(order.getOrderId()));
             List<Car> cars = carService.getAllCars();
             List<OrderStatus> orderStatuses = contentService.getAllOrderStatuses();
             req.setAttribute(ORDER, order);
-            req.setAttribute(CAR, car);
             req.setAttribute(CARS, cars);
             req.setAttribute(ORDER_STATUSES, orderStatuses);
 

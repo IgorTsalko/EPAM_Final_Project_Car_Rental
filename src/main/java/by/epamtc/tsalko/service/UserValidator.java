@@ -3,7 +3,6 @@ package by.epamtc.tsalko.service;
 import by.epamtc.tsalko.bean.Order;
 import by.epamtc.tsalko.bean.Bankcard;
 import by.epamtc.tsalko.bean.user.Passport;
-import by.epamtc.tsalko.bean.user.UserDetails;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,13 +19,14 @@ public class UserValidator {
         availableOrderStatuses.add("rent");
         availableOrderStatuses.add("ended");
         availableOrderStatuses.add("canceled");
+        availableOrderStatuses.add("denied");
     }
 
     private static final String START_VISA = "4";
     private static final String START_MASTERCARD = "5";
 
     private static final int MIN_USER_AGE = 16;
-    private static final int MAX_PASSPORT_YEARS = 10;
+    private static final int MAX_PASSPORT_YEARS = 25;
 
     public static boolean passportValidation(Passport passport) {
         LocalDate passportDateOfIssue = passport.getPassportDateOfIssue();
@@ -58,7 +58,7 @@ public class UserValidator {
     }
 
     public static boolean updateOrderValidation(Order order) {
-        String orderStatus = order.getOrderStatus();
+        String orderStatus = order.getOrderStatus().getStatus();
         String orderComment = order.getComment();
         LocalDate pickUpDate = order.getPickUpDate();
         LocalDate dropOffDate = order.getDropOffDate();

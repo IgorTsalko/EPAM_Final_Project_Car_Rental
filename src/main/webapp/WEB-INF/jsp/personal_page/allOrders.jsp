@@ -15,6 +15,8 @@
 <fmt:message key="order.message_start" var="message_start"/>
 <fmt:message key="order.message_end" var="message_end"/>
 <fmt:message key="currency" var="currency"/>
+<fmt:message key="page_forward" var="page_forward"/>
+<fmt:message key="page_back" var="page_back"/>
 
 <table>
     <tr>
@@ -52,17 +54,17 @@
                     <td><mytag:dateFormatTag localDateTime="${order.orderDate}"/></td>
                     <td style="text-align: center;" class="
                         <c:choose>
-                            <c:when test="${order.orderStatus eq 'new'}">
+                            <c:when test="${order.orderStatus.status eq 'new'}">
                                 new-order
                             </c:when>
-                            <c:when test="${order.orderStatus eq 'expired'}">
+                            <c:when test="${order.orderStatus.status eq 'expired'}">
                                 expired-order
                             </c:when>
-                            <c:when test="${order.orderStatus eq 'processing'}">
+                            <c:when test="${order.orderStatus.status eq 'processing'}">
                                 processing-order
                             </c:when>
                          </c:choose>">
-                        <fmt:message key="order.status.${order.orderStatus}"/>
+                        <fmt:message key="order.status.${order.orderStatus.status}"/>
                     </td>
                     <td>${order.pickUpDate}</td>
                     <td>${order.dropOffDate}</td>
@@ -86,14 +88,14 @@
             <c:if test="${empty requestScope.last_page}">
                 <div class="pages-back">
                     <a href="mainController?command=go_to_personal_page_all_orders&page=${requestScope.page + 1}">
-                        назад &#9658;
+                        ${page_forward} &#9658;
                     </a>
                 </div>
             </c:if>
             <c:if test="${empty requestScope.first_page}">
                 <div class="pages-forward">
                     <a href="mainController?command=go_to_personal_page_all_orders&page=${requestScope.page - 1}">
-                        &#9668; вперед
+                        &#9668; ${page_back}
                     </a>
                 </div>
             </c:if>

@@ -7,23 +7,23 @@ public class OrderStatus implements Serializable {
 
     private static final long serialVersionUID = -8222145100381409952L;
 
-    private int orderStatusID;
-    private String orderStatus;
+    private int statusID;
+    private String status;
 
-    public int getOrderStatusID() {
-        return orderStatusID;
+    public int getStatusID() {
+        return statusID;
     }
 
-    public void setOrderStatusID(int orderStatusID) {
-        this.orderStatusID = orderStatusID;
+    public void setStatusID(int statusID) {
+        this.statusID = statusID;
     }
 
-    public String getOrderStatus() {
-        return orderStatus;
+    public String getStatus() {
+        return status;
     }
 
-    public void setOrderStatus(String orderStatus) {
-        this.orderStatus = orderStatus;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
@@ -31,20 +31,20 @@ public class OrderStatus implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderStatus that = (OrderStatus) o;
-        return orderStatusID == that.orderStatusID &&
-                Objects.equals(orderStatus, that.orderStatus);
+        return statusID == that.statusID &&
+                Objects.equals(status, that.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(orderStatusID, orderStatus);
+        return Objects.hash(statusID, status);
     }
 
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
-                "orderStatusID=" + orderStatusID +
-                ", orderStatus='" + orderStatus + '\'' +
+                "orderStatusID=" + statusID +
+                ", orderStatus='" + status + '\'' +
                 '}';
     }
 }

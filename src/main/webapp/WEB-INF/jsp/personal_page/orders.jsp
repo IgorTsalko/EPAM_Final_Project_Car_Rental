@@ -44,9 +44,10 @@
                 <input type="hidden" name="command" value="go_to_payment_page">
             </form>
             <c:forEach items="${requestScope.user_orders}" var="order">
-                <tr>
+                <tr class="<c:if test="${order.orderStatus.status eq 'denied'}">denied-order</c:if>">
                     <td><mytag:dateFormatTag localDateTime="${order.orderDate}"/></td>
-                    <td><fmt:message key="order.status.${order.orderStatus}"/></td>
+                    <td style="<c:if test="${order.orderStatus.status eq 'denied'}">color: red;</c:if>">
+                        <fmt:message key="order.status.${order.orderStatus.status}"/></td>
                     <td>${order.pickUpDate}</td>
                     <td>${order.dropOffDate}</td>
                     <td>${order.car.brand} ${order.car.model}</td>
@@ -57,6 +58,9 @@
                         <c:choose>
                             <c:when test="${order.paid eq true}">
                                 <span style="color: green">&#10004;</span>
+                            </c:when>
+                            <c:when test="${order.orderStatus.status eq 'denied'}">
+                                <span style="color: #b9b9b9">&#10006;</span>
                             </c:when>
                             <c:otherwise>
                                 <button id="postpaid-btn" form="pay-order-form" type="submit" name="order_id" value="${order.orderId}">${to_pay}</button>

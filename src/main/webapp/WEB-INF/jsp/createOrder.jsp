@@ -60,8 +60,8 @@
                             </c:when>
                             <c:otherwise>
                                         <span id="common-price" class="price">
-                                            <fmt:formatNumber minFractionDigits="2"
-                                                              value="${car.pricePerDay}"/>
+                                            <mytag:discountTag carPrice="${car.pricePerDay}"
+                                                               discount="${sessionScope.user.discount}"/>
                                         </span>
                                 <span>${price_per_day}</span>
                             </c:otherwise>
@@ -76,12 +76,13 @@
                         <div class="rowing-left">
                             <p>${pick_up_date}</p>
                             <input id="pickUpDate" type="date" name="pick_up_date"
-                                   value="${car.availableFrom}" required>
+                                   value="${car.availableFrom}" min="${car.availableFrom}" required>
                         </div>
                         <div class="rowing-right">
                             <p>${drop_off_date}</p>
                             <input id="dropOffDate" type="date" name="drop_off_date"
-                                   value="${car.availableFrom.plusDays(3)}" required>
+                                   value="${car.availableFrom.plusDays(3)}"
+                                   min="${car.availableFrom.plusDays(1)}" required>
                         </div>
                         <div class="rowing-left">
                             <input type="tel" name="phone" pattern="^[0-9\s-+()]+$" maxlength="30" minlength="7"
@@ -95,7 +96,7 @@
                         </div>
                         <button type="submit">${to_rent}</button>
                     </form>
-                    <p id="available-date">${nearest_available_date}: 2020-10-16</p>
+                    <p id="available-date">${nearest_available_date}: ${car.availableFrom}</p>
                     <c:if test="${pageContext.request.getParameter(\"message_create_order\") eq 'incorrect_data'}">
                         <p class="data-error">${incorrect_data}</p>
                     </c:if>

@@ -10,8 +10,12 @@ if (pricePerDay == null) {
 function calculatePrice() {
     let days = Math.floor(
         (Date.parse(dropOffDate.value) - Date.parse(pickUpDate.value)) / 86400000);
-    let totalPrice = days * pricePerDay.textContent;
-    calculatedPrice.textContent = totalPrice.toFixed(2) + ' BYN / ' + days;
+    if (days > 0) {
+        let totalPrice = days * pricePerDay.textContent;
+        calculatedPrice.textContent = totalPrice.toFixed(2) + ' BYN / ' + days;
+    } else {
+        calculatedPrice.textContent = 'INCORRECT DATA';
+    }
 }
 
 pickUpDate.addEventListener('change', calculatePrice);

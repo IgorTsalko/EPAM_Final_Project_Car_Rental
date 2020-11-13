@@ -4,6 +4,8 @@
 <fmt:message key="login" var="login"/>
 <fmt:message key="user.role" var="user_role"/>
 <fmt:message key="user.rating" var="user_rating"/>
+<fmt:message key="page_forward" var="page_forward"/>
+<fmt:message key="page_back" var="page_back"/>
 
 <c:choose>
     <c:when test="${sessionScope.user.role ne 'admin'}">
@@ -35,14 +37,14 @@
         <c:if test="${empty requestScope.last_page}">
             <div class="pages-back">
                 <a href="mainController?command=go_to_personal_page_all_users&page=${requestScope.page + 1}">
-                    назад &#9658;
+                        ${page_forward} &#9658;
                 </a>
             </div>
         </c:if>
         <c:if test="${empty requestScope.first_page}">
             <div class="pages-forward">
                 <a href="mainController?command=go_to_personal_page_all_users&page=${requestScope.page - 1}">
-                    &#9668; вперед
+                    &#9668; ${page_back}
                 </a>
             </div>
         </c:if>

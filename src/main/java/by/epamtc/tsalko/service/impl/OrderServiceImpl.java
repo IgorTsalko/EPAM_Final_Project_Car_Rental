@@ -1,6 +1,7 @@
 package by.epamtc.tsalko.service.impl;
 
 import by.epamtc.tsalko.bean.Order;
+import by.epamtc.tsalko.bean.ReturnAct;
 import by.epamtc.tsalko.dao.DAOProvider;
 import by.epamtc.tsalko.dao.OrderDAO;
 import by.epamtc.tsalko.dao.exception.DAOException;
@@ -90,6 +91,22 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return order;
+    }
+
+    @Override
+    public ReturnAct getReturnAct(int orderID) throws ServiceException {
+        ReturnAct returnAct;
+
+        DAOProvider daoProvider = DAOProvider.getInstance();
+        OrderDAO orderDAO = daoProvider.getOrderDAO();
+
+        try {
+            returnAct = orderDAO.getReturnAct(orderID);
+        } catch (DAOException e) {
+            throw new ServiceException(e);
+        }
+
+        return returnAct;
     }
 
     @Override

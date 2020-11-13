@@ -1,6 +1,7 @@
 package by.epamtc.tsalko.controller.command.impl;
 
 import by.epamtc.tsalko.bean.Order;
+import by.epamtc.tsalko.bean.ReturnAct;
 import by.epamtc.tsalko.controller.TechValidator;
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.CarService;
@@ -32,9 +33,17 @@ public class UpdateOrderCommand implements Command {
     private static final String PARAMETER_DROP_OFF_DATE = "drop_off_date";
     private static final String PARAMETER_COMMENT = "comment";
 
+    private static final String PARAMETER_RETURN_DATE = "return_date";
+    private static final String PARAMETER_CAR_ODOMETER = "car_odometer";
+    private static final String PARAMETER_CAR_DAMAGE = "car_damage";
+    private static final String PARAMETER_ORDER_FINE = "order_fine";
+    private static final String PARAMETER_ACT_COMMENT = "act_comment";
+
     private static final String MESSAGE_UPDATE_ORDER = "&message_update_order=";
     private static final String DATA_UPDATE_ERROR = "data_update_error";
     private static final String INCORRECT_DATA = "incorrect_data";
+
+    private static final int ENDED_ORDER_STATUS_ID = 5;
 
     private static final String GO_TO_PERSONAL_PAGE_ALL_ORDERS = "mainController?command=go_to_personal_page_all_orders";
 
@@ -51,12 +60,28 @@ public class UpdateOrderCommand implements Command {
 
         try {
             Order order = orderService.getOrder(Integer.parseInt(req.getParameter(PARAMETER_ORDER_ID)));
-            order.setOrderStatus(req.getParameter(PARAMETER_ORDER_STATUS));
+            order.getOrderStatus().setStatusID(Integer.parseInt(req.getParameter(PARAMETER_ORDER_STATUS)));
             order.setCar(carService.getCarByID(Integer.parseInt(req.getParameter(PARAMETER_CAR_ID))));
             order.setPickUpDate(LocalDate.parse(req.getParameter(PARAMETER_PICK_UP_DATE)));
             order.setDropOffDate(LocalDate.parse(req.getParameter(PARAMETER_DROP_OFF_DATE)));
             order.setComment(req.getParameter(PARAMETER_COMMENT));
             order.setDiscount(userService.getUserDetails(order.getUserID()).getUserRating().getDiscount());
+
+            if (order.getOrderStatus().getStatusID() == ENDED_ORDER_STATUS_ID) {
+                ReturnAct returnAct = new ReturnAct();
+                returnAct.setOrderID(Integer.parseInt(req.getParameter(PARAMETER_ORDER_ID)));
+                returnAct.setReturnDate(LocalDate.parse(req.getParameter(PARAMETER_RETURN_DATE)));
+                returnAct.setCarOdometer(Integer.parseInt(req.getParameter(PARAMETER_CAR_ODOMETER)));
+                returnAct.setCarDamage(req.getParameter(PARAMETER_CAR_DAMAGE));
+
+                try {
+                    returnAct.setFine(Double.parseDouble(req.getParameter(PARAMETER_ORDER_FINE)));
+                } catch (NumberFormatException ignore) {/*NOPE*/}
+
+                returnAct.setActComment(req.getParameter(PARAMETER_ACT_COMMENT));
+
+                order.setReturnAct(returnAct);
+            }
 
             if (TechValidator.orderValidation(order)) {
                 if (orderService.updateOrder(order)) {
@@ -68,7 +93,10 @@ public class UpdateOrderCommand implements Command {
                 logger.info(order + " failed validation.");
                 page.append(previousRequest).append(MESSAGE_UPDATE_ORDER).append(INCORRECT_DATA);
             }
-        } catch (NumberFormatException | InvalidInputDataServiceException | EntityNotFoundServiceException e) {
+        } catch (InvalidInputDataServiceException e) {
+            page.append(previousRequest).append(MESSAGE_UPDATE_ORDER).append(INCORRECT_DATA);
+        } catch (NumberFormatException | EntityNotFoundServiceException e) {
+            logger.info("Could not update order, incorrect data.", e);
             page.append(previousRequest).append(MESSAGE_UPDATE_ORDER).append(INCORRECT_DATA);
         } catch (ServiceException e) {
             page.append(previousRequest).append(MESSAGE_UPDATE_ORDER).append(DATA_UPDATE_ERROR);
