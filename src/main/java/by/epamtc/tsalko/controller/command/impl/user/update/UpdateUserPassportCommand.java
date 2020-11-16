@@ -1,7 +1,7 @@
 package by.epamtc.tsalko.controller.command.impl.user.update;
 
 import by.epamtc.tsalko.bean.user.Passport;
-import by.epamtc.tsalko.controller.TechValidator;
+import by.epamtc.tsalko.controller.util.TechValidator;
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;

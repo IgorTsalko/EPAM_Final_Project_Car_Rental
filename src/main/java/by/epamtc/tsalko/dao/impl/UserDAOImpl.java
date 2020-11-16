@@ -99,8 +99,8 @@ public class UserDAOImpl implements UserDAO {
      * such user does not exists. Never return <code>null</code>.
      * @param authorizationData data about existing <code>User</code>
      * @return <code>User</code> object that contains the main data about user from database
-     * @exception DAOException if occurred severe problem with database
      * @throws EntityNotFoundDAOException if corresponding user not found
+     * @throws DAOException if occurred severe problem with database
      */
     @Override
     public User authorization(AuthorizationData authorizationData) throws DAOException {
@@ -137,8 +137,8 @@ public class UserDAOImpl implements UserDAO {
     /**
      * Enroll new <code>User</code> in data base if such user do not exists or throws exception.
      * @param registrationData data about new <code>User</code>
-     * @exception DAOException if occurred severe problem with database
      * @throws EntityAlreadyExistsDAOException if such user already exists
+     * @throws DAOException if occurred severe problem with database
      */
     @Override
     public void registration(RegistrationData registrationData) throws DAOException {
@@ -174,8 +174,8 @@ public class UserDAOImpl implements UserDAO {
      * @param userID unique user identifier in database
      * @return <code>UserDetails</code> object that contains the details data about user
      * from database.
-     * @exception DAOException if occurred severe problem with database
-     * @throws EntityNotFoundDAOException if corresponding User not found
+     * @throws EntityNotFoundDAOException if corresponding user not found
+     * @throws DAOException if occurred severe problem with database
      */
     @Override
     public UserDetails getUserDetails(int userID) throws DAOException {
@@ -364,7 +364,7 @@ public class UserDAOImpl implements UserDAO {
      * @param passport object that describes user passport data
      * @return <code>true</code> if the data has been successfully updated
      * or <code>false</code> if it has been not
-     * @throws EntityNotFoundDAOException if user for <code>passport</code> does not exist
+     * @throws EntityNotFoundDAOException if user for passport does not exist
      * @throws DAOException if occurred severe problem with database
      */
     @Override

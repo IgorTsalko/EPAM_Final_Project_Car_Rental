@@ -3,7 +3,7 @@ package by.epamtc.tsalko.dao.impl;
 import by.epamtc.tsalko.bean.content.Rating;
 import by.epamtc.tsalko.bean.content.Role;
 import by.epamtc.tsalko.bean.user.*;
-import by.epamtc.tsalko.dao.ScriptRunner;
+import by.epamtc.tsalko.dao.util.ScriptRunner;
 import by.epamtc.tsalko.dao.connection.ConnectionPool;
 import by.epamtc.tsalko.dao.exception.DAOException;
 import by.epamtc.tsalko.dao.exception.EntityAlreadyExistsDAOException;
@@ -12,8 +12,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -23,13 +22,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserDAOImplTest {
 
-    private static final UserDAOImpl userDAOimpl = new UserDAOImpl();
+    private static final UserDAOImpl userDAOImpl = new UserDAOImpl();
     private static final ConnectionPool connectionPool = ConnectionPool.getInstance();
 
     private static final String RELOAD_DB_SQL_FILE
@@ -42,6 +40,11 @@ public class UserDAOImplTest {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(RELOAD_DB_SQL_FILE));
         scriptRunner.runScript(bufferedReader);
         connectionPool.closeConnection(con, null);
+    }
+
+    @AfterAll
+    static void disconnectDB() {
+        connectionPool.dropAllConnections();
     }
 
     @Test
@@ -58,12 +61,21 @@ public class UserDAOImplTest {
         expectedUser.setDiscount(7);
         expectedUser.setRegistrationDate(LocalDateTime.parse("2020-01-12T20:44:37"));
 
-        User actualUser = userDAOimpl.authorization(authData);
+        User actualUser = userDAOImpl.authorization(authData);
         assertEquals(expectedUser, actualUser);
     }
 
     @ParameterizedTest
-    @MethodSource("incorrectAuthorizationParams")
+    @CsvSource({
+            "Kiska_IUlka_test, sddfsvd",
+            "Kiska_IUlka_test, ''",
+            "Kiska_IUlka_test, ",
+            "incorrect_login, 2dbe5f10eed9523027160e70aa7d1ff4",
+            "'' , 2dbe5f10eed9523027160e70aa7d1ff4",
+            " , 2dbe5f10eed9523027160e70aa7d1ff4",
+            " , ",
+            "'' , ''",
+    })
     void failed_authorization_test(String login, String password) {
         UserDAOImpl userDAOimpl = new UserDAOImpl();
         AuthorizationData authData = new AuthorizationData();
@@ -73,16 +85,6 @@ public class UserDAOImplTest {
         assertThrows(EntityNotFoundDAOException.class, () -> userDAOimpl.authorization(authData));
     }
 
-    static Stream<Arguments> incorrectAuthorizationParams() {
-        return Stream.of(
-                Arguments.of("Kiska_IUlka_test", "sddfsvd"),
-                Arguments.of("incorrect_login", "2dbe5f10eed9523027160e70aa7d1ff4"),
-                Arguments.of("Kiska_IUlka_test", null),
-                Arguments.of(null, "2dbe5f10eed9523027160e70aa7d1ff4"),
-                Arguments.of(null, null)
-        );
-    }
-
     @Test
     void successful_registration_test() throws DAOException, SQLException {
         RegistrationData expectedRegData = new RegistrationData();
@@ -90,7 +92,7 @@ public class UserDAOImplTest {
         expectedRegData.setPassword("fed3b61b26081849378080b34e693d2e");
         expectedRegData.setPhone("+375331232312");
         expectedRegData.setEmail("test@email.ru");
-        userDAOimpl.registration(expectedRegData);
+        userDAOImpl.registration(expectedRegData);
 
         Connection con = connectionPool.takeConnection();
         PreparedStatement ps = con.prepareStatement("SELECT * FROM users WHERE user_login=?");
@@ -116,7 +118,7 @@ public class UserDAOImplTest {
         regData.setPassword("2dbe5f10eed9523027160e70aa7d1ff4");
         regData.setPhone("+375295288517");
         regData.setEmail("kiska-iulka-test@mail.ru");
-        assertThrows(EntityAlreadyExistsDAOException.class, () -> userDAOimpl.registration(regData));
+        assertThrows(EntityAlreadyExistsDAOException.class, () -> userDAOImpl.registration(regData));
     }
 
     @Test
@@ -140,13 +142,13 @@ public class UserDAOImplTest {
         rating.setDiscount(0);
         expectedUserDetails.setUserRating(rating);
 
-        UserDetails actualUserDetails = userDAOimpl.getUserDetails(15);
+        UserDetails actualUserDetails = userDAOImpl.getUserDetails(15);
         assertEquals(expectedUserDetails, actualUserDetails);
     }
 
     @Test
     void retrieve_not_existing_user_details() {
-        assertThrows(EntityNotFoundDAOException.class, () -> userDAOimpl.getUserDetails(252));
+        assertThrows(EntityNotFoundDAOException.class, () -> userDAOImpl.getUserDetails(252));
     }
 
     @Test
@@ -180,13 +182,13 @@ public class UserDAOImplTest {
         user.setRegistrationDate(LocalDateTime.parse("2020-01-12T20:44:37"));
         expectedUsersList.add(user);
 
-        List<User> actualUsersList = userDAOimpl.getUsers(2, 3);
+        List<User> actualUsersList = userDAOImpl.getUsers(2, 3);
         assertEquals(expectedUsersList, actualUsersList);
     }
 
     @Test
     void retrieve_users_list_beyond_number_of_users() throws DAOException {
-        assertEquals(0, userDAOimpl.getUsers(258, 10).size());
+        assertEquals(0, userDAOImpl.getUsers(258, 10).size());
     }
 
     @Test
@@ -204,13 +206,13 @@ public class UserDAOImplTest {
         expectedPassport.setPassportUserThirdName("Николаевна");
         expectedPassport.setPassportUserDateOfBirth(LocalDate.parse("1987-12-03"));
 
-        Passport actualPassport = userDAOimpl.getUserPassport(4);
+        Passport actualPassport = userDAOImpl.getUserPassport(4);
         assertEquals(expectedPassport, actualPassport);
     }
 
     @Test
     void retrieve_not_existing_passport() throws DAOException {
-        assertNull(userDAOimpl.getUserPassport(252));
+        assertNull(userDAOImpl.getUserPassport(252));
     }
 
     @Test
@@ -228,7 +230,7 @@ public class UserDAOImplTest {
         rating.setRatingID(3);
         expectedUserDetails.setUserRating(rating);
 
-        assertTrue(userDAOimpl.updateUserDetails(expectedUserDetails));
+        assertTrue(userDAOImpl.updateUserDetails(expectedUserDetails));
 
         Connection con = connectionPool.takeConnection();
         PreparedStatement ps = con.prepareStatement("SELECT * FROM users WHERE user_id=?");
@@ -272,7 +274,7 @@ public class UserDAOImplTest {
         rating.setDiscount(7);
         userDetails.setUserRating(rating);
 
-        assertFalse(userDAOimpl.updateUserDetails(userDetails));
+        assertFalse(userDAOImpl.updateUserDetails(userDetails));
     }
 
     @Test
@@ -289,7 +291,7 @@ public class UserDAOImplTest {
         expectedPassport.setPassportUserThirdName("Васильевич");
         expectedPassport.setPassportUserDateOfBirth(LocalDate.parse("1985-05-11"));
 
-        assertTrue(userDAOimpl.updateUserPassport(expectedPassport));
+        assertTrue(userDAOImpl.updateUserPassport(expectedPassport));
 
         Connection con = connectionPool.takeConnection();
         PreparedStatement ps = con.prepareStatement("SELECT * FROM user_passports WHERE user_id=?");
@@ -328,7 +330,7 @@ public class UserDAOImplTest {
         expectedPassport.setPassportUserThirdName("Петрович");
         expectedPassport.setPassportUserDateOfBirth(LocalDate.parse("1994-01-04"));
 
-        assertTrue(userDAOimpl.updateUserPassport(expectedPassport));
+        assertTrue(userDAOImpl.updateUserPassport(expectedPassport));
 
         Connection con = connectionPool.takeConnection();
         PreparedStatement ps = con.prepareStatement("SELECT * FROM user_passports WHERE user_id=?");
@@ -367,14 +369,14 @@ public class UserDAOImplTest {
         passport.setPassportUserThirdName("Васильевич");
         passport.setPassportUserDateOfBirth(LocalDate.parse("1985-05-11"));
 
-        assertThrows(EntityNotFoundDAOException.class, () -> userDAOimpl.updateUserPassport(passport));
+        assertThrows(EntityNotFoundDAOException.class, () -> userDAOImpl.updateUserPassport(passport));
     }
 
     @Test
     void update_user_login() throws DAOException, SQLException {
         String expectedLogin = "loplov_new_login";
 
-        assertTrue(userDAOimpl.updateUserLogin(11, expectedLogin));
+        assertTrue(userDAOImpl.updateUserLogin(11, expectedLogin));
 
         Connection con = connectionPool.takeConnection();
         PreparedStatement ps = con.prepareStatement("SELECT user_login FROM users WHERE user_id=?");
@@ -389,7 +391,7 @@ public class UserDAOImplTest {
 
     @Test
     void update_user_login_if_user_does_not_exist() throws DAOException {
-        assertFalse(userDAOimpl.updateUserLogin(252, "some_new_login"));
+        assertFalse(userDAOImpl.updateUserLogin(252, "some_new_login"));
     }
 
     @Test
@@ -397,7 +399,7 @@ public class UserDAOImplTest {
         String oldPassword = "c6f12a67bfb0d06f4a704ebb9e698946";
         String expectedPassword = "2dbe5f10eed9523027160e70aa7d1ff4";
 
-        assertTrue(userDAOimpl.updateUserPassword(12, oldPassword, expectedPassword));
+        assertTrue(userDAOImpl.updateUserPassword(12, oldPassword, expectedPassword));
 
         Connection con = connectionPool.takeConnection();
         PreparedStatement ps = con.prepareStatement("SELECT user_password FROM users WHERE user_id=?");
@@ -413,7 +415,7 @@ public class UserDAOImplTest {
 
     @Test
     void update_user_password_if_inccorrect_old_password() throws DAOException {
-        assertFalse(userDAOimpl.updateUserPassword(
+        assertFalse(userDAOImpl.updateUserPassword(
                 11,
                 "incorrect_old_password",
                 "2dbe5f10eed9523027160e70aa7d1ff4"));
@@ -421,14 +423,9 @@ public class UserDAOImplTest {
 
     @Test
     void update_user_password_if_user_does_not_exist() throws DAOException {
-        assertFalse(userDAOimpl.updateUserPassword(
+        assertFalse(userDAOImpl.updateUserPassword(
                 252,
                 "c6f12a67bfb0d06f4a704ebb9e698946",
                 "2dbe5f10eed9523027160e70aa7d1ff4"));
-    }
-
-    @AfterAll
-    static void disconnectDB() {
-        connectionPool.dropAllConnections();
     }
 }

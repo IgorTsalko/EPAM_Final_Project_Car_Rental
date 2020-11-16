@@ -1,4 +1,4 @@
-package by.epamtc.tsalko.service;
+package by.epamtc.tsalko.service.util;
 
 import by.epamtc.tsalko.bean.Order;
 import by.epamtc.tsalko.bean.Bankcard;

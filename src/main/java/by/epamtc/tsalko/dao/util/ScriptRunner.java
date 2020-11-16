@@ -1,4 +1,4 @@
-package by.epamtc.tsalko.dao;
+package by.epamtc.tsalko.dao.util;
 
 /*
  * Slightly modified version of the com.ibatis.common.jdbc.ScriptRunner class

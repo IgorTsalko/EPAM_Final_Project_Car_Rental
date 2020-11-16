@@ -1,7 +1,7 @@
 package by.epamtc.tsalko.controller.command.impl.user.create;
 
 import by.epamtc.tsalko.bean.Bankcard;
-import by.epamtc.tsalko.controller.TechValidator;
+import by.epamtc.tsalko.controller.util.TechValidator;
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.BankcardService;
 import by.epamtc.tsalko.service.ServiceProvider;

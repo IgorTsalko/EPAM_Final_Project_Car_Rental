@@ -3,7 +3,7 @@ package by.epamtc.tsalko.controller.command.impl;
 import by.epamtc.tsalko.bean.user.AuthorizationData;
 import by.epamtc.tsalko.bean.user.User;
 import by.epamtc.tsalko.controller.command.Command;
-import by.epamtc.tsalko.controller.TechValidator;
+import by.epamtc.tsalko.controller.util.TechValidator;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.ServiceException;

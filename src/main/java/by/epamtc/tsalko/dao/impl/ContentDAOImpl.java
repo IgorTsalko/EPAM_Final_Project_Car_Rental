@@ -7,6 +7,7 @@ import by.epamtc.tsalko.bean.content.Role;
 import by.epamtc.tsalko.dao.ContentDAO;
 import by.epamtc.tsalko.dao.connection.ConnectionPool;
 import by.epamtc.tsalko.dao.exception.DAOException;
+import by.epamtc.tsalko.dao.exception.EntityNotFoundDAOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,6 +48,12 @@ public class ContentDAOImpl implements ContentDAO {
     private static final String COLUMN_NEWS_TEXT_RU = "news_text_ru";
     private static final String COLUMN_NEWS_TEXT_EN = "news_text_en";
 
+    /**
+     * Execute the SQL statement and return list of objects <code>Role</code>
+     * created from data obtained from the database.
+     * @return list of objects <code>Role</code> that represent the user roles
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
     public List<Role> getAllRoles() throws DAOException {
         List<Role> allRoles;
@@ -80,6 +87,15 @@ public class ContentDAOImpl implements ContentDAO {
         return allRoles;
     }
 
+    /**
+     * Execute the SQL statement and return <code>Role</code> object created from data
+     * obtained from the database by unique role identifier or throws exception if
+     * such user does not exist. Never return <code>null</code>.
+     * @param roleID unique role identifier in database
+     * @return <code>Role</code> object that represents the user role
+     * @throws EntityNotFoundDAOException if corresponding role not found
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
     public Role getRoleByID(int roleID) throws DAOException {
         Role role;
@@ -99,7 +115,7 @@ public class ContentDAOImpl implements ContentDAO {
                 role.setRoleID(resultSet.getInt(COLUMN_ROLE_ID));
                 role.setRoleName(resultSet.getString(COLUMN_ROLE));
             } else {
-                throw new DAOException("Could not retrieve role.");
+                throw new EntityNotFoundDAOException();
             }
         } catch (SQLException e) {
             logger.error("Severe database error! Could not retrieve role!", e);
@@ -113,6 +129,12 @@ public class ContentDAOImpl implements ContentDAO {
         return role;
     }
 
+    /**
+     * Execute the SQL statement and return list of objects <code>Rating</code>
+     * created from data obtained from the database.
+     * @return list of objects <code>Rating</code> that represent the user ratings
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
     public List<Rating> getAllRatings() throws DAOException {
         List<Rating> allRatings;
@@ -147,6 +169,15 @@ public class ContentDAOImpl implements ContentDAO {
         return allRatings;
     }
 
+    /**
+     * Execute the SQL statement and return <code>Rating</code> object created from data
+     * obtained from the database by unique rating identifier or throws exception if
+     * such user does not exist. Never return <code>null</code>.
+     * @param ratingID unique rating identifier in database
+     * @return <code>Rating</code> object that represents the user rating
+     * @throws EntityNotFoundDAOException if corresponding User not found
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
     public Rating getRatingByID(int ratingID) throws DAOException {
         Rating rating;
@@ -167,7 +198,7 @@ public class ContentDAOImpl implements ContentDAO {
                 rating.setRatingName(resultSet.getString(COLUMN_RATING));
                 rating.setDiscount(resultSet.getInt(COLUMN_DISCOUNT));
             } else {
-                throw new DAOException("Could not retrieve rating.");
+                throw new EntityNotFoundDAOException();
             }
         } catch (SQLException e) {
             logger.error("Severe database error! Could not retrieve rating!", e);
@@ -181,6 +212,12 @@ public class ContentDAOImpl implements ContentDAO {
         return rating;
     }
 
+    /**
+     * Execute the SQL statement and return list of objects <code>OrderStatus</code>
+     * created from data obtained from the database.
+     * @return list of objects <code>OrderStatus</code> that represent the order status
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
     public List<OrderStatus> getAllOrderStatuses() throws DAOException {
         List<OrderStatus> orderStatuses;
@@ -215,6 +252,12 @@ public class ContentDAOImpl implements ContentDAO {
         return orderStatuses;
     }
 
+    /**
+     * Execute the SQL statement and return list of objects <code>News</code>
+     * created from data obtained from the database.
+     * @return list of objects <code>News</code>
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
     public List<News> getAllNews() throws DAOException {
         List<News> allNews;

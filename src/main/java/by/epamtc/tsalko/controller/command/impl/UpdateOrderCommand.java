@@ -2,7 +2,7 @@ package by.epamtc.tsalko.controller.command.impl;
 
 import by.epamtc.tsalko.bean.Order;
 import by.epamtc.tsalko.bean.ReturnAct;
-import by.epamtc.tsalko.controller.TechValidator;
+import by.epamtc.tsalko.controller.util.TechValidator;
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.CarService;
 import by.epamtc.tsalko.service.OrderService;

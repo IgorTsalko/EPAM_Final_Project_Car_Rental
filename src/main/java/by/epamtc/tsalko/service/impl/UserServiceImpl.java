@@ -5,7 +5,7 @@ import by.epamtc.tsalko.dao.UserDAO;
 import by.epamtc.tsalko.dao.exception.DAOException;
 import by.epamtc.tsalko.dao.exception.EntityAlreadyExistsDAOException;
 import by.epamtc.tsalko.dao.exception.EntityNotFoundDAOException;
-import by.epamtc.tsalko.service.UserValidator;
+import by.epamtc.tsalko.service.util.UserValidator;
 import by.epamtc.tsalko.service.encrypt.Encoder;
 import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.InvalidInputDataServiceException;

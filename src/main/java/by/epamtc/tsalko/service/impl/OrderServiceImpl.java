@@ -7,7 +7,7 @@ import by.epamtc.tsalko.dao.OrderDAO;
 import by.epamtc.tsalko.dao.exception.DAOException;
 import by.epamtc.tsalko.dao.exception.EntityNotFoundDAOException;
 import by.epamtc.tsalko.service.OrderService;
-import by.epamtc.tsalko.service.UserValidator;
+import by.epamtc.tsalko.service.util.UserValidator;
 import by.epamtc.tsalko.service.exception.EntityNotFoundServiceException;
 import by.epamtc.tsalko.service.exception.InvalidInputDataServiceException;
 import by.epamtc.tsalko.service.exception.ServiceException;

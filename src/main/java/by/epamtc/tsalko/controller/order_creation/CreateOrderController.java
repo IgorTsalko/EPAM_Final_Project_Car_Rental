@@ -2,7 +2,7 @@ package by.epamtc.tsalko.controller.order_creation;
 
 import by.epamtc.tsalko.bean.Order;
 import by.epamtc.tsalko.bean.user.User;
-import by.epamtc.tsalko.controller.TechValidator;
+import by.epamtc.tsalko.controller.util.TechValidator;
 import by.epamtc.tsalko.service.CarService;
 import by.epamtc.tsalko.service.OrderService;
 import by.epamtc.tsalko.service.ServiceProvider;
