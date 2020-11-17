@@ -42,13 +42,9 @@ public class UpdateUserLoginCommand implements Command {
             String newLogin = req.getParameter(PARAMETER_NEW_LOGIN);
 
             if (TechValidator.loginValidation(newLogin)) {
-                if (userService.updateUserLogin(userID, newLogin)) {
-                    req.getSession().removeAttribute(ATTRIBUTE_USER);
-                    page.append(GO_TO_LOGIN_PAGE).append(MESSAGE_UPDATE_LOGIN).append(SUCCESSFULLY);
-                } else {
-                    page.append(GO_TO_PERSONAL_PAGE_DETAILS)
-                            .append(MESSAGE_UPDATE_LOGIN).append(DATA_UPDATE_ERROR);
-                }
+                userService.updateUserLogin(userID, newLogin);
+                req.getSession().removeAttribute(ATTRIBUTE_USER);
+                page.append(GO_TO_LOGIN_PAGE).append(MESSAGE_UPDATE_LOGIN).append(SUCCESSFULLY);
             } else {
                 logger.info(newLogin + " failed validation.");
                 page.append(GO_TO_PERSONAL_PAGE_DETAILS)

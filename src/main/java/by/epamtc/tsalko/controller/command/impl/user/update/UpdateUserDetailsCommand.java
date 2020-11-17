@@ -59,11 +59,8 @@ public class UpdateUserDetailsCommand implements Command {
             } catch (NumberFormatException ignore) {/*NOPE*/}
 
             if (TechValidator.userDetailsValidation(userDetails)) {
-                if (userService.updateUserDetails(userDetails)) {
-                    page.append(MESSAGE_DETAILS_UPDATE).append(DATA_UPDATED);
-                } else {
-                    page.append(MESSAGE_DETAILS_UPDATE).append(DATA_UPDATE_ERROR);
-                }
+                userService.updateUserDetails(userDetails);
+                page.append(MESSAGE_DETAILS_UPDATE).append(DATA_UPDATED);
             } else {
                 logger.info(userDetails + " failed validation.");
                 page.append(MESSAGE_DETAILS_UPDATE).append(INCORRECT_DATA);

@@ -43,6 +43,9 @@ public class UpdateUserPassportCommand implements Command {
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         StringBuilder page = new StringBuilder((String) req.getSession().getAttribute(ATTRIBUTE_PREVIOUS_REQUEST));
 
+        ServiceProvider serviceProvider = ServiceProvider.getInstance();
+        UserService userService = serviceProvider.getUserService();
+
         try {
             Passport passport = new Passport();
 
@@ -60,14 +63,8 @@ public class UpdateUserPassportCommand implements Command {
             passport.setPassportUserThirdName(req.getParameter(PARAMETER_USER_PASSPORT_THIRDNAME));
 
             if (TechValidator.passportValidation(passport)) {
-                ServiceProvider serviceProvider = ServiceProvider.getInstance();
-                UserService userService = serviceProvider.getUserService();
-
-                if (userService.updateUserPassport(passport)) {
-                    page.append(MESSAGE_PASSPORT_UPDATE).append(DATA_UPDATED);
-                } else {
-                    page.append(MESSAGE_PASSPORT_UPDATE).append(DATA_UPDATE_ERROR);
-                }
+                userService.updateUserPassport(passport);
+                page.append(MESSAGE_PASSPORT_UPDATE).append(DATA_UPDATED);
             } else {
                 logger.info(passport + " failed validation.");
                 page.append(MESSAGE_PASSPORT_UPDATE).append(INCORRECT_DATA);

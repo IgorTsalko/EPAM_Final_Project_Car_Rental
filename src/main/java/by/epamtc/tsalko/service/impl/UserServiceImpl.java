@@ -117,62 +117,48 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updateUserDetails(UserDetails userDetails) throws ServiceException {
-        boolean updated;
-
+    public void updateUserDetails(UserDetails userDetails) throws ServiceException {
         DAOProvider daoProvider = DAOProvider.getInstance();
         UserDAO userDAO = daoProvider.getUserDAO();
 
         try {
-            updated = userDAO.updateUserDetails(userDetails);
+            userDAO.updateUserDetails(userDetails);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
-
-        return updated;
     }
 
     @Override
-    public boolean updateUserPassport(Passport passport) throws ServiceException {
+    public void updateUserPassport(Passport passport) throws ServiceException {
         if (!UserValidator.passportValidation(passport)) {
             logger.info(passport + " failed validation");
             throw new InvalidInputDataServiceException();
         }
 
-        boolean updated;
-
         DAOProvider daoProvider = DAOProvider.getInstance();
         UserDAO userDAO = daoProvider.getUserDAO();
 
         try {
-            updated = userDAO.updateUserPassport(passport);
+            userDAO.updateUserPassport(passport);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
-
-        return updated;
     }
 
     @Override
-    public boolean updateUserLogin(int userID, String newUserLogin) throws ServiceException {
-        boolean updated;
-
+    public void updateUserLogin(int userID, String newUserLogin) throws ServiceException {
         DAOProvider daoProvider = DAOProvider.getInstance();
         UserDAO userDAO = daoProvider.getUserDAO();
 
         try {
-            updated = userDAO.updateUserLogin(userID, newUserLogin);
+            userDAO.updateUserLogin(userID, newUserLogin);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
-
-        return updated;
     }
 
     @Override
-    public boolean updateUserPassword(int userID, String oldPassword, String newPassword) throws ServiceException {
-        boolean updated;
-
+    public void updateUserPassword(int userID, String oldPassword, String newPassword) throws ServiceException {
         DAOProvider daoProvider = DAOProvider.getInstance();
         UserDAO userDAO = daoProvider.getUserDAO();
 
@@ -180,11 +166,9 @@ public class UserServiceImpl implements UserService {
             oldPassword = Encoder.encrypt(oldPassword);
             newPassword = Encoder.encrypt(newPassword);
 
-            updated = userDAO.updateUserPassword(userID, oldPassword, newPassword);
+            userDAO.updateUserPassword(userID, oldPassword, newPassword);
         } catch (DAOException | NoSuchAlgorithmException e) {
             throw new ServiceException(e);
         }
-
-        return updated;
     }
 }

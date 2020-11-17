@@ -51,6 +51,7 @@ public class ContentDAOImpl implements ContentDAO {
     /**
      * Execute the SQL statement and return list of objects <code>Role</code>
      * created from data obtained from the database.
+     *
      * @return list of objects <code>Role</code> that represent the user roles
      * @throws DAOException if occurred severe problem with database
      */
@@ -91,10 +92,11 @@ public class ContentDAOImpl implements ContentDAO {
      * Execute the SQL statement and return <code>Role</code> object created from data
      * obtained from the database by unique role identifier or throws exception if
      * such user does not exist. Never return <code>null</code>.
+     *
      * @param roleID unique role identifier in database
      * @return <code>Role</code> object that represents the user role
      * @throws EntityNotFoundDAOException if corresponding role not found
-     * @throws DAOException if occurred severe problem with database
+     * @throws DAOException               if occurred severe problem with database
      */
     @Override
     public Role getRoleByID(int roleID) throws DAOException {
@@ -132,6 +134,7 @@ public class ContentDAOImpl implements ContentDAO {
     /**
      * Execute the SQL statement and return list of objects <code>Rating</code>
      * created from data obtained from the database.
+     *
      * @return list of objects <code>Rating</code> that represent the user ratings
      * @throws DAOException if occurred severe problem with database
      */
@@ -173,10 +176,11 @@ public class ContentDAOImpl implements ContentDAO {
      * Execute the SQL statement and return <code>Rating</code> object created from data
      * obtained from the database by unique rating identifier or throws exception if
      * such user does not exist. Never return <code>null</code>.
+     *
      * @param ratingID unique rating identifier in database
      * @return <code>Rating</code> object that represents the user rating
-     * @throws EntityNotFoundDAOException if corresponding User not found
-     * @throws DAOException if occurred severe problem with database
+     * @throws EntityNotFoundDAOException if corresponding user not found
+     * @throws DAOException               if occurred severe problem with database
      */
     @Override
     public Rating getRatingByID(int ratingID) throws DAOException {
@@ -215,6 +219,7 @@ public class ContentDAOImpl implements ContentDAO {
     /**
      * Execute the SQL statement and return list of objects <code>OrderStatus</code>
      * created from data obtained from the database.
+     *
      * @return list of objects <code>OrderStatus</code> that represent the order status
      * @throws DAOException if occurred severe problem with database
      */
@@ -255,6 +260,7 @@ public class ContentDAOImpl implements ContentDAO {
     /**
      * Execute the SQL statement and return list of objects <code>News</code>
      * created from data obtained from the database.
+     *
      * @return list of objects <code>News</code>
      * @throws DAOException if occurred severe problem with database
      */

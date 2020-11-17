@@ -5,7 +5,6 @@ import by.epamtc.tsalko.controller.util.TechValidator;
 import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.BankcardService;
 import by.epamtc.tsalko.service.ServiceProvider;
-import by.epamtc.tsalko.service.exception.EntityAlreadyExistsServiceException;
 import by.epamtc.tsalko.service.exception.InvalidInputDataServiceException;
 import by.epamtc.tsalko.service.exception.ServiceException;
 
@@ -30,7 +29,6 @@ public class CreateBankcardCommand implements Command {
     private static final String MESSAGE_BANKCARD_ADDING = "&message_bankcard_adding=";
     private static final String DATA_ADD_ERROR = "data_add_error";
     private static final String INCORRECT_DATA = "incorrect_data";
-    private static final String BANKCARD_EXISTS = "bankcard_exists";
 
     private static final String validTrueFormatPattern = "d-MM-yy";
 
@@ -65,9 +63,6 @@ public class CreateBankcardCommand implements Command {
         } catch (NumberFormatException | DateTimeParseException | InvalidInputDataServiceException e) {
             page.append(GO_TO_PERSONAL_PAGE_CREATE_BANKCARD)
                     .append(MESSAGE_BANKCARD_ADDING).append(INCORRECT_DATA);
-        } catch (EntityAlreadyExistsServiceException e) {
-            page.append(GO_TO_PERSONAL_PAGE_CREATE_BANKCARD)
-                    .append(MESSAGE_BANKCARD_ADDING).append(BANKCARD_EXISTS);
         } catch (ServiceException e) {
             page.append(GO_TO_PERSONAL_PAGE_CREATE_BANKCARD)
                     .append(MESSAGE_BANKCARD_ADDING).append(DATA_ADD_ERROR);

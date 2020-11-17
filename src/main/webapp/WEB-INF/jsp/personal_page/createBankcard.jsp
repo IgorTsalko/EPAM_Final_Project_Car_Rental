@@ -2,7 +2,6 @@
 
 <fmt:message key="data.add_error" var="add_error"/>
 <fmt:message key="data.incorrect_data" var="incorrect_data"/>
-<fmt:message key="bankcard.message.exists" var="card_exists"/>
 
 <fmt:message key="bankcard.adding_title" var="bankcard_adding_title"/>
 <fmt:message key="bankcard.number_title" var="bankcard_number_title"/>
@@ -25,9 +24,6 @@
     </c:when>
     <c:when test="${message_bankcard_adding eq 'incorrect_data'}">
         <p class="incorrect-data-error">${incorrect_data}</p>
-    </c:when>
-    <c:when test="${message_bankcard_adding eq 'bankcard_exists'}">
-        <p class="incorrect-data-error">${card_exists}</p>
     </c:when>
 </c:choose>
 <div class="clear">

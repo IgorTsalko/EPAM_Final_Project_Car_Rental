@@ -84,30 +84,32 @@ public class Bankcard implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Bankcard bankCard = (Bankcard) o;
-        return userID == bankCard.userID &&
-                bankcardNumber == bankCard.bankcardNumber &&
-                Objects.equals(bankcardValidTrue, bankCard.bankcardValidTrue) &&
-                Objects.equals(bankcardUserFirstname, bankCard.bankcardUserFirstname) &&
-                Objects.equals(bankcardUserLastname, bankCard.bankcardUserLastname) &&
-                Objects.equals(bankcardCVV, bankCard.bankcardCVV);
+        Bankcard bankcard = (Bankcard) o;
+        return userID == bankcard.userID &&
+                bankcardID == bankcard.bankcardID &&
+                bankcardNumber == bankcard.bankcardNumber &&
+                Objects.equals(bankcardValidTrue, bankcard.bankcardValidTrue) &&
+                Objects.equals(bankcardUserFirstname, bankcard.bankcardUserFirstname) &&
+                Objects.equals(bankcardUserLastname, bankcard.bankcardUserLastname) &&
+                Objects.equals(bankcardCVV, bankcard.bankcardCVV);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userID, bankcardNumber, bankcardValidTrue, bankcardUserFirstname,
-                bankcardUserLastname, bankcardCVV);
+        return Objects.hash(userID, bankcardID, bankcardNumber, bankcardValidTrue,
+                bankcardUserFirstname, bankcardUserLastname, bankcardCVV);
     }
 
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" +
                 "userID=" + userID +
-                ", cardAccount=" + bankcardNumber +
-                ", cardValidTrue=" + bankcardValidTrue +
-                ", cardUserFirstname='" + bankcardUserFirstname + '\'' +
-                ", cardUserLastname='" + bankcardUserLastname + '\'' +
-                ", authorizationCode=" + bankcardCVV +
+                ", bankcardID=" + bankcardID +
+                ", bankcardNumber=" + bankcardNumber +
+                ", bankcardValidTrue=" + bankcardValidTrue +
+                ", bankcardUserFirstname='" + bankcardUserFirstname + '\'' +
+                ", bankcardUserLastname='" + bankcardUserLastname + '\'' +
+                ", bankcardCVV='" + bankcardCVV + '\'' +
                 '}';
     }
 }

@@ -5,10 +5,8 @@ import by.epamtc.tsalko.bean.Order;
 import by.epamtc.tsalko.dao.BankcardDAO;
 import by.epamtc.tsalko.dao.DAOProvider;
 import by.epamtc.tsalko.dao.exception.DAOException;
-import by.epamtc.tsalko.dao.exception.EntityAlreadyExistsDAOException;
 import by.epamtc.tsalko.service.BankcardService;
 import by.epamtc.tsalko.service.util.UserValidator;
-import by.epamtc.tsalko.service.exception.EntityAlreadyExistsServiceException;
 import by.epamtc.tsalko.service.exception.InvalidInputDataServiceException;
 import by.epamtc.tsalko.service.exception.ServiceException;
 import org.apache.logging.log4j.LogManager;
@@ -97,8 +95,6 @@ public class BankcardServiceImpl implements BankcardService {
 
         try {
             bankcardDAO.createBankcard(bankCard);
-        } catch (EntityAlreadyExistsDAOException e) {
-            throw new EntityAlreadyExistsServiceException(e);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }

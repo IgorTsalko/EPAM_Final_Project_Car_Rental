@@ -5,6 +5,7 @@ import by.epamtc.tsalko.bean.content.Rating;
 import by.epamtc.tsalko.bean.content.Role;
 import by.epamtc.tsalko.dao.connection.ConnectionPool;
 import by.epamtc.tsalko.dao.exception.DAOException;
+import by.epamtc.tsalko.dao.exception.EntityNotFoundDAOException;
 import by.epamtc.tsalko.dao.util.ScriptRunner;
 import org.junit.jupiter.api.*;
 
@@ -18,7 +19,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ContentDAOImplTest {
+public class ContentDAOImplTest {
 
     private static final ConnectionPool connectionPool = ConnectionPool.getInstance();
     private static final ContentDAOImpl contentDAOImpl = new ContentDAOImpl();
@@ -33,11 +34,6 @@ class ContentDAOImplTest {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(RELOAD_DB_SQL_FILE));
         scriptRunner.runScript(bufferedReader);
         connectionPool.closeConnection(con, null);
-    }
-
-    @AfterAll
-    static void disconnectDB() {
-        connectionPool.dropAllConnections();
     }
 
     @Test
@@ -68,7 +64,12 @@ class ContentDAOImplTest {
     }
 
     @Test
-    void getAllRatings() throws DAOException {
+    void retrieve_role_by_not_existing_id() {
+        assertThrows(EntityNotFoundDAOException.class, () -> contentDAOImpl.getRoleByID(252));
+    }
+
+    @Test
+    void retrieve_all_ratings() throws DAOException {
         List<Rating> expectedAllRatings = new ArrayList<>();
         Rating rating = new Rating();
         rating.setRatingID(1);
@@ -99,7 +100,7 @@ class ContentDAOImplTest {
     }
 
     @Test
-    void getRatingByID() throws DAOException {
+    void retrieve_rating_by_id() throws DAOException {
         Rating expectedRating = new Rating();
         expectedRating.setRatingID(3);
         expectedRating.setRatingName("C2");
@@ -110,7 +111,12 @@ class ContentDAOImplTest {
     }
 
     @Test
-    void getAllOrderStatuses() throws DAOException {
+    void retrieve_rating_by_not_existing_id() {
+        assertThrows(EntityNotFoundDAOException.class, () -> contentDAOImpl.getRatingByID(252));
+    }
+
+    @Test
+    void retrieve_all_order_statuses() throws DAOException {
         List<OrderStatus> expectedAllOrderStatuses = new ArrayList<>();
         OrderStatus orderStatus = new OrderStatus();
         orderStatus.setStatusID(1);
@@ -152,7 +158,7 @@ class ContentDAOImplTest {
     }
 
     @Test
-    void getAllNews() {
+    void retrieve_all_news() {
         assertDoesNotThrow(() -> contentDAOImpl.getAllNews());
     }
 }
