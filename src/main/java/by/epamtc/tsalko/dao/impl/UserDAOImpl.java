@@ -228,13 +228,13 @@ public class UserDAOImpl implements UserDAO {
 
     /**
      * Execute the SQL statement and return list of objects <code>User</code> created from data
-     * obtained from the database or return empty list if <code>linesAmount</code> is outside
+     * obtained from the database or return empty list if <code>offset</code> is outside
      * the number of records or records are missing or there are no any users.
      *
      * @param offset      index number from which to start extraction
      * @param linesAmount number of retrievable objects
      * @return list of <code>User</code> objects from database or empty list if
-     * <code>linesAmount</code> is outside the number of records or records are missing
+     * <code>offset</code> is outside the number of records or records are missing
      * @throws DAOException if occurred severe problem with database
      */
     @Override
@@ -324,7 +324,7 @@ public class UserDAOImpl implements UserDAO {
      *
      * @param userDetails object that describes details data user
      * @throws UpdateDataDAOException if cannot update data in database
-     * @throws DAOException              if occurred severe problem with database
+     * @throws DAOException           if occurred severe problem with database
      */
     @Override
     public void updateUserDetails(UserDetails userDetails) throws DAOException {
@@ -361,7 +361,7 @@ public class UserDAOImpl implements UserDAO {
      *
      * @param passport object that describes user passport data
      * @throws EntityNotFoundDAOException if user for passport does not exist
-     * @throws UpdateDataDAOException  if cannot update data in database
+     * @throws UpdateDataDAOException     if cannot update data in database
      * @throws DAOException               if occurred severe problem with database
      */
     @Override
@@ -417,7 +417,7 @@ public class UserDAOImpl implements UserDAO {
      * @param userID       unique user identifier in database
      * @param newUserLogin new user login
      * @throws UpdateDataDAOException if cannot update data in database
-     * @throws DAOException              if occurred severe problem with database
+     * @throws DAOException           if occurred severe problem with database
      */
     @Override
     public void updateUserLogin(int userID, String newUserLogin) throws DAOException {
@@ -452,7 +452,7 @@ public class UserDAOImpl implements UserDAO {
      * @param oldPassword old user oldPassword
      * @param newPassword new user password
      * @throws UpdateDataDAOException if cannot update data in database
-     * @throws DAOException              if occurred severe problem with database
+     * @throws DAOException           if occurred severe problem with database
      */
     @Override
     public void updateUserPassword(int userID, String oldPassword, String newPassword) throws DAOException {

@@ -41,7 +41,7 @@ public class DeleteBankcardCommand implements Command {
                 logger.info("userID: " + userID + ", bankcardID: " + bankcardID + " failed validation.");
                 page.append(MESSAGE_BANKCARD_DELETE).append(DATA_DELETE_ERROR);
             }
-        }  catch (NumberFormatException | ServiceException e) {
+        } catch (NumberFormatException | ServiceException e) {
             page.append(MESSAGE_BANKCARD_DELETE).append(DATA_DELETE_ERROR);
         }
         resp.sendRedirect(page.toString());

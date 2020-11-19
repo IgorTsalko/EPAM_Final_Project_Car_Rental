@@ -5,6 +5,8 @@ import by.epamtc.tsalko.controller.command.Command;
 import by.epamtc.tsalko.service.OrderService;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.exception.ServiceException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +15,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class GoToPersonalPageAllOrdersCommand implements Command {
+
+    private static final Logger logger = LogManager.getLogger(GoToPersonalPageAllOrdersCommand.class);
 
     private static final int ROWS_AMOUNT = 10;
 
@@ -36,7 +40,7 @@ public class GoToPersonalPageAllOrdersCommand implements Command {
             int page = 1;
             try {
                 page = Integer.parseInt(req.getParameter(PAGE));
-            } catch (NumberFormatException ignore) {/*NOPE*/}
+            } catch (NumberFormatException e) {/*NOPE*/}
             if (page < 1) {
                 page = 1;
             }

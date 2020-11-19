@@ -29,9 +29,7 @@ public class OrderServiceImpl implements OrderService {
             throw new InvalidInputDataServiceException();
         }
 
-        if (!setUpTotalSum(order)) {
-            throw new ServiceException("Could not set up total sum");
-        }
+        setUpTotalSum(order);
 
         DAOProvider daoProvider = DAOProvider.getInstance();
         OrderDAO orderDAO = daoProvider.getOrderDAO();
@@ -110,60 +108,39 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean updateOrder(Order order) throws ServiceException {
+    public void updateOrder(Order order) throws ServiceException {
         if (!UserValidator.updateOrderValidation(order)) {
             logger.info(order + " failed validation");
             throw new InvalidInputDataServiceException();
         }
 
-        boolean updated;
-
-        if (!setUpTotalSum(order)) {
-            throw new ServiceException("Could not set up total sum");
-        }
+        setUpTotalSum(order);
 
         DAOProvider daoProvider = DAOProvider.getInstance();
         OrderDAO orderDAO = daoProvider.getOrderDAO();
 
         try {
-            updated = orderDAO.updateOrder(order);
-        } catch (DAOException e) {
-            throw new ServiceException(e);
-        }
-
-        return updated;
-    }
-
-    @Override
-    public void setPayment(Order order) throws ServiceException {
-        DAOProvider daoProvider = DAOProvider.getInstance();
-        OrderDAO orderDAO = daoProvider.getOrderDAO();
-
-        try {
-            orderDAO.setPayment(order);
+            orderDAO.updateOrder(order);
         } catch (DAOException e) {
             throw new ServiceException(e);
         }
     }
 
-    private boolean setUpTotalSum(Order order) {
-        boolean setUp = false;
-        LocalDate pickUpDate = order.getPickUpDate();
-        LocalDate dropOffDate = order.getDropOffDate();
+    private void setUpTotalSum(Order order) {
+        double pricePerDay = order.getCar().getPricePerDay();
 
-        if (pickUpDate != null && dropOffDate != null) {
+        if (pricePerDay > 0) {
+            LocalDate pickUpDate = order.getPickUpDate();
+            LocalDate dropOffDate = order.getDropOffDate();
             long amountOfDays = ChronoUnit.DAYS.between(pickUpDate, dropOffDate);
-            double pricePerDay = order.getCar().getPricePerDay();
             double totalSum = amountOfDays * pricePerDay;
-
             double discount = order.getDiscount();
+
             if (discount > 0) {
                 totalSum = (pricePerDay * (1 - discount / 100)) * amountOfDays;
             }
-            order.setTotalSum(totalSum);
-            setUp = true;
-        }
 
-        return setUp;
+            order.setTotalSum(totalSum);
+        }
     }
 }

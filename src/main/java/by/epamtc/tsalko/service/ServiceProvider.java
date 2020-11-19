@@ -12,7 +12,8 @@ public class ServiceProvider {
     private final BankcardService bankcardService = new BankcardServiceImpl();
     private final ContentService contentService = new ContentServiceImpl();
 
-    private ServiceProvider() {}
+    private ServiceProvider() {
+    }
 
     public static ServiceProvider getInstance() {
         return instance;

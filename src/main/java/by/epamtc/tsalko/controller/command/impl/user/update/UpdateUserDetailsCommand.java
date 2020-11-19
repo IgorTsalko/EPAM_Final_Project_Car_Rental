@@ -35,16 +35,16 @@ public class UpdateUserDetailsCommand implements Command {
 
     @Override
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        StringBuilder page = new StringBuilder((String) req.getSession().getAttribute(ATTRIBUTE_PREVIOUS_REQUEST));
+        StringBuilder page = new StringBuilder(
+                (String) req.getSession().getAttribute(ATTRIBUTE_PREVIOUS_REQUEST));
 
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         UserService userService = serviceProvider.getUserService();
         ContentService contentService = serviceProvider.getContentService();
 
         try {
-            UserDetails userDetails
-                    = userService.getUserDetails(
-                            Integer.parseInt(req.getParameter(PARAMETER_USER_ID)));
+            UserDetails userDetails = userService.getUserDetails(
+                    Integer.parseInt(req.getParameter(PARAMETER_USER_ID)));
 
             userDetails.setUserPhone(req.getParameter(PARAMETER_USER_PHONE));
             userDetails.setUserEmail(req.getParameter(PARAMETER_USER_EMAIL));
@@ -56,7 +56,7 @@ public class UpdateUserDetailsCommand implements Command {
                 userDetails.setUserRating(
                         contentService.getRatingByID(
                                 Integer.parseInt(req.getParameter(PARAMETER_USER_RATING_ID))));
-            } catch (NumberFormatException ignore) {/*NOPE*/}
+            } catch (NumberFormatException e) {/*NOPE*/}
 
             if (TechValidator.userDetailsValidation(userDetails)) {
                 userService.updateUserDetails(userDetails);

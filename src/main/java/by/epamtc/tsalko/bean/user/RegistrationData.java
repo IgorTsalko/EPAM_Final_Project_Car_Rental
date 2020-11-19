@@ -12,7 +12,8 @@ public class RegistrationData implements Serializable {
     private String login;
     private String password;
 
-    public RegistrationData() {}
+    public RegistrationData() {
+    }
 
     public String getEmail() {
         return email;

@@ -1,11 +1,16 @@
 package by.epamtc.tsalko.view.tag;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 
 public class PaymentSystemTag extends TagSupport {
+
+    private static final Logger logger = LogManager.getLogger(PaymentSystemTag.class);
 
     private static final String URL_VISA_IMG = "img/visa.png";
     private static final String URL_MASTERCARD_IMG = "img/mastercard.png";
@@ -30,7 +35,9 @@ public class PaymentSystemTag extends TagSupport {
             } else if (curdNumberStr.startsWith("5")) {
                 out.write("<img src=\"" + URL_MASTERCARD_IMG + "\">");
             }
-        } catch (IOException ignore) {}
+        } catch (IOException e) {
+            logger.info("Could not write payment system.", e);
+        }
 
         return SKIP_BODY;
     }

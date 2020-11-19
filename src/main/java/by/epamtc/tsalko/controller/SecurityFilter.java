@@ -72,7 +72,7 @@ public class SecurityFilter implements Filter {
             if (commandName != null) {
                 parameterName = ParameterName.valueOf(commandName.toUpperCase());
             }
-        } catch (IllegalArgumentException ignore) {/*NOPE*/}
+        } catch (IllegalArgumentException e) {/*NOPE*/}
 
         if (parameterName != null) {
             HttpSession session = req.getSession();
@@ -102,7 +102,9 @@ public class SecurityFilter implements Filter {
         int userID = 0;
         try {
             userID = Integer.parseInt(req.getParameter(PARAMETER_USER_ID));
-        } catch (NumberFormatException ignore) {/* NOPE */}
+        } catch (NumberFormatException e) {
+            logger.info("Incorrect argument userID", e);
+        }
 
         return ((user.getRole().equals(ROLE_CUSTOMER)
                 && user.getLogin().equals(senderLogin)

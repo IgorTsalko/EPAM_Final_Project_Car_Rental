@@ -114,7 +114,7 @@ public class TechValidator {
         LocalDate pickUpDate = order.getPickUpDate();
         LocalDate dropOffDate = order.getDropOffDate();
 
-        return  discount < 100
+        return discount < 100
                 && orderStatus != null
                 && pickUpDate != null
                 && dropOffDate != null;

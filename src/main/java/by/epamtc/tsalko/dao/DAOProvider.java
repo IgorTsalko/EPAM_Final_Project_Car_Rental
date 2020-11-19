@@ -12,7 +12,8 @@ public class DAOProvider {
     private final BankcardDAO bankcardDAO = new BankcardDAOImpl();
     private final ContentDAO contentDAO = new ContentDAOImpl();
 
-    private DAOProvider() {}
+    private DAOProvider() {
+    }
 
     public static DAOProvider getInstance() {
         return instance;

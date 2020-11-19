@@ -11,9 +11,13 @@ import java.util.List;
 public interface ContentDAO {
 
     List<Role> getAllRoles() throws DAOException;
+
     Role getRoleByID(int roleID) throws DAOException;
+
     List<Rating> getAllRatings() throws DAOException;
+
     Rating getRatingByID(int ratingID) throws DAOException;
+
     List<OrderStatus> getAllOrderStatuses() throws DAOException;
 
     List<News> getAllNews() throws DAOException;

@@ -56,6 +56,13 @@ public class CarDAOImpl implements CarDAO {
     private static final String COLUMN_DROP_OF_DATE = "drop_of_date";
     private static final String COLUMN_CAR_IMAGE_URI = "car_image_uri";
 
+    /**
+     * Execute the SQL statement and return list of objects <code>Car</code>
+     * created from data obtained from the database.
+     *
+     * @return list of objects <code>Car</code> that represent a car
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
     public List<Car> getAllCars() throws DAOException {
         List<Car> cars = new ArrayList<>();
@@ -85,6 +92,15 @@ public class CarDAOImpl implements CarDAO {
         return cars;
     }
 
+    /**
+     * Execute the SQL statement and return list of random objects <code>Car</code>
+     * except main car.
+     *
+     * @param count     number of random cars
+     * @param mainCarID identifier main car which is not used in finding random cars
+     * @return list of random objects <code>Car</code> that represent a car
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
     public List<Car> getRecommendedCars(int count, int mainCarID) throws DAOException {
         List<Car> randomCars = new ArrayList<>();
@@ -131,6 +147,17 @@ public class CarDAOImpl implements CarDAO {
         return randomCars;
     }
 
+    /**
+     * Execute the SQL statement and return <code>Car</code> object created from data
+     * obtained from the database by unique car identifier or throws exception if
+     * such identifier does not exist. Never return <code>null</code>.
+     *
+     * @param carID unique car identifier in database
+     * @return <code>Car</code> object that represents a car
+     * @throws EntityNotFoundDAOException if <code>carID</code> identifier does not exist
+     *                                    in the database
+     * @throws DAOException               if occurred severe problem with database
+     */
     @Override
     public Car getCarByID(int carID) throws DAOException {
         Car car;
@@ -162,6 +189,15 @@ public class CarDAOImpl implements CarDAO {
         return car;
     }
 
+    /**
+     * Execute the SQL statement and return list of URI for car images created from
+     * data obtained from the database. If the car does not have any images
+     * return empty list.
+     *
+     * @param carID unique car identifier in database
+     * @return list of <code>String</code> that represents URI for car images
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
     public List<String> getAllCarImagesByID(int carID) throws DAOException {
         List<String> carImages;

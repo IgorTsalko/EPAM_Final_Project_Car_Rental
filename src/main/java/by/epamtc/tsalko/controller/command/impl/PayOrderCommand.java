@@ -66,6 +66,7 @@ public class PayOrderCommand implements Command {
 
             int orderID = Integer.parseInt(req.getParameter(PARAMETER_ORDER_ID));
             Order order = orderService.getOrder(orderID);
+
             Bankcard bankcard;
 
             if (useAnotherBankcard) {
@@ -87,7 +88,9 @@ public class PayOrderCommand implements Command {
                     if (addBankcard) {
                         try {
                             bankcardService.createBankcard(bankcard);
-                        } catch (ServiceException ignore) {/*NOPE*/}
+                        } catch (ServiceException e) {
+                            logger.info("Could not add bankcard.", e);
+                        }
                     }
                 } else {
                     logger.info(bankcard + " failed validation");
@@ -98,7 +101,7 @@ public class PayOrderCommand implements Command {
             }
 
             if (paid && order != null) {
-                orderService.setPayment(order);
+                orderService.updateOrder(order);
             }
 
             page.append(GO_TO_USER_ORDERS);

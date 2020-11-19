@@ -142,7 +142,7 @@ public class BankcardDAOImpl implements BankcardDAO {
      *
      * @param bankCard data about new <code>Bankcard</code>
      * @throws UpdateDataDAOException if cannot add new data in database
-     * @throws DAOException              if occurred severe problem with database
+     * @throws DAOException           if occurred severe problem with database
      */
     @Override
     public void createBankcard(Bankcard bankCard) throws DAOException {
@@ -177,8 +177,8 @@ public class BankcardDAOImpl implements BankcardDAO {
      *
      * @param userID     unique user identifier in database
      * @param bankCardID unique bankcard identifier in database
-     * @throws UpdateDataDAOException if cannot add new data in database
-     * @throws DAOException              if occurred severe problem with database
+     * @throws UpdateDataDAOException if cannot update data in database
+     * @throws DAOException           if occurred severe problem with database
      */
     @Override
     public void deleteBankcard(int userID, int bankCardID) throws DAOException {

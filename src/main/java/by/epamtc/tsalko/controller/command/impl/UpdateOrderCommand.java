@@ -76,7 +76,7 @@ public class UpdateOrderCommand implements Command {
 
                 try {
                     returnAct.setFine(Double.parseDouble(req.getParameter(PARAMETER_ORDER_FINE)));
-                } catch (NumberFormatException ignore) {/*NOPE*/}
+                } catch (NumberFormatException e) {/*NOPE*/}
 
                 returnAct.setActComment(req.getParameter(PARAMETER_ACT_COMMENT));
 
@@ -84,11 +84,8 @@ public class UpdateOrderCommand implements Command {
             }
 
             if (TechValidator.orderValidation(order)) {
-                if (orderService.updateOrder(order)) {
-                    page.append(GO_TO_PERSONAL_PAGE_ALL_ORDERS);
-                } else {
-                    page.append(previousRequest).append(MESSAGE_UPDATE_ORDER).append(DATA_UPDATE_ERROR);
-                }
+                orderService.updateOrder(order);
+                page.append(GO_TO_PERSONAL_PAGE_ALL_ORDERS);
             } else {
                 logger.info(order + " failed validation.");
                 page.append(previousRequest).append(MESSAGE_UPDATE_ORDER).append(INCORRECT_DATA);

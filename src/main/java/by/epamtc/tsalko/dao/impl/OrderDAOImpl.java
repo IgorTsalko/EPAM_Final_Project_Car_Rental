@@ -9,6 +9,7 @@ import by.epamtc.tsalko.dao.connection.ConnectionPool;
 import by.epamtc.tsalko.dao.exception.ConnectionPoolError;
 import by.epamtc.tsalko.dao.exception.DAOException;
 import by.epamtc.tsalko.dao.exception.EntityNotFoundDAOException;
+import by.epamtc.tsalko.dao.exception.UpdateDataDAOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -115,9 +116,12 @@ public class OrderDAOImpl implements OrderDAO {
     private static final int ENDED_ORDER_STATUS_ID = 5;
 
     /**
+     * Enroll new <code>Order</code> in data base. Also enroll the bill that relates
+     * to the current order. If it was not possible to enroll a new order and bill,
+     * the changes are not sent and throws exception.
      *
-     * @param order
-     * @throws DAOException
+     * @param order data about new <code>Order</code>
+     * @throws DAOException if occurred severe problem with database
      */
     @Override
     public void addOrder(Order order) throws DAOException {
@@ -168,6 +172,16 @@ public class OrderDAOImpl implements OrderDAO {
         }
     }
 
+    /**
+     * Execute the SQL statement and return list of objects <code>Order</code> which refer
+     * to a specific user created from data obtained from the database or return empty list
+     * if user does not have any orders yet.
+     *
+     * @param userID unique user identifier in database
+     * @return list of <code>Order</code> objects from database or empty list if specific user
+     * does not have any orders yet.
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
     public List<Order> getUserOrders(int userID) throws DAOException {
         List<Order> userOrders = new ArrayList<>();
@@ -198,6 +212,17 @@ public class OrderDAOImpl implements OrderDAO {
         return userOrders;
     }
 
+    /**
+     * Execute the SQL statement and return list of objects <code>Order</code> created from data
+     * obtained from the database or return empty list if <code>offset</code> is outside
+     * the number of records or records are missing or there are no any users.
+     *
+     * @param offset      index number from which to start extraction
+     * @param linesAmount number of retrievable objects
+     * @return list of <code>Order</code> objects from database or empty list if
+     * <code>offset</code> is outside the number of records or records are missing
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
     public List<Order> getOrders(int offset, int linesAmount) throws DAOException {
         List<Order> allOrders = new ArrayList<>();
@@ -229,6 +254,15 @@ public class OrderDAOImpl implements OrderDAO {
         return allOrders;
     }
 
+    /**
+     * Execute the SQL statement and return <code>Order</code> object created from data
+     * obtained from the database by unique order identifier or throws exception.
+     * Never return <code>null</code>.
+     *
+     * @param orderID unique order identifier in database
+     * @return <code>Order</code> object that describes unique order
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
     public Order getOrder(int orderID) throws DAOException {
         Order order;
@@ -260,6 +294,15 @@ public class OrderDAOImpl implements OrderDAO {
         return order;
     }
 
+    /**
+     * Execute the SQL statement and return <code>ReturnAct</code> object created from data
+     * obtained from the database by unique order identifier or throws exception.
+     * Never return <code>null</code>.
+     *
+     * @param orderID unique order identifier in database
+     * @return <code>ReturnAct </code> object that describes unique order
+     * @throws DAOException if occurred severe problem with database
+     */
     @Override
     public ReturnAct getReturnAct(int orderID) throws DAOException {
         ReturnAct returnAct = null;
@@ -296,10 +339,17 @@ public class OrderDAOImpl implements OrderDAO {
         return returnAct;
     }
 
+    /**
+     * Execute the SQL statement and update order data in database. If it was not possible to
+     * update the order or add data to the car rental schedule or update the return act
+     * the changes are not sent and throws exception.
+     *
+     * @param order data about new <code>Order</code>
+     * @throws UpdateDataDAOException if cannot update data in database
+     * @throws DAOException           if occurred severe problem with database
+     */
     @Override
-    public boolean updateOrder(Order order) throws DAOException {
-        boolean updated = false;
-
+    public void updateOrder(Order order) throws DAOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -318,8 +368,9 @@ public class OrderDAOImpl implements OrderDAO {
             preparedStatement.setDouble(7, order.getTotalSum());
             preparedStatement.setInt(8, order.getOrderId());
 
-            if (preparedStatement.executeUpdate() == 2) {
-                updated = true;
+            if (preparedStatement.executeUpdate() != 2) {
+                connection.rollback();
+                throw new UpdateDataDAOException("Could not update order");
             }
 
             if (order.getOrderStatus().getStatusID() != NEW_ORDER_STATUS_ID) {
@@ -328,7 +379,7 @@ public class OrderDAOImpl implements OrderDAO {
                     preparedStatement = connection.prepareStatement(DELETE_CAR_RENTAL_SCHEDULE);
                     preparedStatement.setInt(1, order.getCar().getCarID());
                     preparedStatement.setInt(2, order.getOrderId());
-                } else  {
+                } else {
                     preparedStatement = connection.prepareStatement(INSERT_CAR_RENTAL_SCHEDULE);
                     preparedStatement.setInt(1, order.getCar().getCarID());
                     preparedStatement.setInt(2, order.getOrderId());
@@ -338,44 +389,41 @@ public class OrderDAOImpl implements OrderDAO {
                             java.sql.Date.valueOf(order.getDropOffDate()));
 
                     if (preparedStatement.executeUpdate() != 1) {
-                        updated = false;
-                    }
-
-                    if (order.getOrderStatus().getStatusID() == ENDED_ORDER_STATUS_ID) {
-                        preparedStatement = connection.prepareStatement(SELECT_RETURN_ACT_BY_ORDER_ID);
-                        preparedStatement.setInt(1, order.getOrderId());
-                        resultSet = preparedStatement.executeQuery();
-
-                        if (resultSet.next()) {
-                            preparedStatement = connection.prepareStatement(UPDATE_RETURN_ACT);
-                        } else {
-                            preparedStatement = connection.prepareStatement(INSERT_RETURN_ACT);
-                        }
-
-                        preparedStatement.setDate(1,
-                                java.sql.Date.valueOf(order.getReturnAct().getReturnDate()));
-                        preparedStatement.setInt(2, order.getReturnAct().getCarOdometer());
-                        preparedStatement.setString(3, order.getReturnAct().getCarDamage());
-                        preparedStatement.setDouble(4, order.getReturnAct().getFine());
-                        preparedStatement.setString(5, order.getReturnAct().getActComment());
-                        preparedStatement.setInt(6, order.getReturnAct().getOrderID());
-
-                        if (preparedStatement.executeUpdate() != 1) {
-                            updated = false;
-                        }
+                        connection.rollback();
+                        throw new UpdateDataDAOException("Could not update order");
                     }
                 }
-            }
 
-            if (updated) {
-                connection.commit();
-            } else {
-                connection.rollback();
+                if (order.getOrderStatus().getStatusID() == ENDED_ORDER_STATUS_ID) {
+                    preparedStatement = connection.prepareStatement(SELECT_RETURN_ACT_BY_ORDER_ID);
+                    preparedStatement.setInt(1, order.getOrderId());
+                    resultSet = preparedStatement.executeQuery();
+
+                    if (resultSet.next()) {
+                        preparedStatement = connection.prepareStatement(UPDATE_RETURN_ACT);
+                    } else {
+                        preparedStatement = connection.prepareStatement(INSERT_RETURN_ACT);
+                    }
+
+                    preparedStatement.setDate(1,
+                            java.sql.Date.valueOf(order.getReturnAct().getReturnDate()));
+                    preparedStatement.setInt(2, order.getReturnAct().getCarOdometer());
+                    preparedStatement.setString(3, order.getReturnAct().getCarDamage());
+                    preparedStatement.setDouble(4, order.getReturnAct().getFine());
+                    preparedStatement.setString(5, order.getReturnAct().getActComment());
+                    preparedStatement.setInt(6, order.getReturnAct().getOrderID());
+
+                    if (preparedStatement.executeUpdate() != 1) {
+                        connection.rollback();
+                        throw new UpdateDataDAOException("Could not update order");
+                    }
+                }
             }
         } catch (ConnectionPoolError | SQLException e) {
             try {
                 if (connection != null) {
                     connection.rollback();
+                    throw new UpdateDataDAOException("Could not update order");
                 }
             } catch (SQLException ex) {
                 logger.error("Severe database error! Could not make rollback", ex);
@@ -385,29 +433,6 @@ public class OrderDAOImpl implements OrderDAO {
         } finally {
             if (connection != null) {
                 connectionPool.closeConnection(connection, preparedStatement, resultSet);
-            }
-        }
-
-        return updated;
-    }
-
-    @Override
-    public void setPayment(Order order) throws DAOException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            connection = connectionPool.takeConnection();
-            preparedStatement = connection.prepareStatement(UPDATE_ORDER_SET_PAYMENT);
-            preparedStatement.setInt(1, order.getOrderId());
-
-            preparedStatement.executeUpdate();
-        } catch (ConnectionPoolError | SQLException e) {
-            logger.error("Severe database error! Could not update order payment.", e);
-            throw new DAOException("Could not update order payment.", e);
-        } finally {
-            if (connection != null) {
-                connectionPool.closeConnection(connection, preparedStatement);
             }
         }
     }

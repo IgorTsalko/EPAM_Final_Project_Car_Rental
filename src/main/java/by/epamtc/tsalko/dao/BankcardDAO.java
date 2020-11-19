@@ -8,6 +8,7 @@ import java.util.List;
 public interface BankcardDAO {
 
     List<Bankcard> getUserBankcards(int userID) throws DAOException;
+
     Bankcard getUserBankcard(int bankcardID) throws DAOException;
 
     void createBankcard(Bankcard bankcard) throws DAOException;

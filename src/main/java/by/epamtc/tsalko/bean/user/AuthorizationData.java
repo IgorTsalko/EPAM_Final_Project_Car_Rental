@@ -10,7 +10,8 @@ public class AuthorizationData implements Serializable {
     private String login;
     private String password;
 
-    public AuthorizationData() {}
+    public AuthorizationData() {
+    }
 
     public String getLogin() {
         return login;

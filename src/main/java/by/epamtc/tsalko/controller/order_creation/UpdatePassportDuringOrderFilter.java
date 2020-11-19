@@ -70,7 +70,7 @@ public class UpdatePassportDuringOrderFilter implements Filter {
                 }
             } catch (DateTimeParseException e) {
                 logger.info("Could not update user passport, incorrect data", e);
-            }  catch (ServiceException e) {
+            } catch (ServiceException e) {
                 logger.info("Could not update user passport", e);
             }
         }

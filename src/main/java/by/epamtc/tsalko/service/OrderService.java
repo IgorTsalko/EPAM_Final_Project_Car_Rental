@@ -11,11 +11,12 @@ public interface OrderService {
     void createOrder(Order order) throws ServiceException;
 
     List<Order> getUserOrders(int userID) throws ServiceException;
+
     List<Order> getOrders(int offset, int rowsAmount) throws ServiceException;
+
     Order getOrder(int orderID) throws ServiceException;
+
     ReturnAct getReturnAct(int orderID) throws ServiceException;
 
-    boolean updateOrder(Order order) throws ServiceException;
-
-    void setPayment(Order order) throws ServiceException;
+    void updateOrder(Order order) throws ServiceException;
 }

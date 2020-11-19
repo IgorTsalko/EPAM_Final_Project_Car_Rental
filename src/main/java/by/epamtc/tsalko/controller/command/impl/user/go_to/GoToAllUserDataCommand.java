@@ -11,6 +11,8 @@ import by.epamtc.tsalko.service.ContentService;
 import by.epamtc.tsalko.service.ServiceProvider;
 import by.epamtc.tsalko.service.UserService;
 import by.epamtc.tsalko.service.exception.ServiceException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +21,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class GoToAllUserDataCommand implements Command {
+
+    private static final Logger logger = LogManager.getLogger(GoToAllUserDataCommand.class);
 
     private static final String PARAMETER_USER_ID = "user_id";
 
@@ -51,7 +55,9 @@ public class GoToAllUserDataCommand implements Command {
         int userID = 0;
         try {
             userID = Integer.parseInt(req.getParameter(PARAMETER_USER_ID));
-        } catch (NumberFormatException ignore) {/* NOPE */}
+        } catch (NumberFormatException e) {
+            logger.info("Incorrect argument userID", e);
+        }
 
         try {
             userDetails = userService.getUserDetails(userID);

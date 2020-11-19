@@ -6,4 +6,5 @@ import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
 @SelectPackages("by.epamtc.tsalko.dao")
-public class TestSuiteDAO {}
+public class TestSuiteDAO {
+}
