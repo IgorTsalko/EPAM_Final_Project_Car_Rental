@@ -66,9 +66,6 @@ public class OrderDAOImpl implements OrderDAO {
                     "order_status_id=?, order_is_paid=?, order_comment=?, bill_sum=? " +
                     "WHERE order_id=? AND main_bill=1";
 
-    private static final String UPDATE_ORDER_SET_PAYMENT
-            = "UPDATE user_orders SET order_is_paid=1 WHERE order_id=?";
-
     private static final String INSERT_CAR_RENTAL_SCHEDULE
             = "INSERT INTO car_rental_schedule (car_id, order_id, pick_up_date, drop_of_date) VALUES (?, ?, ?, ?)";
 
